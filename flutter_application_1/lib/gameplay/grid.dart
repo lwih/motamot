@@ -8,6 +8,8 @@ class WordGrid extends StatelessWidget {
   final List<String> words;
   final String wordInProgress;
   final String wordToFind;
+  final String hints;
+  final bool showHints;
   final int activeRow;
 
   bool hasAnyRowLeft() {
@@ -45,6 +47,8 @@ class WordGrid extends StatelessWidget {
       required this.words,
       required this.wordInProgress,
       required this.wordToFind,
+      required this.hints,
+      required this.showHints,
       required this.activeRow,
       Key? key})
       : super(key: key);
@@ -61,9 +65,11 @@ class WordGrid extends StatelessWidget {
       }).toList(),
       hasAnyRowLeft()
           ? WordRow(
-              word: withWhiteSpace(wordInProgress, wordToFind.length).split(''),
+              word: showHints
+                  ? hints.split('')
+                  : withWhiteSpace(wordInProgress, wordToFind.length).split(''),
               wordToFind: wordToFind.split(''),
-              validateRow: false,
+              validateRow: showHints,
             )
           : Column(),
       ...createUntouchedRows().map((String emptyWord) {

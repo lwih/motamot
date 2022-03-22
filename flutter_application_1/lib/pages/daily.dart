@@ -35,7 +35,7 @@ class _DailyPageState extends State<DailyPage> {
       _validation = '';
       if (_finished) {
       } else if (_wordInProgress.length == _wordToFind.length &&
-          key != 'enter') {
+          !(key == 'enter' || key == 'delete')) {
       } else if (key == 'delete' && _wordInProgress.isNotEmpty) {
         _wordInProgress =
             _wordInProgress.substring(0, _wordInProgress.length - 1);
@@ -57,6 +57,25 @@ class _DailyPageState extends State<DailyPage> {
       }
     });
   }
+
+  String hints(String wordToFind, List<String> words) {
+    List<String> wordInProgress = List.generate(
+        wordToFind.length, (index) => index == 0 ? wordToFind[0] : ' ');
+
+    for (String word in words) {
+      word.split('').asMap().forEach((int pos, String letter) {
+        if (wordToFind[pos] == letter) {
+          wordInProgress[pos] = letter;
+        }
+      });
+    }
+
+    return wordInProgress.join('');
+  }
+
+  bool showHints(
+          String wordToFind, String wordInProgress, List<String> words) =>
+      wordInProgress[0] == wordToFind[0] && wordInProgress.length == 1;
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +109,8 @@ class _DailyPageState extends State<DailyPage> {
                   firstLetter: _wordToFind.substring(0, 1),
                   words: _words,
                   wordInProgress: _wordInProgress,
+                  hints: hints(_wordToFind, _words),
+                  showHints: showHints(_wordToFind, _wordInProgress, _words),
                   wordToFind: _wordToFind,
                   activeRow: 0,
                 ),

@@ -8,29 +8,38 @@ class WordRow extends StatelessWidget {
 
   static var i = -1;
 
-  String decide(List<String> words, String givenLetter, int i) {
-    final letterToFind = words[i];
+  String decide(List<String> word, String givenLetter, int i) {
+    final letterToFind = word[i];
     if (letterToFind == givenLetter) {
       return 'good_position';
-    } else if (words.contains(givenLetter)) {
+    } else if (word.contains(givenLetter)) {
       return 'wrong_position';
     } else {
       return 'not_in_word';
     }
   }
 
-  Color getColor(String result) {
+  Color associateColor(String result, int i) {
     if (result == 'good_position') {
-      return Colors.red;
+      return goodPositionColor;
     } else if (result == 'wrong_position') {
-      return Colors.orange;
+      return wrongPositionColor;
     } else {
-      return defaultColor();
+      return defaultColor;
     }
   }
 
-  Color defaultColor() {
-    return Colors.blue;
+  static const Color defaultColor = Colors.blue;
+  static const Color goodPositionColor = Colors.green;
+  static const Color wrongPositionColor = Colors.orange;
+
+  Color getColor(
+      List<String> wordToFind, List<String> word, String letter, int pos) {
+    return (pos == 0 && word[0] == wordToFind[0])
+        ? goodPositionColor
+        : validateRow
+            ? associateColor(decide(wordToFind, letter, pos), pos)
+            : defaultColor;
   }
 
   const WordRow(
@@ -42,23 +51,22 @@ class WordRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    i = 0;
+    i = -1;
     final screenWidth = MediaQuery.of(context).size.width;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: word.map((String letter) {
-        final color = validateRow
-            ? getColor(decide(wordToFind, letter, i))
-            : defaultColor();
         i++;
         return Column(
           children: [
             AnimatedContainer(
                 duration: const Duration(seconds: 1),
-                color: color,
+                color: getColor(wordToFind, word, letter, i),
                 width: (screenWidth / wordToFind.length) - 10,
                 height: screenWidth / wordToFind.length - 10,
-                child: Text(letter)),
+                child: Center(
+                  child: Text(letter),
+                )),
           ],
         );
       }).toList(),
