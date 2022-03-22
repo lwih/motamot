@@ -34,6 +34,8 @@ class _DailyPageState extends State<DailyPage> {
       developer.log(key);
       _validation = '';
       if (_finished) {
+      } else if (_wordInProgress.length == _wordToFind.length &&
+          key != 'enter') {
       } else if (key == 'delete' && _wordInProgress.isNotEmpty) {
         _wordInProgress =
             _wordInProgress.substring(0, _wordInProgress.length - 1);
@@ -77,7 +79,10 @@ class _DailyPageState extends State<DailyPage> {
             mainAxisSize: MainAxisSize.max,
             children: [
               Center(
-                child: Text('FINISHED: $_finished'),
+                child: Text('word: $_wordToFind'),
+              ),
+              Center(
+                child: Text('finished: $_finished'),
               ),
               Center(
                 child: WordGrid(

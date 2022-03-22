@@ -10,15 +10,20 @@ class WordGrid extends StatelessWidget {
   final String wordToFind;
   final int activeRow;
 
+  bool hasAnyRowLeft() {
+    return numberOfRows - words.length > 0;
+  }
+
   List<String> createUntouchedRows() {
+    List<String> rows = [];
     final int amountOfRowsLeft = numberOfRows - words.length - 1;
+
     final int wordLength = wordToFind.length;
     String fakeEmptyWorld = '';
     for (var i = 0; i < wordLength; i++) {
       fakeEmptyWorld = '$fakeEmptyWorld-';
     }
 
-    List<String> rows = [];
     for (var i = 0; i < amountOfRowsLeft; i++) {
       rows.add(fakeEmptyWorld);
     }
@@ -54,11 +59,13 @@ class WordGrid extends StatelessWidget {
           validateRow: true,
         );
       }).toList(),
-      WordRow(
-        word: withWhiteSpace(wordInProgress, wordToFind.length).split(''),
-        wordToFind: wordToFind.split(''),
-        validateRow: false,
-      ),
+      hasAnyRowLeft()
+          ? WordRow(
+              word: withWhiteSpace(wordInProgress, wordToFind.length).split(''),
+              wordToFind: wordToFind.split(''),
+              validateRow: false,
+            )
+          : Column(),
       ...createUntouchedRows().map((String emptyWord) {
         return WordRow(
           word: emptyWord.split(''),
