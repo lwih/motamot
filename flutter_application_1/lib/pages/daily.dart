@@ -21,27 +21,43 @@ class DailyPage extends StatefulWidget {
   State<DailyPage> createState() => _DailyPageState();
 }
 
-class _DailyPageState extends State<DailyPage> {
+class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
   final String _wordToFind = 'prout';
   String firstLetter = 'p';
   String _wordInProgress = 'p';
   final List<String> _words = [];
   String _validation = '';
   bool _finished = false;
+  late AnimationController animationController;
 
-  void _onChooseKey(String key) {
-    setState(() {
-      developer.log(key);
-      _validation = '';
-      if (_finished) {
-      } else if (_wordInProgress.length == _wordToFind.length &&
-          !(key == 'enter' || key == 'delete')) {
-      } else if (key == 'delete' && _wordInProgress.isNotEmpty) {
+  void _onChooseKey(String key) async {
+    developer.log(key);
+
+    if (_finished) {
+      return;
+    } else if (key != 'enter' && _wordInProgress.length == _wordToFind.length) {
+      return;
+    }
+
+    if (key == 'delete' && _wordInProgress.isNotEmpty) {
+      return setState(() {
         _wordInProgress =
             _wordInProgress.substring(0, _wordInProgress.length - 1);
-      } else if (key == 'enter') {
-        if (wordHasCorrectLength(_wordToFind, _wordInProgress) &&
-            wordIsAcceptable(_wordInProgress)) {
+      });
+    }
+
+    if (key == 'enter') {
+      // incorrect length
+      if (_wordInProgress.length != _wordToFind.length) {
+        return setState(() {
+          _validation = 'word not acceptable';
+        });
+      }
+
+      if (wordIsAcceptable(_wordInProgress)) {
+        await _playAnimation();
+
+        return setState(() {
           _words.add(_wordInProgress);
           _wordInProgress = firstLetter;
 
@@ -49,13 +65,40 @@ class _DailyPageState extends State<DailyPage> {
             _finished = true;
             _wordInProgress = '';
           }
-        } else {
-          _validation = 'word not acceptable';
-        }
-      } else if (key != 'delete' && key != 'enter') {
-        _wordInProgress = '$_wordInProgress$key';
+        });
       }
-    });
+    }
+
+    if (key != 'delete' && key != 'enter') {
+      setState(() {
+        _wordInProgress = '$_wordInProgress$key';
+      });
+    }
+  }
+
+  Future<void> _playAnimation() async {
+    try {
+      await animationController.forward().orCancel;
+      animationController.reset();
+    } on TickerCanceled {
+      // the animation got canceled, probably because we were disposed
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
   }
 
   String hints(String wordToFind, List<String> words) {
@@ -105,6 +148,7 @@ class _DailyPageState extends State<DailyPage> {
               ),
               Center(
                 child: WordGrid(
+                  animationController: animationController,
                   numberOfRows: 6,
                   firstLetter: _wordToFind.substring(0, 1),
                   words: _words,

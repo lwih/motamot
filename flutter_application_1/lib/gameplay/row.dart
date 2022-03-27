@@ -57,17 +57,11 @@ class WordRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: word.map((String letter) {
         i++;
-        return Column(
-          children: [
-            AnimatedContainer(
-                duration: const Duration(seconds: 1),
-                color: getColor(wordToFind, word, letter, i),
-                width: (screenWidth / wordToFind.length) - 10,
-                height: screenWidth / wordToFind.length - 10,
-                child: Center(
-                  child: Text(letter),
-                )),
-          ],
+        return Container(
+          color: getColor(wordToFind, word, letter, i),
+          width: (screenWidth / wordToFind.length) - 10,
+          height: screenWidth / wordToFind.length - 10,
+          child: Text(letter),
         );
       }).toList(),
     );

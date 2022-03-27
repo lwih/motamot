@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_application_1/gameplay/animated_row.dart';
 import 'package:flutter_application_1/gameplay/row.dart';
 
 @immutable
@@ -11,47 +12,34 @@ class WordGrid extends StatelessWidget {
   final String hints;
   final bool showHints;
   final int activeRow;
+  final AnimationController animationController;
 
   bool hasAnyRowLeft() {
     return numberOfRows - words.length > 0;
   }
 
   List<String> createUntouchedRows() {
-    List<String> rows = [];
+    final List<String> rows = [];
     final int amountOfRowsLeft = numberOfRows - words.length - 1;
-
-    final int wordLength = wordToFind.length;
-    String fakeEmptyWorld = '';
-    for (var i = 0; i < wordLength; i++) {
-      fakeEmptyWorld = '$fakeEmptyWorld-';
-    }
-
+    String fakeEmptyWorld = ''.padRight(wordToFind.length, '-');
     for (var i = 0; i < amountOfRowsLeft; i++) {
       rows.add(fakeEmptyWorld);
     }
     return rows;
   }
 
-  String withWhiteSpace(String wordInProgress, int desiredLength) {
-    final int currentLength = wordInProgress.length;
-    String wordWithSpaces = wordInProgress;
-    for (var i = 0; i < desiredLength - currentLength; i++) {
-      wordWithSpaces = '$wordWithSpaces ';
-    }
-    return wordWithSpaces;
-  }
-
-  const WordGrid(
-      {required this.numberOfRows,
-      required this.firstLetter,
-      required this.words,
-      required this.wordInProgress,
-      required this.wordToFind,
-      required this.hints,
-      required this.showHints,
-      required this.activeRow,
-      Key? key})
-      : super(key: key);
+  const WordGrid({
+    required this.numberOfRows,
+    required this.firstLetter,
+    required this.words,
+    required this.wordInProgress,
+    required this.wordToFind,
+    required this.activeRow,
+    required this.hints,
+    required this.showHints,
+    required this.animationController,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -64,12 +52,10 @@ class WordGrid extends StatelessWidget {
         );
       }).toList(),
       hasAnyRowLeft()
-          ? WordRow(
-              word: showHints
-                  ? hints.split('')
-                  : withWhiteSpace(wordInProgress, wordToFind.length).split(''),
-              wordToFind: wordToFind.split(''),
-              validateRow: showHints,
+          ? AnimatedWordRow(
+              controller: animationController,
+              wordToFind: wordToFind,
+              word: wordInProgress.padRight(wordToFind.length, '-'),
             )
           : Column(),
       ...createUntouchedRows().map((String emptyWord) {
