@@ -21,7 +21,7 @@ class WordGrid extends StatelessWidget {
   List<String> createUntouchedRows() {
     final List<String> rows = [];
     final int amountOfRowsLeft = numberOfRows - words.length - 1;
-    String fakeEmptyWorld = ''.padRight(wordToFind.length, '-');
+    String fakeEmptyWorld = ''.padRight(wordToFind.length, ' ');
     for (var i = 0; i < amountOfRowsLeft; i++) {
       rows.add(fakeEmptyWorld);
     }
@@ -55,7 +55,9 @@ class WordGrid extends StatelessWidget {
           ? AnimatedWordRow(
               controller: animationController,
               wordToFind: wordToFind,
-              word: wordInProgress.padRight(wordToFind.length, '-'),
+              word: showHints
+                  ? hints
+                  : wordInProgress.padRight(wordToFind.length, ' '),
             )
           : Column(),
       ...createUntouchedRows().map((String emptyWord) {

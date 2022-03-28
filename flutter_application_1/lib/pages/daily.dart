@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/design.dart';
 import 'package:flutter_application_1/gameplay/grid.dart';
 import 'package:flutter_application_1/gameplay/keyboard.dart';
 import 'dart:developer' as developer;
@@ -22,9 +23,9 @@ class DailyPage extends StatefulWidget {
 }
 
 class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
-  final String _wordToFind = 'prout';
-  String firstLetter = 'p';
-  String _wordInProgress = 'p';
+  final String _wordToFind = 'excessif';
+  String firstLetter = 'e';
+  String _wordInProgress = 'e';
   final List<String> _words = [];
   String _validation = '';
   bool _finished = false;
@@ -129,44 +130,58 @@ class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+        backgroundColor: CustomColors.backgroundColor,
         appBar: AppBar(
           // Here we take the value from the DailyPage object that was created by
           // the App.build method, and use it to set our appbar title.
-          title: const Text('TITLE'),
+          title: const Text('Le mot du jour'),
+          backgroundColor: CustomColors.backgroundColor,
         ),
         body: Container(
           margin: const EdgeInsets.all(20),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.max,
             children: [
-              Center(
-                child: Text('word: $_wordToFind'),
-              ),
-              Center(
-                child: Text('finished: $_finished'),
-              ),
-              Center(
-                child: WordGrid(
-                  animationController: animationController,
-                  numberOfRows: 6,
-                  firstLetter: _wordToFind.substring(0, 1),
-                  words: _words,
-                  wordInProgress: _wordInProgress,
-                  hints: hints(_wordToFind, _words),
-                  showHints: showHints(_wordToFind, _wordInProgress, _words),
-                  wordToFind: _wordToFind,
-                  activeRow: 0,
+              // Center(
+              //   child: Text('word: $_wordToFind'),
+              // ),
+              // Center(
+              //   child: Text('finished: $_finished'),
+              // ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: Center(
+                  child: WordGrid(
+                    animationController: animationController,
+                    numberOfRows: 6,
+                    firstLetter: _wordToFind.substring(0, 1),
+                    words: _words,
+                    wordInProgress: _wordInProgress,
+                    hints: hints(_wordToFind, _words),
+                    showHints: showHints(_wordToFind, _wordInProgress, _words),
+                    wordToFind: _wordToFind,
+                    activeRow: 0,
+                  ),
                 ),
               ),
-              Center(
+              Align(
+                alignment: Alignment.bottomCenter,
                 child: Keyboard(
                   chooseKey: _onChooseKey,
                 ),
               ),
-              Center(
-                child: Text(_validation),
-              ),
+              // Center(
+              //   child: Align(
+              //     alignment: Alignment.bottomCenter,
+              //     child: Keyboard(
+              //       chooseKey: _onChooseKey,
+              //     ),
+              //   ),
+              // ),
+              // Center(
+              //   child: Text(_validation),
+              // ),
             ],
           ),
         ));

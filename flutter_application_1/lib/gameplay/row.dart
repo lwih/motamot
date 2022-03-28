@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/design.dart';
+import 'package:flutter_application_1/utils.dart';
 
 @immutable
 class WordRow extends StatelessWidget {
@@ -19,27 +21,23 @@ class WordRow extends StatelessWidget {
     }
   }
 
-  Color associateColor(String result, int i) {
-    if (result == 'good_position') {
-      return goodPositionColor;
-    } else if (result == 'wrong_position') {
-      return wrongPositionColor;
-    } else {
-      return defaultColor;
-    }
-  }
-
-  static const Color defaultColor = Colors.blue;
-  static const Color goodPositionColor = Colors.green;
-  static const Color wrongPositionColor = Colors.orange;
-
   Color getColor(
       List<String> wordToFind, List<String> word, String letter, int pos) {
+    final statuses = getColorMapCorrection(wordToFind.join(''), word.join(''));
+    final list = List.generate(wordToFind.length, (i) {
+      if (statuses[i] == WordValidationStatus.goodPosition) {
+        return CustomColors.rightPosition;
+      } else if (statuses[i] == WordValidationStatus.wrongPosition) {
+        return CustomColors.wrongPosition;
+      } else {
+        return CustomColors.notInWord;
+      }
+    });
     return (pos == 0 && word[0] == wordToFind[0])
-        ? goodPositionColor
+        ? CustomColors.rightPosition
         : validateRow
-            ? associateColor(decide(wordToFind, letter, pos), pos)
-            : defaultColor;
+            ? list[pos]
+            : CustomColors.notInWord;
   }
 
   const WordRow(
@@ -57,11 +55,20 @@ class WordRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: word.map((String letter) {
         i++;
-        return Container(
-          color: getColor(wordToFind, word, letter, i),
-          width: (screenWidth / wordToFind.length) - 10,
-          height: screenWidth / wordToFind.length - 10,
-          child: Text(letter),
+        return Padding(
+          padding: const EdgeInsets.all(1),
+          child: Container(
+            color: getColor(wordToFind, word, letter, i),
+            width: (screenWidth / wordToFind.length) - 10,
+            height: screenWidth / wordToFind.length - 10,
+            child: Center(
+              child: Text(
+                letter.toUpperCase(),
+                style: const TextStyle(
+                    color: CustomColors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
         );
       }).toList(),
     );

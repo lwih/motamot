@@ -120,5 +120,18 @@ void main() {
       final actualResult = getColorMapCorrection(wordToFind, givenWord);
       expect(actualResult, expectedResult);
     });
+    test('peeti - pomte - [oxxou]', () {
+      const wordToFind = 'peeti';
+      const givenWord = 'pomte';
+      final expectedResult = [
+        WordValidationStatus.goodPosition,
+        WordValidationStatus.notInWord,
+        WordValidationStatus.notInWord,
+        WordValidationStatus.goodPosition,
+        WordValidationStatus.wrongPosition
+      ];
+      final actualResult = getColorMapCorrection(wordToFind, givenWord);
+      expect(actualResult, expectedResult);
+    });
   });
 }

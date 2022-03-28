@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/design.dart';
+import 'package:flutter_application_1/utils.dart';
 
 class AnimatedWordRow extends StatelessWidget {
   final AnimationController controller;
@@ -23,7 +25,7 @@ class AnimatedWordRow extends StatelessWidget {
     return List.generate(
       letterColors.length,
       (i) => ColorTween(
-        begin: LetterColors.notInWord,
+        begin: CustomColors.notInWord,
         end: letterColors[i],
       ).animate(
         CurvedAnimation(
@@ -48,7 +50,13 @@ class AnimatedWordRow extends StatelessWidget {
         color: animations[i].value,
         width: size,
         height: size,
-        child: Text(word[i]),
+        child: Center(
+          child: Text(
+            word[i].toUpperCase(),
+            style: const TextStyle(
+                color: CustomColors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
       );
     };
   }
@@ -59,9 +67,12 @@ class AnimatedWordRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         word.length,
-        (i) => AnimatedBuilder(
-          animation: controller,
-          builder: _buildLetterAnimation(i),
+        (i) => Padding(
+          padding: const EdgeInsets.all(1),
+          child: AnimatedBuilder(
+            animation: controller,
+            builder: _buildLetterAnimation(i),
+          ),
         ),
       ),
     );
@@ -69,20 +80,15 @@ class AnimatedWordRow extends StatelessWidget {
 }
 
 class LetterColors {
-  static const notInWord = Colors.blue;
-  static const rightPosition = Colors.green;
-  static const wrongPosition = Colors.orange;
-
   static List<Color> listColors(String word, String wordToFind) {
+    final statuses = getColorMapCorrection(wordToFind, word);
     return List.generate(wordToFind.length, (i) {
-      final letterToFind = wordToFind[i];
-      final letterOfWord = word[i];
-      if (letterToFind == letterOfWord) {
-        return rightPosition;
-      } else if (wordToFind.contains(letterOfWord)) {
-        return wrongPosition;
+      if (statuses[i] == WordValidationStatus.goodPosition) {
+        return CustomColors.rightPosition;
+      } else if (statuses[i] == WordValidationStatus.wrongPosition) {
+        return CustomColors.wrongPosition;
       } else {
-        return notInWord;
+        return CustomColors.notInWord;
       }
     });
   }
