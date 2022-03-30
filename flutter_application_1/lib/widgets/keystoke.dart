@@ -3,9 +3,14 @@ import 'package:flutter_application_1/design.dart';
 
 class Keystroke extends StatelessWidget {
   final String keyStroke;
+  final Color background;
   final void Function()? onPressed;
 
-  const Keystroke({required this.keyStroke, required this.onPressed, Key? key})
+  const Keystroke(
+      {required this.keyStroke,
+      required this.background,
+      required this.onPressed,
+      Key? key})
       : super(key: key);
 
   @override
@@ -31,7 +36,7 @@ class Keystroke extends StatelessWidget {
         child: Text(keyStroke),
       ),
       style: ElevatedButton.styleFrom(
-        primary: CustomColors.notInWord,
+        primary: background,
         // onPrimary: Colors.white,
         // shadowColor: Colors.greenAccent,
         elevation: 3,

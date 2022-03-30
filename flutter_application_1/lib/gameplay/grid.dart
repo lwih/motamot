@@ -11,7 +11,6 @@ class WordGrid extends StatelessWidget {
   final String wordToFind;
   final String hints;
   final bool showHints;
-  final int activeRow;
   final AnimationController animationController;
 
   bool hasAnyRowLeft() {
@@ -34,7 +33,6 @@ class WordGrid extends StatelessWidget {
     required this.words,
     required this.wordInProgress,
     required this.wordToFind,
-    required this.activeRow,
     required this.hints,
     required this.showHints,
     required this.animationController,

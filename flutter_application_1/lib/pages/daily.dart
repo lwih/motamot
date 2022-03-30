@@ -1,10 +1,57 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+import 'dart:developer';
+import 'package:flutter/services.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/DatabaseHandler.dart';
 import 'package:flutter_application_1/design.dart';
 import 'package:flutter_application_1/gameplay/grid.dart';
 import 'package:flutter_application_1/gameplay/keyboard.dart';
-import 'dart:developer' as developer;
-
 import 'package:flutter_application_1/utils.dart';
+
+dbStuff() async {
+  var databasesPath = await getDatabasesPath();
+  var path = join(databasesPath, "lol.db");
+
+  // Check if the database exists
+  var exists = await databaseExists(path);
+
+  if (!exists) {
+    // Should happen only the first time you launch your application
+    log("Creating new copy from asset");
+
+    // Make sure the parent directory exists
+    try {
+      await Directory(dirname(path)).create(recursive: true);
+    } catch (_) {
+      log('error parent directory' + _.toString());
+    }
+
+    // Copy from asset
+    ByteData data = await rootBundle.load(join("assets", "motus.db"));
+    List<int> bytes =
+        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+    // Write and flush the bytes written
+    await File(path).writeAsBytes(bytes, flush: true);
+  } else {
+    log("Opening existing database");
+  }
+  // open the database
+  var db = await openDatabase(path, readOnly: true, version: 3);
+  log(db.path);
+  var bite = await db.rawQuery(
+      "SELECT name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%';");
+  log('ok');
+  // final List<Map<String, dynamic>> maps = await db.rawQuery(
+  //   "SELECT * FROM lemme ORDER BY RANDOM() LIMIT 1",
+  // );
+  // log('ok');
+}
 
 class DailyPage extends StatefulWidget {
   const DailyPage({Key? key}) : super(key: key);
@@ -23,20 +70,46 @@ class DailyPage extends StatefulWidget {
 }
 
 class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
-  final String _wordToFind = 'excessif';
-  String firstLetter = 'e';
-  String _wordInProgress = 'e';
+  late String _wordToFind;
+  late String _firstLetter;
+  late String _wordInProgress = 'e';
   final List<String> _words = [];
   String _validation = '';
   bool _finished = false;
   late AnimationController animationController;
 
-  void _onChooseKey(String key) async {
-    developer.log(key);
+  late DatabaseHandler handler;
 
+  @override
+  void initState() {
+    super.initState();
+    handler = DatabaseHandler('motus.db');
+
+    getDailyWord();
+
+    animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+  }
+
+  void getDailyWord() async {
+    final String word = await handler.retrieveDailyWorld();
+    setState(() {
+      _wordToFind = word;
+      _firstLetter = word.split('').first;
+      _wordInProgress = _firstLetter;
+    });
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
+  void _onChooseKey(String key) async {
     if (_finished) {
-      return;
-    } else if (key != 'enter' && _wordInProgress.length == _wordToFind.length) {
       return;
     }
 
@@ -55,22 +128,28 @@ class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
         });
       }
 
-      if (wordIsAcceptable(_wordInProgress)) {
+      bool wordExists = await handler.wordExists(_wordInProgress);
+
+      if (wordExists) {
         await _playAnimation();
 
         return setState(() {
           _words.add(_wordInProgress);
-          _wordInProgress = firstLetter;
+          _wordInProgress = _firstLetter;
 
-          if (_words.length == 6) {
+          if (_words.length == _wordToFind.length) {
             _finished = true;
             _wordInProgress = '';
           }
         });
+      } else {
+        _validation = 'mot non existant';
       }
     }
 
-    if (key != 'delete' && key != 'enter') {
+    if (key != 'delete' &&
+        key != 'enter' &&
+        _wordInProgress.length < _wordToFind.length) {
       setState(() {
         _wordInProgress = '$_wordInProgress$key';
       });
@@ -86,22 +165,6 @@ class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-
-    animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    );
-  }
-
-  @override
-  void dispose() {
-    animationController.dispose();
-    super.dispose();
-  }
-
   String hints(String wordToFind, List<String> words) {
     List<String> wordInProgress = List.generate(
         wordToFind.length, (index) => index == 0 ? wordToFind[0] : ' ');
@@ -113,13 +176,48 @@ class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
         }
       });
     }
-
     return wordInProgress.join('');
   }
 
   bool showHints(
           String wordToFind, String wordInProgress, List<String> words) =>
       wordInProgress[0] == wordToFind[0] && wordInProgress.length == 1;
+
+  List<String> getRightPositionKeys(String wordToFind, List<String> words) {
+    List<String> keys = [];
+    for (String word in words) {
+      word.split('').asMap().forEach((int pos, String letter) {
+        if (wordToFind[pos] == letter) {
+          keys.add(letter);
+        }
+      });
+    }
+    return keys;
+  }
+
+  List<String> getWrongPositionKeys(String wordToFind, List<String> words) {
+    List<String> keys = [];
+    for (String word in words) {
+      word.split('').asMap().forEach((int pos, String letter) {
+        if (wordToFind.contains(letter) && wordToFind[pos] != letter) {
+          keys.add(letter);
+        }
+      });
+    }
+    return keys;
+  }
+
+  List<String> getDisabledKeys(String wordToFind, List<String> words) {
+    List<String> keys = [];
+    for (String word in words) {
+      word.split('').asMap().forEach((int pos, String letter) {
+        if (!wordToFind.contains(letter)) {
+          keys.add(letter);
+        }
+      });
+    }
+    return keys;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +247,13 @@ class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
               // Center(
               //   child: Text('finished: $_finished'),
               // ),
+              Center(
+                child: Text(
+                  _validation,
+                  style: const TextStyle(
+                      color: CustomColors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
               Align(
                 alignment: Alignment.topCenter,
                 child: Center(
@@ -159,15 +264,19 @@ class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
                     words: _words,
                     wordInProgress: _wordInProgress,
                     hints: hints(_wordToFind, _words),
-                    showHints: showHints(_wordToFind, _wordInProgress, _words),
+                    showHints: _finished
+                        ? false
+                        : showHints(_wordToFind, _wordInProgress, _words),
                     wordToFind: _wordToFind,
-                    activeRow: 0,
                   ),
                 ),
               ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Keyboard(
+                  rightPositionKeys: getRightPositionKeys(_wordToFind, _words),
+                  wrongPositionKeys: getWrongPositionKeys(_wordToFind, _words),
+                  disableKeys: getDisabledKeys(_wordToFind, _words),
                   chooseKey: _onChooseKey,
                 ),
               ),
@@ -178,9 +287,6 @@ class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
               //       chooseKey: _onChooseKey,
               //     ),
               //   ),
-              // ),
-              // Center(
-              //   child: Text(_validation),
               // ),
             ],
           ),

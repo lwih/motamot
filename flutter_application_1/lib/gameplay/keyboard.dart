@@ -4,6 +4,9 @@ import 'package:flutter_application_1/widgets/keystoke.dart';
 
 @immutable
 class Keyboard extends StatelessWidget {
+  final List<String> rightPositionKeys;
+  final List<String> wrongPositionKeys;
+  final List<String> disableKeys;
   final ValueChanged<String> chooseKey;
 
   static final List<List<String>> layout = [
@@ -12,7 +15,25 @@ class Keyboard extends StatelessWidget {
     [' ', ' ', 'w', 'x', 'c', 'v', 'b', 'n', ' ', ' ']
   ];
 
-  const Keyboard({required this.chooseKey, Key? key}) : super(key: key);
+  const Keyboard(
+      {required this.chooseKey,
+      required this.rightPositionKeys,
+      required this.wrongPositionKeys,
+      required this.disableKeys,
+      Key? key})
+      : super(key: key);
+
+  Color getKeyColor(String key) {
+    if (rightPositionKeys.contains(key)) {
+      return CustomColors.rightPosition;
+    } else if (wrongPositionKeys.contains(key)) {
+      return CustomColors.wrongPosition;
+    } else if (disableKeys.contains(key)) {
+      return CustomColors.backgroundColor;
+    } else {
+      return CustomColors.notInWord;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +49,9 @@ class Keyboard extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(1),
                   child: Keystroke(
-                      onPressed: () => chooseKey(key), keyStroke: key),
+                      background: getKeyColor(key),
+                      onPressed: () => chooseKey(key),
+                      keyStroke: key),
                 ),
               );
             }).toList());
