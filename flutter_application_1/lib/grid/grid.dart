@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_application_1/gameplay/animated_row.dart';
-import 'package:flutter_application_1/gameplay/row.dart';
+import 'package:flutter_application_1/grid/animated_row.dart';
+import 'package:flutter_application_1/grid/row.dart';
 
 @immutable
 class WordGrid extends StatelessWidget {
@@ -53,6 +53,7 @@ class WordGrid extends StatelessWidget {
           ? AnimatedWordRow(
               controller: animationController,
               wordToFind: wordToFind,
+              showHints: showHints,
               word: showHints
                   ? hints
                   : wordInProgress.padRight(wordToFind.length, ' '),

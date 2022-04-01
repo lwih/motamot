@@ -1,9 +1,41 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+
+class Daily {
+  final String date;
+  final String word;
+  final bool? success;
+  final int? attempts;
+
+  Daily({
+    required this.date,
+    required this.word,
+    required this.success,
+    required this.attempts,
+  });
+
+  Daily.fromMap(Map<String, dynamic> res)
+      : date = res['date'],
+        word = res['word'],
+        success = res['success'] == 1
+            ? true
+            : res['success'] == 0
+                ? false
+                : null,
+        attempts = res['attempts'];
+
+  Map<String, Object?> toMap() {
+    return {
+      'date': date,
+      'word': word,
+      'success': success == true ? '1' : '0',
+      'attempts': attempts.toString()
+    };
+  }
+}
 
 class Lemme {
   final String lemme;
@@ -80,16 +112,49 @@ class DatabaseHandler {
     return db;
   }
 
-  Future<int> insertUser(List<Lemme> users) async {
-    int result = 0;
-    final Database db = await initializeDB();
-    for (var user in users) {
-      result = await db.insert('users', user.toMap());
-    }
-    return result;
+  Future<String> retrieveDailyWord(String date) async {
+    final Database db = await openDB();
+    final List<Map<String, Object?>> queryResult = await db.query(
+      'daily',
+      where: 'date = ?',
+      whereArgs: [date],
+      limit: 1,
+    );
+    await db.close();
+    return queryResult.map((e) => Daily.fromMap(e)).toList().first.word;
   }
 
-  Future<String> retrieveDailyWorld() async {
+  Future<bool> dailyHasBeenPlayed(String date) async {
+    final Database db = await openDB();
+    final List<Map<String, Object?>> queryResult = await db.query(
+      'daily',
+      where: 'date = ?',
+      whereArgs: [date],
+    );
+    await db.close();
+    return queryResult.map((e) => Daily.fromMap(e)).toList().first.success !=
+        null;
+  }
+
+  Future<int> updateDailyResult(
+      {required String date,
+      required bool success,
+      required int attempts}) async {
+    final Database db = await openDB();
+    var update = await db.update(
+      'daily',
+      {
+        'success': success == true ? '1' : '0',
+        'attempts': attempts.toString(),
+      },
+      where: 'date = ?',
+      whereArgs: [date],
+    );
+    await db.close();
+    return update;
+  }
+
+  Future<String> retrieveRandomWord() async {
     final Database db = await openDB();
     final List<Map<String, Object?>> queryResult =
         await db.rawQuery('SELECT lemme FROM lemme ORDER BY RANDOM() LIMIT 1;');
@@ -98,8 +163,13 @@ class DatabaseHandler {
 
   Future<bool> wordExists(String word) async {
     final Database db = await openDB();
-    final List<Map<String, Object?>> queryResult = await db.query('word',
-        columns: ['word'], where: 'word = ?', whereArgs: [word]);
+    final List<Map<String, Object?>> queryResult = await db.query(
+      'word',
+      columns: ['word'],
+      where: 'word = ?',
+      whereArgs: [word],
+    );
+    await db.close();
     return queryResult.isNotEmpty;
   }
 }

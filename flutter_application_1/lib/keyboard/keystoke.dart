@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/design.dart';
+import 'package:flutter_application_1/design/design.dart';
 
 class Keystroke extends StatelessWidget {
   final String keyStroke;
@@ -37,6 +37,7 @@ class Keystroke extends StatelessWidget {
       ),
       style: ElevatedButton.styleFrom(
         primary: background,
+        padding: const EdgeInsets.all(1.0),
         // onPrimary: Colors.white,
         // shadowColor: Colors.greenAccent,
         elevation: 3,

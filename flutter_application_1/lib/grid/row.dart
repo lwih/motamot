@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/design.dart';
+import 'package:flutter_application_1/design/design.dart';
 import 'package:flutter_application_1/utils.dart';
 
 @immutable
@@ -10,17 +10,6 @@ class WordRow extends StatelessWidget {
 
   static var i = -1;
 
-  String decide(List<String> word, String givenLetter, int i) {
-    final letterToFind = word[i];
-    if (letterToFind == givenLetter) {
-      return 'good_position';
-    } else if (word.contains(givenLetter)) {
-      return 'wrong_position';
-    } else {
-      return 'not_in_word';
-    }
-  }
-
   Color getColor(
       List<String> wordToFind, List<String> word, String letter, int pos) {
     final statuses = getColorMapCorrection(wordToFind.join(''), word.join(''));
@@ -29,6 +18,9 @@ class WordRow extends StatelessWidget {
         return CustomColors.rightPosition;
       } else if (statuses[i] == WordValidationStatus.wrongPosition) {
         return CustomColors.wrongPosition;
+      } else if (statuses[i] == WordValidationStatus.notInWord ||
+          statuses[i] == WordValidationStatus.ignored) {
+        return CustomColors.backgroundColor;
       } else {
         return CustomColors.notInWord;
       }

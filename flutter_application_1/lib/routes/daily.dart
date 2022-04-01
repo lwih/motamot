@@ -1,60 +1,21 @@
 import 'dart:async';
-import 'dart:io';
-
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 import 'dart:developer';
-import 'package:flutter/services.dart';
+
+import 'package:flutter_application_1/grid/grid.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/DatabaseHandler.dart';
-import 'package:flutter_application_1/design.dart';
-import 'package:flutter_application_1/gameplay/grid.dart';
-import 'package:flutter_application_1/gameplay/keyboard.dart';
-import 'package:flutter_application_1/utils.dart';
+import 'package:flutter_application_1/design/design.dart';
+import 'package:flutter_application_1/keyboard/keyboard.dart';
+import 'package:flutter_application_1/modals/daily_results.dart';
+import 'package:flutter_application_1/routes/home.dart';
+import 'package:flutter_application_1/utils/date_utils.dart';
+import 'package:intl/intl.dart';
 
-dbStuff() async {
-  var databasesPath = await getDatabasesPath();
-  var path = join(databasesPath, "lol.db");
+import '../utils/date_utils.dart';
 
-  // Check if the database exists
-  var exists = await databaseExists(path);
-
-  if (!exists) {
-    // Should happen only the first time you launch your application
-    log("Creating new copy from asset");
-
-    // Make sure the parent directory exists
-    try {
-      await Directory(dirname(path)).create(recursive: true);
-    } catch (_) {
-      log('error parent directory' + _.toString());
-    }
-
-    // Copy from asset
-    ByteData data = await rootBundle.load(join("assets", "motus.db"));
-    List<int> bytes =
-        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-
-    // Write and flush the bytes written
-    await File(path).writeAsBytes(bytes, flush: true);
-  } else {
-    log("Opening existing database");
-  }
-  // open the database
-  var db = await openDatabase(path, readOnly: true, version: 3);
-  log(db.path);
-  var bite = await db.rawQuery(
-      "SELECT name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%';");
-  log('ok');
-  // final List<Map<String, dynamic>> maps = await db.rawQuery(
-  //   "SELECT * FROM lemme ORDER BY RANDOM() LIMIT 1",
-  // );
-  // log('ok');
-}
-
-class DailyPage extends StatefulWidget {
-  const DailyPage({Key? key}) : super(key: key);
+class DailyRoute extends StatefulWidget {
+  const DailyRoute({Key? key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -66,10 +27,10 @@ class DailyPage extends StatefulWidget {
   // always marked "final".
 
   @override
-  State<DailyPage> createState() => _DailyPageState();
+  State<DailyRoute> createState() => _DailyRouteState();
 }
 
-class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
+class _DailyRouteState extends State<DailyRoute> with TickerProviderStateMixin {
   late String _wordToFind;
   late String _firstLetter;
   late String _wordInProgress = 'e';
@@ -94,7 +55,8 @@ class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
   }
 
   void getDailyWord() async {
-    final String word = await handler.retrieveDailyWorld();
+    final String word = await handler.retrieveDailyWord(formattedToday());
+
     setState(() {
       _wordToFind = word;
       _firstLetter = word.split('').first;
@@ -106,54 +68,6 @@ class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
   void dispose() {
     animationController.dispose();
     super.dispose();
-  }
-
-  void _onChooseKey(String key) async {
-    if (_finished) {
-      return;
-    }
-
-    if (key == 'delete' && _wordInProgress.isNotEmpty) {
-      return setState(() {
-        _wordInProgress =
-            _wordInProgress.substring(0, _wordInProgress.length - 1);
-      });
-    }
-
-    if (key == 'enter') {
-      // incorrect length
-      if (_wordInProgress.length != _wordToFind.length) {
-        return setState(() {
-          _validation = 'word not acceptable';
-        });
-      }
-
-      bool wordExists = await handler.wordExists(_wordInProgress);
-
-      if (wordExists) {
-        await _playAnimation();
-
-        return setState(() {
-          _words.add(_wordInProgress);
-          _wordInProgress = _firstLetter;
-
-          if (_words.length == _wordToFind.length) {
-            _finished = true;
-            _wordInProgress = '';
-          }
-        });
-      } else {
-        _validation = 'mot non existant';
-      }
-    }
-
-    if (key != 'delete' &&
-        key != 'enter' &&
-        _wordInProgress.length < _wordToFind.length) {
-      setState(() {
-        _wordInProgress = '$_wordInProgress$key';
-      });
-    }
   }
 
   Future<void> _playAnimation() async {
@@ -221,6 +135,120 @@ class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    void _showOverlay(BuildContext context, {required bool success}) async {
+      // Declaring and Initializing OverlayState
+      // and OverlayEntry objects
+      var overlayState = Overlay.of(context);
+      // ignore: prefer_typing_uninitialized_variables
+      var overlayEntry;
+      overlayEntry = OverlayEntry(builder: (context) {
+        return DailyResults(
+            wordToFind: _wordToFind,
+            success: success,
+            shareResults: () {},
+            goHome: () {
+              overlayEntry.remove();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Home()),
+              );
+            });
+      });
+
+      // Inserting the OverlayEntry into the Overlay
+      overlayState?.insert(overlayEntry);
+    }
+
+    void _onChooseKey(String key) async {
+      if (_finished) {
+        return;
+      }
+
+      if (key == 'delete' && _wordInProgress.length > 1) {
+        return setState(() {
+          _wordInProgress =
+              _wordInProgress.substring(0, _wordInProgress.length - 1);
+          _validation = "";
+        });
+      }
+
+      if (key == 'enter') {
+        // incorrect length
+        if (_wordInProgress.length != _wordToFind.length) {
+          setState(() {
+            _validation = "Ce mot n'est pas correct.";
+          });
+        }
+
+        bool wordExists = await handler.wordExists(_wordInProgress);
+
+        if (wordExists) {
+          await _playAnimation();
+
+          if (_wordInProgress == _wordToFind) {
+            _showOverlay(context, success: true);
+            var a = await handler.updateDailyResult(
+              date: formattedToday(),
+              success: true,
+              attempts: (_words.length + 1),
+            );
+          } else {
+            if (_words.length == 5) {
+              _showOverlay(context, success: false);
+              var a = await handler.updateDailyResult(
+                date: formattedToday(),
+                success: false,
+                attempts: (_words.length + 1),
+              );
+              log('ok');
+            }
+          }
+
+          setState(() {
+            if (_wordInProgress == _wordToFind) {
+              _finished = true;
+              // _showOverlay(context, success: true);
+              // var a = await handler.updateDailyResult(
+              //   date: formattedToday(),
+              //   success: true,
+              //   attempts: (_words.length + 1),
+              // );
+              // log('ok');
+            } else {
+              _words.add(_wordInProgress);
+
+              if (_words.length == 6) {
+                _finished = true;
+                _wordInProgress = '';
+                // _showOverlay(context, success: false);
+                // var a = await handler.updateDailyResult(
+                //   date: formattedToday(),
+                //   success: false,
+                //   attempts: (_words.length + 1),
+                // );
+                // log('ok');
+              } else {
+                _wordInProgress = _firstLetter;
+              }
+            }
+          });
+        } else {
+          setState(() {
+            _validation = "Ce mot n'existe pas dans notre dictionnaire.";
+          });
+        }
+      }
+
+      if (key != 'delete' &&
+          key != 'enter' &&
+          _wordInProgress.length < _wordToFind.length) {
+        setState(() {
+          _validation = '';
+          _wordInProgress = '$_wordInProgress$key';
+        });
+      }
+    }
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -230,7 +258,7 @@ class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
     return Scaffold(
         backgroundColor: CustomColors.backgroundColor,
         appBar: AppBar(
-          // Here we take the value from the DailyPage object that was created by
+          // Here we take the value from the Daily object that was created by
           // the App.build method, and use it to set our appbar title.
           title: const Text('Le mot du jour'),
           backgroundColor: CustomColors.backgroundColor,
@@ -241,18 +269,8 @@ class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.max,
             children: [
-              // Center(
-              //   child: Text('word: $_wordToFind'),
-              // ),
-              // Center(
-              //   child: Text('finished: $_finished'),
-              // ),
               Center(
-                child: Text(
-                  _validation,
-                  style: const TextStyle(
-                      color: CustomColors.white, fontWeight: FontWeight.bold),
-                ),
+                child: Text('word: $_wordToFind'),
               ),
               Align(
                 alignment: Alignment.topCenter,
@@ -271,6 +289,13 @@ class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
                   ),
                 ),
               ),
+              Center(
+                child: Text(
+                  _validation,
+                  style: const TextStyle(
+                      color: CustomColors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Keyboard(
@@ -280,14 +305,6 @@ class _DailyPageState extends State<DailyPage> with TickerProviderStateMixin {
                   chooseKey: _onChooseKey,
                 ),
               ),
-              // Center(
-              //   child: Align(
-              //     alignment: Alignment.bottomCenter,
-              //     child: Keyboard(
-              //       chooseKey: _onChooseKey,
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ));

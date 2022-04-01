@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/design.dart';
+import 'package:flutter_application_1/design/design.dart';
 import 'package:flutter_application_1/utils.dart';
 
 class AnimatedWordRow extends StatelessWidget {
   final AnimationController controller;
   final String wordToFind;
   final String word;
+  final bool showHints;
 
   late final List<Animation> animations;
 
@@ -14,6 +15,7 @@ class AnimatedWordRow extends StatelessWidget {
     required this.controller,
     required this.wordToFind,
     required this.word,
+    required this.showHints,
   }) : super(key: key) {
     animations = _createAnimationSequence(controller);
   }
@@ -46,6 +48,11 @@ class AnimatedWordRow extends StatelessWidget {
     return (BuildContext context, Widget? child) {
       final screenWidth = MediaQuery.of(context).size.width;
       final size = (screenWidth / wordToFind.length) - 10;
+      var styles = (i != 0 && showHints)
+          ? const TextStyle(
+              color: CustomColors.hintText, fontWeight: FontWeight.bold)
+          : const TextStyle(
+              color: CustomColors.white, fontWeight: FontWeight.bold);
       return Container(
         color: animations[i].value,
         width: size,
@@ -53,8 +60,7 @@ class AnimatedWordRow extends StatelessWidget {
         child: Center(
           child: Text(
             word[i].toUpperCase(),
-            style: const TextStyle(
-                color: CustomColors.white, fontWeight: FontWeight.bold),
+            style: styles,
           ),
         ),
       );
@@ -87,6 +93,9 @@ class LetterColors {
         return CustomColors.rightPosition;
       } else if (statuses[i] == WordValidationStatus.wrongPosition) {
         return CustomColors.wrongPosition;
+      } else if (statuses[i] == WordValidationStatus.notInWord ||
+          statuses[i] == WordValidationStatus.ignored) {
+        return CustomColors.backgroundColor;
       } else {
         return CustomColors.notInWord;
       }
