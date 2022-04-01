@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/design/card-button.dart';
 import 'package:flutter_application_1/design/design.dart';
 import 'package:flutter_application_1/design/fade_route.dart';
 import 'package:flutter_application_1/routes/daily.dart';
 import 'package:flutter_application_1/routes/random.dart';
 import 'package:flutter_application_1/routes/sprint.dart';
 import 'package:flutter_application_1/routes/stats.dart';
+import 'package:flutter_application_1/storage/daily.dart';
 import 'package:flutter_application_1/utils/date_utils.dart';
 
 import '../storage/db-handler.dart';
@@ -20,8 +22,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) => FutureBuilder(
-        future: handler.dailyHasBeenPlayed(formattedToday()),
-        builder: (context, snapshot) {
+        future: handler.retrieveDailyChallenge(formattedToday()),
+        builder: (context, AsyncSnapshot<Daily> snapshot) {
           if (snapshot.hasData) {
             final hasBeenPlayed = snapshot.data;
             // Build the widget with data.
@@ -30,47 +32,60 @@ class _HomeState extends State<Home> {
                 body: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Center(
-                      child: ElevatedButton(
-                        child: const Text('random'),
-                        onPressed: () {
-                          Navigator.push(context,
-                              FadeRoute(page: const RandomWordRoute()));
-                        },
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Center(
+                        child: Image.asset('assets/logo.png'),
                       ),
                     ),
+                    // Center(
+                    //   child: CardButton(
+                    //     onTap: () {
+                    //       Navigator.push(context,
+                    //           FadeRoute(page: const RandomWordRoute()));
+                    //     },
+                    //     title: 'Mot Aléatoire',
+                    //     description: 'mot random',
+                    //   ),
+                    // ),
                     Center(
-                      child: ElevatedButton(
-                        child: const Text('daily'),
-                        onPressed: () {
-                          Navigator.push(
-                              context, FadeRoute(page: const DailyWordRoute()));
-                        },
-                        // hasBeenPlayed == true
-                        //     ? () {}
-                        //     : () {
-                        //         Navigator.push(context,
-                        // FadeRoute(page: const DailyWordRoute()));
-                        //       },
-                      ),
+                      child: CardButton(
+                          onTap: () {
+                            // hasBeenPlayed == true
+                            //     ? () {}
+                            //     : () {
+                            //         Navigator.push(context,
+                            // FadeRoute(page: const DailyWordRoute()));
+                            //       },
+                            Navigator.push(context,
+                                FadeRoute(page: const DailyWordRoute()));
+                          },
+                          title: 'Mot du jour',
+                          description:
+                              'Garder son cerveau en forme en trouvant le mot du jour.',
+                          next:
+                              snapshot.data?.success != null ? 'demain' : null,
+                          status: snapshot.data?.success),
                     ),
                     Center(
-                      child: ElevatedButton(
-                        child: const Text('sprint'),
-                        onPressed: () {
-                          Navigator.push(
-                              context, FadeRoute(page: const Sprint()));
-                        },
-                      ),
-                    ),
-                    Center(
-                      child: ElevatedButton(
-                        child: const Text('stats'),
-                        onPressed: () {
-                          Navigator.push(
-                              context, FadeRoute(page: const Stats()));
-                        },
-                      ),
+                      child: CardButton(
+                          onTap: () {
+                            // hasBeenPlayed == true
+                            //     ? () {}
+                            //     : () {
+                            //         Navigator.push(context,
+                            // FadeRoute(page: const DailyWordRoute()));
+                            //       },
+                            Navigator.push(
+                                context, FadeRoute(page: const Sprint()));
+                          },
+                          title: 'Sprint du dimanche',
+                          description:
+                              'Tous les dimanches, 5 minutes pour tout donner.',
+                          next: snapshot.data?.success != null
+                              ? 'dimanche'
+                              : null,
+                          status: snapshot.data?.success),
                     ),
                   ],
                 ));

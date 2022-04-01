@@ -61,17 +61,17 @@ class DatabaseHandler {
     return queryResult.map((e) => Daily.fromMap(e)).toList().first;
   }
 
-  Future<bool> dailyHasBeenPlayed(String date) async {
-    final Database db = await openDB();
-    final List<Map<String, Object?>> queryResult = await db.query(
-      'daily',
-      where: 'date = ?',
-      whereArgs: [date],
-    );
-    await db.close();
-    return queryResult.map((e) => Daily.fromMap(e)).toList().first.success !=
-        null;
-  }
+  // Future<bool> dailyHasBeenPlayed(String date) async {
+  //   final Database db = await openDB();
+  //   final List<Map<String, Object?>> queryResult = await db.query(
+  //     'daily',
+  //     where: 'date = ?',
+  //     whereArgs: [date],
+  //   );
+  //   await db.close();
+  //   return queryResult.map((e) => Daily.fromMap(e)).toList().first.success !=
+  //       null;
+  // }
 
   Future<int> updateDailyResult({
     required String date,
