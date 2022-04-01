@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/DatabaseHandler.dart';
+import 'package:flutter_application_1/storage/db-handler.dart';
 import 'package:flutter_application_1/routes/home.dart';
 
 Future<void> main() async {

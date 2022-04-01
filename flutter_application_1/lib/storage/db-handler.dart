@@ -1,73 +1,10 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_1/storage/daily.dart';
+import 'package:flutter_application_1/storage/lemme.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-
-class Daily {
-  final String date;
-  final String word;
-  final bool? success;
-  final int? attempts;
-
-  Daily({
-    required this.date,
-    required this.word,
-    required this.success,
-    required this.attempts,
-  });
-
-  Daily.fromMap(Map<String, dynamic> res)
-      : date = res['date'],
-        word = res['word'],
-        success = res['success'] == 1
-            ? true
-            : res['success'] == 0
-                ? false
-                : null,
-        attempts = res['attempts'];
-
-  Map<String, Object?> toMap() {
-    return {
-      'date': date,
-      'word': word,
-      'success': success == true ? '1' : '0',
-      'attempts': attempts.toString()
-    };
-  }
-}
-
-class Lemme {
-  final String lemme;
-
-  Lemme({
-    required this.lemme,
-  });
-
-  Lemme.fromMap(Map<String, dynamic> res) : lemme = res["lemme"];
-
-  Map<String, Object?> toMap() {
-    return {
-      'lemme': lemme,
-    };
-  }
-}
-
-class Word {
-  final String word;
-
-  Word({
-    required this.word,
-  });
-
-  Word.fromMap(Map<String, dynamic> res) : word = res["word"];
-
-  Map<String, Object?> toMap() {
-    return {
-      'word': word,
-    };
-  }
-}
 
 class DatabaseHandler {
   late String dbName;
@@ -112,7 +49,7 @@ class DatabaseHandler {
     return db;
   }
 
-  Future<String> retrieveDailyWord(String date) async {
+  Future<Daily> retrieveDailyChallenge(String date) async {
     final Database db = await openDB();
     final List<Map<String, Object?>> queryResult = await db.query(
       'daily',
@@ -121,7 +58,7 @@ class DatabaseHandler {
       limit: 1,
     );
     await db.close();
-    return queryResult.map((e) => Daily.fromMap(e)).toList().first.word;
+    return queryResult.map((e) => Daily.fromMap(e)).toList().first;
   }
 
   Future<bool> dailyHasBeenPlayed(String date) async {
@@ -136,16 +73,30 @@ class DatabaseHandler {
         null;
   }
 
-  Future<int> updateDailyResult(
-      {required String date,
-      required bool success,
-      required int attempts}) async {
+  Future<int> updateDailyResult({
+    required String date,
+    required bool success,
+  }) async {
     final Database db = await openDB();
     var update = await db.update(
       'daily',
       {
         'success': success == true ? '1' : '0',
-        'attempts': attempts.toString(),
+      },
+      where: 'date = ?',
+      whereArgs: [date],
+    );
+    await db.close();
+    return update;
+  }
+
+  Future<int> updateDailyWordsInProgress(
+      {required String date, required List<String> words}) async {
+    final Database db = await openDB();
+    var update = await db.update(
+      'daily',
+      {
+        'words': words.join(','),
       },
       where: 'date = ?',
       whereArgs: [date],

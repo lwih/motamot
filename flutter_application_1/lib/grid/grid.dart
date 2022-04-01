@@ -11,6 +11,7 @@ class WordGrid extends StatelessWidget {
   final String wordToFind;
   final String hints;
   final bool showHints;
+  final bool finished;
   final AnimationController animationController;
 
   bool hasAnyRowLeft() {
@@ -19,7 +20,8 @@ class WordGrid extends StatelessWidget {
 
   List<String> createUntouchedRows() {
     final List<String> rows = [];
-    final int amountOfRowsLeft = numberOfRows - words.length - 1;
+    final int amountOfRowsLeft =
+        numberOfRows - words.length - 1 + (finished ? 1 : 0);
     String fakeEmptyWorld = ''.padRight(wordToFind.length, ' ');
     for (var i = 0; i < amountOfRowsLeft; i++) {
       rows.add(fakeEmptyWorld);
@@ -36,6 +38,7 @@ class WordGrid extends StatelessWidget {
     required this.hints,
     required this.showHints,
     required this.animationController,
+    required this.finished,
     Key? key,
   }) : super(key: key);
 
@@ -49,7 +52,7 @@ class WordGrid extends StatelessWidget {
           validateRow: true,
         );
       }).toList(),
-      hasAnyRowLeft()
+      !finished && hasAnyRowLeft()
           ? AnimatedWordRow(
               controller: animationController,
               wordToFind: wordToFind,

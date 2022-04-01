@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/design/design.dart';
+import 'package:flutter_application_1/design/fade_route.dart';
 import 'package:flutter_application_1/routes/daily.dart';
 import 'package:flutter_application_1/routes/random.dart';
 import 'package:flutter_application_1/routes/sprint.dart';
 import 'package:flutter_application_1/routes/stats.dart';
 import 'package:flutter_application_1/utils/date_utils.dart';
 
-import '../DatabaseHandler.dart';
+import '../storage/db-handler.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -33,26 +34,24 @@ class _HomeState extends State<Home> {
                       child: ElevatedButton(
                         child: const Text('random'),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Random()),
-                          );
+                          Navigator.push(context,
+                              FadeRoute(page: const RandomWordRoute()));
                         },
                       ),
                     ),
                     Center(
                       child: ElevatedButton(
                         child: const Text('daily'),
-                        onPressed: hasBeenPlayed == true
-                            ? () {}
-                            : () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const DailyRoute()),
-                                );
-                              },
+                        onPressed: () {
+                          Navigator.push(
+                              context, FadeRoute(page: const DailyWordRoute()));
+                        },
+                        // hasBeenPlayed == true
+                        //     ? () {}
+                        //     : () {
+                        //         Navigator.push(context,
+                        // FadeRoute(page: const DailyWordRoute()));
+                        //       },
                       ),
                     ),
                     Center(
@@ -60,10 +59,7 @@ class _HomeState extends State<Home> {
                         child: const Text('sprint'),
                         onPressed: () {
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Sprint()),
-                          );
+                              context, FadeRoute(page: const Sprint()));
                         },
                       ),
                     ),
@@ -72,10 +68,7 @@ class _HomeState extends State<Home> {
                         child: const Text('stats'),
                         onPressed: () {
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Stats()),
-                          );
+                              context, FadeRoute(page: const Stats()));
                         },
                       ),
                     ),
@@ -84,7 +77,10 @@ class _HomeState extends State<Home> {
           } else {
             // We can show the loading view until the data comes back.
             debugPrint('Step 1, build loading widget');
-            return const CircularProgressIndicator();
+            return Scaffold(
+              backgroundColor: CustomColors.backgroundColor,
+              body: Column(),
+            );
           }
         },
       );

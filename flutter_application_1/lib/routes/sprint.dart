@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/DatabaseHandler.dart';
+import 'package:flutter_application_1/storage/db-handler.dart';
 import 'package:flutter_application_1/design/design.dart';
 import 'package:flutter_application_1/grid/grid.dart';
 import 'package:flutter_application_1/keyboard/keyboard.dart';
@@ -206,23 +206,7 @@ class _SprintState extends State<Sprint> with TickerProviderStateMixin {
                       color: CustomColors.white, fontWeight: FontWeight.bold),
                 ),
               ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: Center(
-                  child: WordGrid(
-                    animationController: animationController,
-                    numberOfRows: 6,
-                    firstLetter: _wordToFind.substring(0, 1),
-                    words: _words,
-                    wordInProgress: _wordInProgress,
-                    hints: hints(_wordToFind, _words),
-                    showHints: _finished
-                        ? false
-                        : showHints(_wordToFind, _wordInProgress, _words),
-                    wordToFind: _wordToFind,
-                  ),
-                ),
-              ),
+
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Keyboard(
