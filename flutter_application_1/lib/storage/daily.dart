@@ -19,7 +19,7 @@ class Daily {
             : res['success'] == 0
                 ? false
                 : null,
-        words = res['words'].split(',');
+        words = res['words']?.split(',');
 
   Map<String, Object?> toMap() {
     return {

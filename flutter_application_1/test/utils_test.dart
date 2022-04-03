@@ -133,5 +133,19 @@ void main() {
       final actualResult = getColorMapCorrection(wordToFind, givenWord);
       expect(actualResult, expectedResult);
     });
+    test('expert - entier - [oxuxuu]', () {
+      const wordToFind = 'expert';
+      const givenWord = 'entier';
+      final expectedResult = [
+        WordValidationStatus.goodPosition,
+        WordValidationStatus.notInWord,
+        WordValidationStatus.wrongPosition,
+        WordValidationStatus.notInWord,
+        WordValidationStatus.wrongPosition,
+        WordValidationStatus.wrongPosition
+      ];
+      final actualResult = getColorMapCorrection(wordToFind, givenWord);
+      expect(actualResult, expectedResult);
+    });
   });
 }

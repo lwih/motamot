@@ -173,7 +173,10 @@ class _GameplayManagerState extends State<GameplayManager>
             _wordsInProgress.add(_wordInProgress);
 
             // custom behaviour optionally defined by parent widget
-            widget.onEnterWord!(words: _wordsInProgress);
+            if (widget.onEnterWord != null) {
+              widget.onEnterWord!(words: _wordsInProgress);
+            }
+
             if (_wordInProgress == widget.wordToFind) {
               _finished = true;
             } else {

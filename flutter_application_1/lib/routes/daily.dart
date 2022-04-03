@@ -103,7 +103,7 @@ class _DailyWordRouteState extends State<DailyWordRoute>
         future: handler.retrieveDailyChallenge(formattedToday()),
         builder: (context, AsyncSnapshot<Daily> snapshot) {
           if (snapshot.hasData) {
-            final dailyWord = snapshot.data?.word.toString();
+            final dailyWord = snapshot.data?.word.toString() ?? '';
             final List<String>? wordsInProgress = snapshot.data?.words;
             final bool finished = snapshot.data?.success != null;
             // Build the widget with data.
@@ -116,9 +116,9 @@ class _DailyWordRouteState extends State<DailyWordRoute>
                   backgroundColor: CustomColors.backgroundColor,
                 ),
                 body: Container(
-                  margin: const EdgeInsets.all(20),
+                  margin: EdgeInsets.all(dailyWord.length > 6 ? 10 : 30),
                   child: GameplayManager(
-                    wordToFind: dailyWord!,
+                    wordToFind: dailyWord,
                     wordsInProgress: wordsInProgress,
                     finished: finished,
                     onFinish: onFinish,

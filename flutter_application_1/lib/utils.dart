@@ -17,8 +17,8 @@ List<bool> positionsOfLetterInWord(List<String> word, String letter) {
   return matchingPositions;
 }
 
-bool letterIsWellPositionedSomewhereElse(List<String> wordToFind,
-    List<String> givenWord, String letter, int currentIndex) {
+List<bool> rightPositionsMap(List<String> wordToFind, List<String> givenWord,
+    String letter, int currentIndex) {
   List<bool> matchingPositions =
       List<bool>.generate(wordToFind.length, (index) => false);
   matchingPositions.asMap().forEach((i, value) {
@@ -29,10 +29,24 @@ bool letterIsWellPositionedSomewhereElse(List<String> wordToFind,
           !!(wordToFind[i] == letter && wordToFind[i] == givenWord[i]);
     }
   });
+  return matchingPositions;
+}
+
+bool letterIsWellPositionedSomewhereElse(List<String> wordToFind,
+    List<String> givenWord, String letter, int currentIndex) {
+  List<bool> matchingPositions =
+      rightPositionsMap(wordToFind, givenWord, letter, currentIndex);
 
   return matchingPositions.where((element) => element == true).isEmpty
       ? false
       : true;
+}
+
+int amountOfThisLetterInRightPosition(List<String> wordToFind,
+    List<String> givenWord, String letter, int currentIndex) {
+  List<bool> matchingPositions =
+      rightPositionsMap(wordToFind, givenWord, letter, currentIndex);
+  return matchingPositions.length;
 }
 
 List<WordValidationStatus> getColorMapCorrection(
@@ -90,8 +104,9 @@ List<WordValidationStatus> getColorMapCorrection(
           statusMap[i] = WordValidationStatus.ignored;
         }
       } else if (amountInWordToFind == amountInGivenWord) {
-        if (letterIsWellPositionedSomewhereElse(
-            wordtoFindLetters, givenWordLetters, letter, i)) {
+        if (amountOfThisLetterInRightPosition(
+                wordtoFindLetters, givenWordLetters, letter, i) ==
+            amountInWordToFind) {
           statusMap[i] = WordValidationStatus.ignored;
         } else {
           statusMap[i] = WordValidationStatus.wrongPosition;

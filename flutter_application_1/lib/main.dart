@@ -5,9 +5,9 @@ import 'package:flutter_application_1/routes/home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const Mouitus());
   var dbHandler = DatabaseHandler('motus.db');
   await dbHandler.initializeDB();
+  runApp(const Mouitus());
 }
 
 class Mouitus extends StatelessWidget {

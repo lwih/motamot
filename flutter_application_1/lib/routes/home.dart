@@ -24,7 +24,18 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) => FutureBuilder(
         future: handler.retrieveDailyChallenge(formattedToday()),
         builder: (context, AsyncSnapshot<Daily> snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasError) {
+            // ignore: todo
+            // TODO
+            return Scaffold(
+              backgroundColor: CustomColors.backgroundColor,
+              body: Column(
+                children: const [
+                  Text('error'),
+                ],
+              ),
+            );
+          } else if (snapshot.hasData) {
             final hasBeenPlayed = snapshot.data;
             // Build the widget with data.
             return Scaffold(
@@ -38,16 +49,16 @@ class _HomeState extends State<Home> {
                         child: Image.asset('assets/logo.png'),
                       ),
                     ),
-                    // Center(
-                    //   child: CardButton(
-                    //     onTap: () {
-                    //       Navigator.push(context,
-                    //           FadeRoute(page: const RandomWordRoute()));
-                    //     },
-                    //     title: 'Mot Aléatoire',
-                    //     description: 'mot random',
-                    //   ),
-                    // ),
+                    Center(
+                      child: CardButton(
+                        onTap: () {
+                          Navigator.push(context,
+                              FadeRoute(page: const RandomWordRoute()));
+                        },
+                        title: 'Mot Aléatoire',
+                        description: 'mot random',
+                      ),
+                    ),
                     Center(
                       child: CardButton(
                           onTap: () {

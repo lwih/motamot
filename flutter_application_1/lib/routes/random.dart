@@ -83,7 +83,7 @@ class _RandomWordRouteState extends State<RandomWordRoute>
         future: handler.retrieveRandomWord(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            final dailyWord = snapshot.data.toString();
+            final randomWord = snapshot.data.toString();
             // Build the widget with data.
             return Scaffold(
                 backgroundColor: CustomColors.backgroundColor,
@@ -94,9 +94,9 @@ class _RandomWordRouteState extends State<RandomWordRoute>
                   backgroundColor: CustomColors.backgroundColor,
                 ),
                 body: Container(
-                  margin: const EdgeInsets.all(20),
+                  margin: EdgeInsets.all(randomWord.length > 6 ? 10 : 30),
                   child: GameplayManager(
-                    wordToFind: dailyWord,
+                    wordToFind: randomWord,
                     finished: false,
                     onFinish: onFinish,
                   ),

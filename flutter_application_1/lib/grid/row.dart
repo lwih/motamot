@@ -43,6 +43,8 @@ class WordRow extends StatelessWidget {
   Widget build(BuildContext context) {
     i = -1;
     final screenWidth = MediaQuery.of(context).size.width;
+    final size = (screenWidth / wordToFind.length) - 10;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: word.map((String letter) {
@@ -51,13 +53,16 @@ class WordRow extends StatelessWidget {
           padding: const EdgeInsets.all(1),
           child: Container(
             color: getColor(wordToFind, word, letter, i),
-            width: (screenWidth / wordToFind.length) - 10,
-            height: screenWidth / wordToFind.length - 10,
+            width: size > 50 ? 50 : size,
+            height: size > 50 ? 50 : size,
             child: Center(
               child: Text(
                 letter.toUpperCase(),
-                style: const TextStyle(
-                    color: CustomColors.white, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: CustomColors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: wordToFind.length > 8 ? 16 : 20,
+                ),
               ),
             ),
           ),

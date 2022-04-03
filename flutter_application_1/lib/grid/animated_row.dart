@@ -49,14 +49,20 @@ class AnimatedWordRow extends StatelessWidget {
       final screenWidth = MediaQuery.of(context).size.width;
       final size = (screenWidth / wordToFind.length) - 10;
       var styles = (i != 0 && showHints)
-          ? const TextStyle(
-              color: CustomColors.hintText, fontWeight: FontWeight.bold)
-          : const TextStyle(
-              color: CustomColors.white, fontWeight: FontWeight.bold);
+          ? TextStyle(
+              color: CustomColors.hintText,
+              fontWeight: FontWeight.bold,
+              fontSize: wordToFind.length > 8 ? 16 : 20,
+            )
+          : TextStyle(
+              color: CustomColors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: wordToFind.length > 8 ? 16 : 20,
+            );
       return Container(
         color: animations[i].value,
-        width: size,
-        height: size,
+        width: size > 50 ? 50 : size,
+        height: size > 50 ? 50 : size,
         child: Center(
           child: Text(
             word[i].toUpperCase(),
