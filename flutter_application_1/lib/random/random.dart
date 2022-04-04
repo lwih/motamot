@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:flutter_application_1/gameplay/gameplay_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/storage/db-handler.dart';
-import 'package:flutter_application_1/design/design.dart';
+import 'package:flutter_application_1/ui/design.dart';
 import 'package:flutter_application_1/modals/daily_results.dart';
 
 class RandomWordRoute extends StatefulWidget {

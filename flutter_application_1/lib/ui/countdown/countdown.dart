@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_application_1/countdown/countdown_controller.dart';
+import 'countdown_controller.dart';
 
 String displayTime(double time) {
   int minutes = Duration(seconds: time.toInt()).inMinutes;

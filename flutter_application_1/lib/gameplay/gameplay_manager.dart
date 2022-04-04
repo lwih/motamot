@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/grid/grid.dart';
 import 'package:flutter_application_1/storage/db-handler.dart';
-import 'package:flutter_application_1/design/design.dart';
+import 'package:flutter_application_1/ui/design.dart';
 import 'package:flutter_application_1/keyboard/keyboard.dart';
 
 class GameplayManager extends StatefulWidget {

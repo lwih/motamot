@@ -1,9 +1,9 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_1/storage/daily.dart';
+import 'package:flutter_application_1/daily/daily_model.dart';
 import 'package:flutter_application_1/storage/lemme.dart';
-import 'package:flutter_application_1/storage/sprint.dart';
+import 'package:flutter_application_1/sprint/sprint_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 

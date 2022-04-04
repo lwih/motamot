@@ -2,20 +2,18 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/countdown/countdown.dart';
-import 'package:flutter_application_1/countdown/countdown_controller.dart';
-import 'package:flutter_application_1/design/fade_route.dart';
 import 'package:flutter_application_1/gameplay/gameplay_manager.dart';
-import 'package:flutter_application_1/modals/sprint_results.dart';
-import 'package:flutter_application_1/routes/home.dart';
-import 'package:flutter_application_1/storage/daily.dart';
+import 'package:flutter_application_1/sprint/sprint_results.dart';
+import 'package:flutter_application_1/home/home.dart';
 import 'package:flutter_application_1/storage/db-handler.dart';
-import 'package:flutter_application_1/design/design.dart';
-import 'package:flutter_application_1/modals/daily_results.dart';
-import 'package:flutter_application_1/storage/sprint.dart';
+import 'package:flutter_application_1/ui/design.dart';
+import 'package:flutter_application_1/sprint/sprint_model.dart';
 import 'package:flutter_application_1/utils.dart';
 import 'package:flutter_application_1/utils/date_utils.dart';
 
+import '../ui/countdown/countdown.dart';
+import '../ui/countdown/countdown_controller.dart';
+import '../ui/route/fade_route.dart';
 import '../utils/date_utils.dart';
 
 class SprintWordRoute extends StatefulWidget {

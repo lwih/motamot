@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/design/design.dart';
+import 'package:flutter_application_1/ui/design.dart';
 
 class Keystroke extends StatelessWidget {
   final String keyStroke;

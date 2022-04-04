@@ -3,13 +3,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/gameplay/gameplay_manager.dart';
-import 'package:flutter_application_1/storage/daily.dart';
+import 'package:flutter_application_1/daily/daily_model.dart';
 import 'package:flutter_application_1/storage/db-handler.dart';
-import 'package:flutter_application_1/design/design.dart';
-import 'package:flutter_application_1/modals/daily_results.dart';
+import 'package:flutter_application_1/ui/design.dart';
 import 'package:flutter_application_1/utils/date_utils.dart';
 
 import '../utils/date_utils.dart';
+import 'daily_results.dart';
 
 class DailyWordRoute extends StatefulWidget {
   final Daily daily;
