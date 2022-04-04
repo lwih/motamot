@@ -140,12 +140,14 @@ class DatabaseHandler {
   Future<int> updateSprintResult({
     required String date,
     required int score,
+    required int timeLeftInSeconds,
   }) async {
     final Database db = await openDB();
     var update = await db.update(
       'sprint',
       {
         'score': score,
+        'timeLeftInSeconds': timeLeftInSeconds,
       },
       where: 'date = ?',
       whereArgs: [date],

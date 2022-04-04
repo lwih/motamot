@@ -34,16 +34,16 @@ class _HomeState extends State<Home> {
                 child: Image.asset('assets/logo.png'),
               ),
             ),
-            Center(
-              child: CardButton(
-                onTap: () {
-                  Navigator.push(
-                      context, FadeRoute(page: const RandomWordRoute()));
-                },
-                title: 'Mot Aléatoire',
-                description: 'mot random',
-              ),
-            ),
+            // Center(
+            //   child: CardButton(
+            //     onTap: () {
+            //       Navigator.push(
+            //           context, FadeRoute(page: const RandomWordRoute()));
+            //     },
+            //     title: 'Mot Aléatoire',
+            //     description: 'mot random',
+            //   ),
+            // ),
             FutureBuilder(
               future: handler.retrieveDailyChallenge(formattedToday()),
               builder: (context, AsyncSnapshot<Daily> snapshot) {
@@ -82,13 +82,10 @@ class _HomeState extends State<Home> {
                     ),
                   );
                 } else {
-                  return Scaffold(
-                    backgroundColor: CustomColors.backgroundColor,
-                    body: Column(
-                      children: const [
-                        Text('loading'),
-                      ],
-                    ),
+                  return Column(
+                    children: const [
+                      Text('loading'),
+                    ],
                   );
                 }
               },
@@ -132,13 +129,10 @@ class _HomeState extends State<Home> {
                         status: snapshot.data?.score != null),
                   );
                 } else {
-                  return Scaffold(
-                    backgroundColor: CustomColors.backgroundColor,
-                    body: Column(
-                      children: const [
-                        Text('loading'),
-                      ],
-                    ),
+                  return Column(
+                    children: const [
+                      Text('loading'),
+                    ],
                   );
                 }
               },

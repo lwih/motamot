@@ -27,7 +27,7 @@ samples, guidance on mobile development, and a full API reference.
 - Sprint
 - Stats
 - Design
-- 
+- 5 free sprint games
 
 
 # Ops

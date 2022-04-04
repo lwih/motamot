@@ -4,8 +4,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/countdown/countdown.dart';
 import 'package:flutter_application_1/countdown/countdown_controller.dart';
+import 'package:flutter_application_1/design/fade_route.dart';
 import 'package:flutter_application_1/gameplay/gameplay_manager.dart';
 import 'package:flutter_application_1/modals/sprint_results.dart';
+import 'package:flutter_application_1/routes/home.dart';
 import 'package:flutter_application_1/storage/daily.dart';
 import 'package:flutter_application_1/storage/db-handler.dart';
 import 'package:flutter_application_1/design/design.dart';
@@ -136,7 +138,16 @@ class _SprintWordRouteState extends State<SprintWordRoute>
           shareResults: () {},
           goHome: () {
             overlayEntry.remove();
-            Navigator.pop(context);
+
+            // .pop() will not refresh the FutureBuilders in Home()
+            // pushAndRemoveUntil() make it word
+            Navigator.pushAndRemoveUntil(
+              context,
+              FadeRoute(
+                page: const Home(),
+              ),
+              (Route<dynamic> route) => false,
+            );
           });
     });
 
@@ -152,9 +163,7 @@ class _SprintWordRouteState extends State<SprintWordRoute>
       score: score,
     );
     var a = await handler.updateSprintResult(
-      date: formattedToday(),
-      score: score,
-    );
+        date: formattedToday(), score: score, timeLeftInSeconds: 0);
   }
 
   onFinishWord({
@@ -166,11 +175,11 @@ class _SprintWordRouteState extends State<SprintWordRoute>
       _currentWordToFind = nextWord;
       _currentWordsInProgress = [];
     });
-    // var a = await handler.updateSprintWordsInProgress(
-    //   date: formattedToday(),
-    //   words: _foundWords,
-    //   timeLeftInSeconds: _controller.timeLeftInSeconds,
-    // );
+    var a = await handler.updateSprintResult(
+      date: formattedToday(),
+      score: getFoundWords(widget.sprint.words, _allGivenWords).length,
+      timeLeftInSeconds: _controller.timeLeftInSeconds,
+    );
   }
 
   onEnterWord({required String word}) async {
@@ -187,80 +196,76 @@ class _SprintWordRouteState extends State<SprintWordRoute>
   }
 
   @override
-  Widget build(BuildContext context) => FutureBuilder(
-        future: handler.retrieveSprintChallenge(formattedToday()),
-        builder: (context, AsyncSnapshot<Sprint> snapshot) {
-          if (snapshot.hasData) {
-            final bool finished = snapshot.data?.score != null;
-            // Build the widget with data.
-            return Scaffold(
-                backgroundColor: CustomColors.backgroundColor,
-                appBar: AppBar(
-                  // Here we take the value from the Sprint object that was created by
-                  // the App.build method, and use it to set our appbar title.
-                  title: const Text('Sprint du dimanche'),
-                  backgroundColor: CustomColors.backgroundColor,
-                ),
-                body: Container(
-                    margin:
-                        EdgeInsets.all(_currentWordToFind.length > 6 ? 10 : 30),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Countdown(
-                              controller: _controller,
-                              seconds: _duration,
-                              build: (BuildContext context, double time) =>
-                                  Text(
-                                displayTime(time),
-                                style:
-                                    const TextStyle(color: CustomColors.white),
-                              ),
-                              interval: const Duration(seconds: 1),
-                              onFinished: () async {
-                                await onFinishGame();
-                              },
-                            ),
-                            ElevatedButton(
-                              child: const Text('Pause'),
-                              onPressed: () {
-                                onPause();
-                              },
-                            ),
-                          ],
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: CustomColors.backgroundColor,
+      appBar: AppBar(
+        // Here we take the value from the Sprint object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: const Text('Sprint du dimanche'),
+        backgroundColor: CustomColors.backgroundColor,
+      ),
+      body: Container(
+        margin: EdgeInsets.all(_currentWordToFind.length > 6 ? 10 : 30),
+        child: widget.sprint.timeLeftInSeconds == 0
+            ? Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('ITS FINISHED'),
+                  ),
+                ],
+              )
+            : Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Countdown(
+                        controller: _controller,
+                        seconds: _duration,
+                        build: (BuildContext context, double time) => Text(
+                          displayTime(time),
+                          style: const TextStyle(color: CustomColors.white),
                         ),
-                        _gamePaused
-                            ? SizedBox(
-                                height: MediaQuery.of(context).size.height / 2,
-                                child: Center(
-                                  child: ElevatedButton(
-                                    child: Text(_gamePaused &&
-                                            widget.sprint.timeLeftInSeconds ==
-                                                null
-                                        ? 'Démarrer'
-                                        : 'Reprendre'),
-                                    onPressed: () {
-                                      onStart();
-                                    },
-                                  ),
-                                ),
-                              )
-                            : GameplayManager(
-                                wordToFind: _currentWordToFind,
-                                wordsInProgress: _currentWordsInProgress,
-                                finished: false,
-                                onFinish: onFinishWord,
-                                onEnterWord: onEnterWord,
-                              ),
-                      ],
-                    )));
-          } else {
-            // We can show the loading view until the data comes back.
-            debugPrint('Step 1, build loading widget');
-            return const CircularProgressIndicator();
-          }
-        },
-      );
+                        interval: const Duration(seconds: 1),
+                        onFinished: () async {
+                          await onFinishGame();
+                        },
+                      ),
+                      ElevatedButton(
+                        child: const Text('Pause'),
+                        onPressed: () {
+                          onPause();
+                        },
+                      ),
+                    ],
+                  ),
+                  _gamePaused
+                      ? SizedBox(
+                          height: MediaQuery.of(context).size.height / 2,
+                          child: Center(
+                            child: ElevatedButton(
+                              child: Text(_gamePaused &&
+                                      widget.sprint.timeLeftInSeconds == null
+                                  ? 'Démarrer'
+                                  : 'Reprendre'),
+                              onPressed: () {
+                                onStart();
+                              },
+                            ),
+                          ),
+                        )
+                      : GameplayManager(
+                          wordToFind: _currentWordToFind,
+                          wordsInProgress: _currentWordsInProgress,
+                          finished: false,
+                          onFinish: onFinishWord,
+                          onEnterWord: onEnterWord,
+                        ),
+                ],
+              ),
+      ),
+    );
+  }
 }
