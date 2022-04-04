@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_1/storage/db-handler.dart';
 import 'package:flutter_application_1/routes/home.dart';
 
@@ -7,6 +8,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var dbHandler = DatabaseHandler('motus.db');
   await dbHandler.initializeDB();
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const Mouitus());
 }
 
