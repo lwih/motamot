@@ -12,7 +12,8 @@ import 'package:flutter_application_1/utils/date_utils.dart';
 import '../utils/date_utils.dart';
 
 class DailyWordRoute extends StatefulWidget {
-  const DailyWordRoute({Key? key}) : super(key: key);
+  final Daily daily;
+  const DailyWordRoute({required this.daily, Key? key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -33,6 +34,8 @@ class _DailyWordRouteState extends State<DailyWordRoute>
 
   late DatabaseHandler handler;
 
+  late List<String> _wordsInProgress;
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +45,10 @@ class _DailyWordRouteState extends State<DailyWordRoute>
       vsync: this,
       duration: const Duration(seconds: 2),
     );
+
+    setState(() {
+      _wordsInProgress = widget.daily.words ?? [];
+    });
   }
 
   Future<Daily> dailyChallenge() async {
@@ -91,45 +98,39 @@ class _DailyWordRouteState extends State<DailyWordRoute>
     );
   }
 
-  onEnterWord({required List<String> words}) async {
+  onEnterWord({required String word}) async {
+    final List<String> allWords = [..._wordsInProgress, word];
     var a = await handler.updateDailyWordsInProgress(
       date: formattedToday(),
-      words: words,
+      words: allWords,
     );
+    setState(() {
+      _wordsInProgress = allWords;
+    });
   }
 
   @override
-  Widget build(BuildContext context) => FutureBuilder(
-        future: handler.retrieveDailyChallenge(formattedToday()),
-        builder: (context, AsyncSnapshot<Daily> snapshot) {
-          if (snapshot.hasData) {
-            final dailyWord = snapshot.data?.word.toString() ?? '';
-            final List<String>? wordsInProgress = snapshot.data?.words;
-            final bool finished = snapshot.data?.success != null;
-            // Build the widget with data.
-            return Scaffold(
-                backgroundColor: CustomColors.backgroundColor,
-                appBar: AppBar(
-                  // Here we take the value from the Daily object that was created by
-                  // the App.build method, and use it to set our appbar title.
-                  title: const Text('Le mot du jour'),
-                  backgroundColor: CustomColors.backgroundColor,
-                ),
-                body: Container(
-                  margin: EdgeInsets.all(dailyWord.length > 6 ? 10 : 30),
-                  child: GameplayManager(
-                    wordToFind: dailyWord,
-                    wordsInProgress: wordsInProgress,
-                    finished: finished,
-                    onFinish: onFinish,
-                    onEnterWord: onEnterWord,
-                  ),
-                ));
-          } else {
-            // We can show the loading view until the data comes back.
-            debugPrint('Step 1, build loading widget');
-            return const CircularProgressIndicator();
-          }
-        },
-      );
+  Widget build(BuildContext context) {
+    final dailyWord = widget.daily.word.toString();
+    final bool finished = widget.daily.success != null;
+    // Build the widget with data.
+    return Scaffold(
+        backgroundColor: CustomColors.backgroundColor,
+        appBar: AppBar(
+          // Here we take the value from the Daily object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: const Text('Le mot du jour'),
+          backgroundColor: CustomColors.backgroundColor,
+        ),
+        body: Container(
+          margin: EdgeInsets.all(dailyWord.length > 6 ? 10 : 30),
+          child: GameplayManager(
+            wordToFind: dailyWord,
+            wordsInProgress: _wordsInProgress,
+            finished: finished,
+            onFinish: onFinish,
+            onEnterWord: onEnterWord,
+          ),
+        ));
+  }
 }

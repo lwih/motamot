@@ -13,7 +13,7 @@ class GameplayManager extends StatefulWidget {
     required String word,
     required bool success,
   }) onFinish;
-  final void Function({required List<String> words})? onEnterWord;
+  final void Function({required String word})? onEnterWord;
 
   const GameplayManager(
       {required this.wordToFind,
@@ -41,32 +41,44 @@ class _GameplayManagerState extends State<GameplayManager>
     with TickerProviderStateMixin {
   late String _firstLetter;
   late String _wordInProgress;
-  late List<String> _wordsInProgress = [];
+  late List<String> _wordsInProgress;
   String _validation = '';
   bool _finished = false;
   late AnimationController animationController;
 
   late DatabaseHandler handler;
 
-  @override
-  void initState() {
-    super.initState();
-    handler = DatabaseHandler('motus.db');
-
+  void setInitialValues() {
     setState(() {
       _firstLetter = widget.wordToFind.split('').first;
       _wordInProgress = widget.wordToFind.split('').first;
-      _wordsInProgress = widget.wordsInProgress ?? [];
+      _wordsInProgress = [...?widget.wordsInProgress];
       _finished = widget.finished;
       _validation = widget.finished
           ? 'Le mot à trouver était "${widget.wordToFind.toUpperCase()}".'
           : '';
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    handler = DatabaseHandler('motus.db');
+
+    setInitialValues();
 
     animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
     );
+  }
+
+  @override
+  void didUpdateWidget(GameplayManager oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.wordToFind != oldWidget.wordToFind) {
+      setInitialValues();
+    }
   }
 
   @override
@@ -174,7 +186,7 @@ class _GameplayManagerState extends State<GameplayManager>
 
             // custom behaviour optionally defined by parent widget
             if (widget.onEnterWord != null) {
-              widget.onEnterWord!(words: _wordsInProgress);
+              widget.onEnterWord!(word: _wordInProgress);
             }
 
             if (_wordInProgress == widget.wordToFind) {

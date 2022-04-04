@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:io';
+
 enum WordValidationStatus { goodPosition, wrongPosition, ignored, notInWord }
 
 bool wordIsAcceptable(String word) {
@@ -118,4 +121,43 @@ List<WordValidationStatus> getColorMapCorrection(
   });
 
   return statusMap;
+}
+
+List<String> getFoundWords(
+    List<String> wordsToFind, List<String>? gameInProgress) {
+  return wordsToFind
+      .takeWhile((wordtoFind) => gameInProgress!.contains(wordtoFind))
+      .toList();
+}
+
+int getPositionOfLastFoundWord(
+    List<String> wordsToFind, List<String>? gameInProgress) {
+  var found = getFoundWords(wordsToFind, gameInProgress);
+  if (found.isEmpty) {
+    return -1;
+  } else {
+    int positionOfLastFound = gameInProgress!.indexOf(found.last);
+    return positionOfLastFound;
+  }
+}
+
+List<String> getCurrentWordConfig(
+    List<String> wordsToFind, List<String>? gameInProgress) {
+  if (gameInProgress == null) {
+    return [];
+  } else {
+    if (gameInProgress.isEmpty) {
+      return [];
+    } else {
+      int positionAfterLastFound =
+          getPositionOfLastFoundWord(wordsToFind, gameInProgress);
+      if (positionAfterLastFound == -1) {
+        return gameInProgress;
+      } else if (positionAfterLastFound + 1 > gameInProgress.length) {
+        return [];
+      } else {}
+      var list = gameInProgress.sublist(positionAfterLastFound + 1);
+      return list;
+    }
+  }
 }

@@ -1,12 +1,24 @@
 import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/countdown/countdown.dart';
+import 'package:flutter_application_1/countdown/countdown_controller.dart';
+import 'package:flutter_application_1/gameplay/gameplay_manager.dart';
+import 'package:flutter_application_1/modals/sprint_results.dart';
+import 'package:flutter_application_1/storage/daily.dart';
 import 'package:flutter_application_1/storage/db-handler.dart';
 import 'package:flutter_application_1/design/design.dart';
-import 'package:flutter_application_1/grid/grid.dart';
-import 'package:flutter_application_1/keyboard/keyboard.dart';
+import 'package:flutter_application_1/modals/daily_results.dart';
+import 'package:flutter_application_1/storage/sprint.dart';
+import 'package:flutter_application_1/utils.dart';
+import 'package:flutter_application_1/utils/date_utils.dart';
 
-class Sprint extends StatefulWidget {
-  const Sprint({Key? key}) : super(key: key);
+import '../utils/date_utils.dart';
+
+class SprintWordRoute extends StatefulWidget {
+  final Sprint sprint;
+  const SprintWordRoute({required this.sprint, Key? key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -18,26 +30,64 @@ class Sprint extends StatefulWidget {
   // always marked "final".
 
   @override
-  State<Sprint> createState() => _SprintState();
+  State<SprintWordRoute> createState() => _SprintWordRouteState();
 }
 
-class _SprintState extends State<Sprint> with TickerProviderStateMixin {
-  late String _wordToFind;
-  late String _firstLetter;
-  late String _wordInProgress = 'e';
-  final List<String> _words = [];
-  String _validation = '';
-  bool _finished = false;
+class _SprintWordRouteState extends State<SprintWordRoute>
+    with TickerProviderStateMixin {
   late AnimationController animationController;
 
   late DatabaseHandler handler;
+  late CountdownController _controller;
+
+  late bool _gamePaused = true;
+  late int _duration;
+  late String _currentWordToFind;
+  late List<String> _currentWordsInProgress = [];
+  late List<String> _allGivenWords;
 
   @override
   void initState() {
     super.initState();
     handler = DatabaseHandler('motus.db');
+    int timeLeftInSeconds = widget.sprint.timeLeftInSeconds ?? (5 * 60);
+    _controller = CountdownController(
+      autoStart: false,
+      timeLeftInSeconds: timeLeftInSeconds,
+    );
 
-    getSprintWord();
+    setState(() {
+      if (widget.sprint.wordsInProgress == null) {
+        _currentWordToFind = widget.sprint.words.first;
+      } else {
+        int positionOfLastFoundWord = getPositionOfLastFoundWord(
+          widget.sprint.words,
+          widget.sprint.wordsInProgress,
+        );
+        if ((positionOfLastFoundWord == -1 &&
+                widget.sprint.wordsInProgress != null) ||
+            widget.sprint.wordsInProgress == null) {
+          _currentWordToFind = widget.sprint.words.first;
+        } else {
+          _currentWordToFind = selectNextWord(
+            widget.sprint.words,
+            widget.sprint.wordsInProgress!.elementAt(
+              getPositionOfLastFoundWord(
+                widget.sprint.words,
+                widget.sprint.wordsInProgress,
+              ),
+            ),
+          );
+        }
+      }
+
+      _currentWordsInProgress = getCurrentWordConfig(
+        widget.sprint.words,
+        widget.sprint.wordsInProgress,
+      );
+      _allGivenWords = widget.sprint.wordsInProgress ?? [];
+      _duration = timeLeftInSeconds;
+    });
 
     animationController = AnimationController(
       vsync: this,
@@ -45,13 +95,10 @@ class _SprintState extends State<Sprint> with TickerProviderStateMixin {
     );
   }
 
-  void getSprintWord() async {
-    final String word = await handler.retrieveRandomWord();
-    setState(() {
-      _wordToFind = word;
-      _firstLetter = word.split('').first;
-      _wordInProgress = _firstLetter;
-    });
+  Future<Sprint> dailyChallenge() async {
+    final Sprint dailyChallenge =
+        await handler.retrieveSprintChallenge(formattedToday());
+    return dailyChallenge;
   }
 
   @override
@@ -60,172 +107,160 @@ class _SprintState extends State<Sprint> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void _onChooseKey(String key) async {
-    if (_finished) {
-      return;
-    }
-
-    if (key == 'delete' && _wordInProgress.isNotEmpty) {
-      return setState(() {
-        _wordInProgress =
-            _wordInProgress.substring(0, _wordInProgress.length - 1);
-      });
-    }
-
-    if (key == 'enter') {
-      // incorrect length
-      if (_wordInProgress.length != _wordToFind.length) {
-        return setState(() {
-          _validation = 'word not acceptable';
-        });
-      }
-
-      bool wordExists = await handler.wordExists(_wordInProgress);
-
-      if (wordExists) {
-        await _playAnimation();
-
-        return setState(() {
-          _words.add(_wordInProgress);
-          _wordInProgress = _firstLetter;
-
-          if (_words.length == _wordToFind.length) {
-            _finished = true;
-            _wordInProgress = '';
-          }
-        });
-      } else {
-        _validation = 'mot non existant';
-      }
-    }
-
-    if (key != 'delete' &&
-        key != 'enter' &&
-        _wordInProgress.length < _wordToFind.length) {
-      setState(() {
-        _wordInProgress = '$_wordInProgress$key';
-      });
-    }
+  void onStart() {
+    _controller.resume();
+    setState(() {
+      _gamePaused = false;
+    });
   }
 
-  Future<void> _playAnimation() async {
-    try {
-      await animationController.forward().orCancel;
-      animationController.reset();
-    } on TickerCanceled {
-      // the animation got canceled, probably because we were disposed
-    }
+  void onPause() {
+    _controller.pause();
+    setState(() {
+      _gamePaused = true;
+    });
   }
 
-  String hints(String wordToFind, List<String> words) {
-    List<String> wordInProgress = List.generate(
-        wordToFind.length, (index) => index == 0 ? wordToFind[0] : ' ');
-
-    for (String word in words) {
-      word.split('').asMap().forEach((int pos, String letter) {
-        if (wordToFind[pos] == letter) {
-          wordInProgress[pos] = letter;
-        }
-      });
-    }
-    return wordInProgress.join('');
+  String selectNextWord(List<String> wordsToFind, String lastFoundWord) {
+    var a = wordsToFind[wordsToFind.indexOf(lastFoundWord) + 1];
+    return wordsToFind[wordsToFind.indexOf(lastFoundWord) + 1];
   }
 
-  bool showHints(
-          String wordToFind, String wordInProgress, List<String> words) =>
-      wordInProgress[0] == wordToFind[0] && wordInProgress.length == 1;
+  void _showOverlay(BuildContext context, {required int score}) async {
+    var overlayState = Overlay.of(context);
+    // ignore: prefer_typing_uninitialized_variables
+    var overlayEntry;
+    overlayEntry = OverlayEntry(builder: (context) {
+      return SprintResults(
+          score: score,
+          shareResults: () {},
+          goHome: () {
+            overlayEntry.remove();
+            Navigator.pop(context);
+          });
+    });
 
-  List<String> getRightPositionKeys(String wordToFind, List<String> words) {
-    List<String> keys = [];
-    for (String word in words) {
-      word.split('').asMap().forEach((int pos, String letter) {
-        if (wordToFind[pos] == letter) {
-          keys.add(letter);
-        }
-      });
-    }
-    return keys;
+    // Inserting the OverlayEntry into the Overlay
+    overlayState?.insert(overlayEntry);
   }
 
-  List<String> getWrongPositionKeys(String wordToFind, List<String> words) {
-    List<String> keys = [];
-    for (String word in words) {
-      word.split('').asMap().forEach((int pos, String letter) {
-        if (wordToFind.contains(letter) && wordToFind[pos] != letter) {
-          keys.add(letter);
-        }
-      });
-    }
-    return keys;
+  onFinishGame() async {
+    log('finished');
+    int score = getFoundWords(widget.sprint.words, _allGivenWords).length;
+    _showOverlay(
+      context,
+      score: score,
+    );
+    var a = await handler.updateSprintResult(
+      date: formattedToday(),
+      score: score,
+    );
   }
 
-  List<String> getDisabledKeys(String wordToFind, List<String> words) {
-    List<String> keys = [];
-    for (String word in words) {
-      word.split('').asMap().forEach((int pos, String letter) {
-        if (!wordToFind.contains(letter)) {
-          keys.add(letter);
-        }
-      });
-    }
-    return keys;
+  onFinishWord({
+    required String word,
+    required bool success,
+  }) async {
+    setState(() {
+      String nextWord = selectNextWord(widget.sprint.words, word);
+      _currentWordToFind = nextWord;
+      _currentWordsInProgress = [];
+    });
+    // var a = await handler.updateSprintWordsInProgress(
+    //   date: formattedToday(),
+    //   words: _foundWords,
+    //   timeLeftInSeconds: _controller.timeLeftInSeconds,
+    // );
+  }
+
+  onEnterWord({required String word}) async {
+    List<String> allWords = [..._allGivenWords, word];
+    setState(() {
+      _allGivenWords = allWords;
+      _currentWordsInProgress = [..._currentWordsInProgress, word];
+    });
+    var a = await handler.updateSprintWordsInProgress(
+      date: formattedToday(),
+      words: allWords,
+      timeLeftInSeconds: _controller.timeLeftInSeconds,
+    );
   }
 
   @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-        backgroundColor: CustomColors.backgroundColor,
-        appBar: AppBar(
-          // Here we take the value from the Sprint object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: const Text('Le mot du jour'),
-          backgroundColor: CustomColors.backgroundColor,
-        ),
-        body: Container(
-          margin: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              // Center(
-              //   child: Text('word: $_wordToFind'),
-              // ),
-              // Center(
-              //   child: Text('finished: $_finished'),
-              // ),
-              Center(
-                child: Text(
-                  _validation,
-                  style: const TextStyle(
-                      color: CustomColors.white, fontWeight: FontWeight.bold),
+  Widget build(BuildContext context) => FutureBuilder(
+        future: handler.retrieveSprintChallenge(formattedToday()),
+        builder: (context, AsyncSnapshot<Sprint> snapshot) {
+          if (snapshot.hasData) {
+            final bool finished = snapshot.data?.score != null;
+            // Build the widget with data.
+            return Scaffold(
+                backgroundColor: CustomColors.backgroundColor,
+                appBar: AppBar(
+                  // Here we take the value from the Sprint object that was created by
+                  // the App.build method, and use it to set our appbar title.
+                  title: const Text('Sprint du dimanche'),
+                  backgroundColor: CustomColors.backgroundColor,
                 ),
-              ),
-
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Keyboard(
-                  rightPositionKeys: getRightPositionKeys(_wordToFind, _words),
-                  wrongPositionKeys: getWrongPositionKeys(_wordToFind, _words),
-                  disableKeys: getDisabledKeys(_wordToFind, _words),
-                  chooseKey: _onChooseKey,
-                ),
-              ),
-              // Center(
-              //   child: Align(
-              //     alignment: Alignment.bottomCenter,
-              //     child: Keyboard(
-              //       chooseKey: _onChooseKey,
-              //     ),
-              //   ),
-              // ),
-            ],
-          ),
-        ));
-  }
+                body: Container(
+                    margin:
+                        EdgeInsets.all(_currentWordToFind.length > 6 ? 10 : 30),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Countdown(
+                              controller: _controller,
+                              seconds: _duration,
+                              build: (BuildContext context, double time) =>
+                                  Text(
+                                displayTime(time),
+                                style:
+                                    const TextStyle(color: CustomColors.white),
+                              ),
+                              interval: const Duration(seconds: 1),
+                              onFinished: () async {
+                                await onFinishGame();
+                              },
+                            ),
+                            ElevatedButton(
+                              child: const Text('Pause'),
+                              onPressed: () {
+                                onPause();
+                              },
+                            ),
+                          ],
+                        ),
+                        _gamePaused
+                            ? SizedBox(
+                                height: MediaQuery.of(context).size.height / 2,
+                                child: Center(
+                                  child: ElevatedButton(
+                                    child: Text(_gamePaused &&
+                                            widget.sprint.timeLeftInSeconds ==
+                                                null
+                                        ? 'Démarrer'
+                                        : 'Reprendre'),
+                                    onPressed: () {
+                                      onStart();
+                                    },
+                                  ),
+                                ),
+                              )
+                            : GameplayManager(
+                                wordToFind: _currentWordToFind,
+                                wordsInProgress: _currentWordsInProgress,
+                                finished: false,
+                                onFinish: onFinishWord,
+                                onEnterWord: onEnterWord,
+                              ),
+                      ],
+                    )));
+          } else {
+            // We can show the loading view until the data comes back.
+            debugPrint('Step 1, build loading widget');
+            return const CircularProgressIndicator();
+          }
+        },
+      );
 }

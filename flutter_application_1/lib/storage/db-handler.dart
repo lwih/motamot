@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/storage/daily.dart';
 import 'package:flutter_application_1/storage/lemme.dart';
+import 'package:flutter_application_1/storage/sprint.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -122,5 +123,52 @@ class DatabaseHandler {
     );
     await db.close();
     return queryResult.isNotEmpty;
+  }
+
+  Future<Sprint> retrieveSprintChallenge(String date) async {
+    final Database db = await openDB();
+    final List<Map<String, Object?>> queryResult = await db.query(
+      'sprint',
+      where: 'date = ?',
+      whereArgs: [date],
+      limit: 1,
+    );
+    await db.close();
+    return queryResult.map((e) => Sprint.fromMap(e)).toList().first;
+  }
+
+  Future<int> updateSprintResult({
+    required String date,
+    required int score,
+  }) async {
+    final Database db = await openDB();
+    var update = await db.update(
+      'sprint',
+      {
+        'score': score,
+      },
+      where: 'date = ?',
+      whereArgs: [date],
+    );
+    await db.close();
+    return update;
+  }
+
+  Future<int> updateSprintWordsInProgress(
+      {required String date,
+      required List<String> words,
+      required int timeLeftInSeconds}) async {
+    final Database db = await openDB();
+    var update = await db.update(
+      'sprint',
+      {
+        'wordsInProgress': words.join(','),
+        'timeLeftInSeconds': timeLeftInSeconds
+      },
+      where: 'date = ?',
+      whereArgs: [date],
+    );
+    await db.close();
+    return update;
   }
 }

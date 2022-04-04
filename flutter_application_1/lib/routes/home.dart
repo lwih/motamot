@@ -7,6 +7,7 @@ import 'package:flutter_application_1/routes/random.dart';
 import 'package:flutter_application_1/routes/sprint.dart';
 import 'package:flutter_application_1/routes/stats.dart';
 import 'package:flutter_application_1/storage/daily.dart';
+import 'package:flutter_application_1/storage/sprint.dart';
 import 'package:flutter_application_1/utils/date_utils.dart';
 
 import '../storage/db-handler.dart';
@@ -21,93 +22,128 @@ class _HomeState extends State<Home> {
   final DatabaseHandler handler = DatabaseHandler('motus.db');
 
   @override
-  Widget build(BuildContext context) => FutureBuilder(
-        future: handler.retrieveDailyChallenge(formattedToday()),
-        builder: (context, AsyncSnapshot<Daily> snapshot) {
-          if (snapshot.hasError) {
-            // ignore: todo
-            // TODO
-            return Scaffold(
-              backgroundColor: CustomColors.backgroundColor,
-              body: Column(
-                children: const [
-                  Text('error'),
-                ],
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: CustomColors.backgroundColor,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Center(
+                child: Image.asset('assets/logo.png'),
               ),
-            );
-          } else if (snapshot.hasData) {
-            final hasBeenPlayed = snapshot.data;
-            // Build the widget with data.
-            return Scaffold(
-                backgroundColor: CustomColors.backgroundColor,
-                body: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Center(
-                        child: Image.asset('assets/logo.png'),
-                      ),
+            ),
+            Center(
+              child: CardButton(
+                onTap: () {
+                  Navigator.push(
+                      context, FadeRoute(page: const RandomWordRoute()));
+                },
+                title: 'Mot Aléatoire',
+                description: 'mot random',
+              ),
+            ),
+            FutureBuilder(
+              future: handler.retrieveDailyChallenge(formattedToday()),
+              builder: (context, AsyncSnapshot<Daily> snapshot) {
+                if (snapshot.hasError) {
+                  return Scaffold(
+                    backgroundColor: CustomColors.backgroundColor,
+                    body: Column(
+                      children: const [
+                        Text('error'),
+                      ],
                     ),
-                    Center(
-                      child: CardButton(
+                  );
+                } else if (snapshot.hasData) {
+                  Daily daily = snapshot.data!;
+                  return Center(
+                    child: CardButton(
+                      onTap: () {
+                        // hasBeenPlayed == true
+                        //     ? () {}
+                        //     : () {
+                        //         Navigator.push(context,
+                        // FadeRoute(page: const DailyWordRoute()));
+                        //       },
+                        Navigator.push(
+                            context,
+                            FadeRoute(
+                                page: DailyWordRoute(
+                              daily: daily,
+                            )));
+                      },
+                      title: 'Mot du jour',
+                      description:
+                          'Garder son cerveau en forme en trouvant le mot du jour.',
+                      next: snapshot.data?.success != null ? 'demain' : null,
+                      status: snapshot.data?.success,
+                    ),
+                  );
+                } else {
+                  return Scaffold(
+                    backgroundColor: CustomColors.backgroundColor,
+                    body: Column(
+                      children: const [
+                        Text('loading'),
+                      ],
+                    ),
+                  );
+                }
+              },
+            ),
+            FutureBuilder(
+              future: handler.retrieveSprintChallenge(formattedToday()),
+              builder: (context, AsyncSnapshot<Sprint> snapshot) {
+                if (snapshot.hasError) {
+                  return Scaffold(
+                    backgroundColor: CustomColors.backgroundColor,
+                    body: Column(
+                      children: const [
+                        Text('error'),
+                      ],
+                    ),
+                  );
+                } else if (snapshot.hasData) {
+                  Sprint sprint = snapshot.data!;
+                  return Center(
+                    child: CardButton(
                         onTap: () {
-                          Navigator.push(context,
-                              FadeRoute(page: const RandomWordRoute()));
+                          // hasBeenPlayed == true
+                          //     ? () {}
+                          //     : () {
+                          //         Navigator.push(context,
+                          // FadeRoute(page: const DailyWordRoute()));
+                          //       },
+                          Navigator.push(
+                            context,
+                            FadeRoute(
+                              page: SprintWordRoute(
+                                sprint: sprint,
+                              ),
+                            ),
+                          );
                         },
-                        title: 'Mot Aléatoire',
-                        description: 'mot random',
-                      ),
+                        title: 'Sprint du dimanche',
+                        description:
+                            'Tous les dimanches, 5 minutes pour tout donner.',
+                        next: snapshot.data?.score != null ? 'dimanche' : null,
+                        status: snapshot.data?.score != null),
+                  );
+                } else {
+                  return Scaffold(
+                    backgroundColor: CustomColors.backgroundColor,
+                    body: Column(
+                      children: const [
+                        Text('loading'),
+                      ],
                     ),
-                    Center(
-                      child: CardButton(
-                          onTap: () {
-                            // hasBeenPlayed == true
-                            //     ? () {}
-                            //     : () {
-                            //         Navigator.push(context,
-                            // FadeRoute(page: const DailyWordRoute()));
-                            //       },
-                            Navigator.push(context,
-                                FadeRoute(page: const DailyWordRoute()));
-                          },
-                          title: 'Mot du jour',
-                          description:
-                              'Garder son cerveau en forme en trouvant le mot du jour.',
-                          next:
-                              snapshot.data?.success != null ? 'demain' : null,
-                          status: snapshot.data?.success),
-                    ),
-                    Center(
-                      child: CardButton(
-                          onTap: () {
-                            // hasBeenPlayed == true
-                            //     ? () {}
-                            //     : () {
-                            //         Navigator.push(context,
-                            // FadeRoute(page: const DailyWordRoute()));
-                            //       },
-                            Navigator.push(
-                                context, FadeRoute(page: const Sprint()));
-                          },
-                          title: 'Sprint du dimanche',
-                          description:
-                              'Tous les dimanches, 5 minutes pour tout donner.',
-                          next: snapshot.data?.success != null
-                              ? 'dimanche'
-                              : null,
-                          status: snapshot.data?.success),
-                    ),
-                  ],
-                ));
-          } else {
-            // We can show the loading view until the data comes back.
-            debugPrint('Step 1, build loading widget');
-            return Scaffold(
-              backgroundColor: CustomColors.backgroundColor,
-              body: Column(),
-            );
-          }
-        },
-      );
+                  );
+                }
+              },
+            ),
+          ],
+        ));
+  }
 }

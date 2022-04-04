@@ -148,4 +148,41 @@ void main() {
       expect(actualResult, expectedResult);
     });
   });
+  group('getCurrentWordConfig', () {
+    const List<String> wordsToFind = [
+      'word1',
+      'word2',
+      'word3',
+      'word4',
+      'word5'
+    ];
+    test('should return [] when gameInProgress is null', () {
+      const List<String>? gameInProgress = null;
+      expect(getCurrentWordConfig(wordsToFind, gameInProgress), []);
+    });
+    test('should return [] when gameInProgress is empty', () {
+      const List<String>? gameInProgress = [];
+      expect(getCurrentWordConfig(wordsToFind, gameInProgress), []);
+    });
+    test('should return wordInProgress when none found yet but some exist', () {
+      const List<String>? gameInProgress = ['other'];
+      expect(getCurrentWordConfig(wordsToFind, gameInProgress), gameInProgress);
+    });
+    test(
+        'should return [] when some words have been found but nothing new after',
+        () {
+      const List<String>? gameInProgress = ['wordX', 'wordX', 'wordX', 'word1'];
+      expect(getCurrentWordConfig(wordsToFind, gameInProgress), []);
+    });
+    test('should return the words after the last word found', () {
+      const List<String>? gameInProgress = [
+        'wordX',
+        'wordX',
+        'wordX',
+        'word1',
+        'wordx'
+      ];
+      expect(getCurrentWordConfig(wordsToFind, gameInProgress), ['wordx']);
+    });
+  });
 }

@@ -25,8 +25,12 @@ class Daily {
     return {
       'date': date,
       'word': word,
-      'success': success == true ? '1' : '0',
-      'attempts': words.toString()
+      'success': success == true
+          ? '1'
+          : success == false
+              ? '0'
+              : null,
+      'words': words?.join(',')
     };
   }
 }
