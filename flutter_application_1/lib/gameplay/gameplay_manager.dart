@@ -238,21 +238,21 @@ class _GameplayManagerState extends State<GameplayManager>
         // Center(
         //   child: Text('word: ${widget.wordToFind}'),
         // ),
-        // Container(
-        //   margin: const EdgeInsets.only(
-        //     bottom: 50,
-        //   ),
-        //   child: Center(
-        //     child: Keyboard(
-        //       rightPositionKeys:
-        //           getRightPositionKeys(widget.wordToFind, _wordsInProgress),
-        //       wrongPositionKeys:
-        //           getWrongPositionKeys(widget.wordToFind, _wordsInProgress),
-        //       disableKeys: getDisabledKeys(widget.wordToFind, _wordsInProgress),
-        //       chooseKey: _onChooseKey,
-        //     ),
-        //   ),
-        // ),
+        Container(
+          // margin: const EdgeInsets.only(
+          //   bottom: 50,
+          // ),
+          child: Center(
+            child: Keyboard(
+              rightPositionKeys:
+                  getRightPositionKeys(widget.wordToFind, _wordsInProgress),
+              wrongPositionKeys:
+                  getWrongPositionKeys(widget.wordToFind, _wordsInProgress),
+              disableKeys: getDisabledKeys(widget.wordToFind, _wordsInProgress),
+              chooseKey: _onChooseKey,
+            ),
+          ),
+        ),
         Container(
           margin: const EdgeInsets.only(bottom: 10),
           child: Center(

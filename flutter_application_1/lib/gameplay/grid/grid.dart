@@ -52,28 +52,36 @@ class WordGrid extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ...words.map((word) {
-              return WordRow(
-                key: Key('Row$word'),
-                word: word.split(''),
-                wordToFind: wordToFind.split(''),
-                validateRow: true,
+              return Expanded(
+                child: WordRow(
+                  key: Key('Row$word'),
+                  word: word.split(''),
+                  wordToFind: wordToFind.split(''),
+                  validateRow: true,
+                ),
               );
             }).toList(),
             !finished && hasAnyRowLeft()
-                ? AnimatedWordRow(
-                    controller: animationController,
-                    wordToFind: wordToFind,
-                    showHints: showHints,
-                    word: showHints
-                        ? hints
-                        : wordInProgress.padRight(wordToFind.length, ' '),
+                ? Expanded(
+                    child: AnimatedWordRow(
+                      controller: animationController,
+                      wordToFind: wordToFind,
+                      showHints: showHints,
+                      word: showHints
+                          ? hints
+                          : wordInProgress.padRight(wordToFind.length, ' '),
+                    ),
                   )
-                : Container(),
+                : Expanded(
+                    child: Container(),
+                  ),
             ...createUntouchedRows().map((String emptyWord) {
-              return WordRow(
-                word: emptyWord.split(''),
-                wordToFind: wordToFind.split(''),
-                validateRow: false,
+              return Expanded(
+                child: WordRow(
+                  word: emptyWord.split(''),
+                  wordToFind: wordToFind.split(''),
+                  validateRow: false,
+                ),
               );
             }).toList(),
           ],
