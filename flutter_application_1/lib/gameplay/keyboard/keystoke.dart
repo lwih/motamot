@@ -26,11 +26,11 @@ class Keystroke extends StatelessWidget {
           elevation: 0,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(2.0)),
-          fixedSize: const Size(10, 10),
         ),
       );
     }
     return ElevatedButton(
+      key: Key('Key${keyStroke.toUpperCase()}'),
       onPressed: onPressed,
       child: Center(
         child: Text(keyStroke),
@@ -42,7 +42,6 @@ class Keystroke extends StatelessWidget {
         // shadowColor: Colors.greenAccent,
         elevation: 3,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2.0)),
-        fixedSize: const Size(10, 10),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/design.dart';
-import 'package:flutter_application_1/keyboard/keystoke.dart';
+
+import 'keystoke.dart';
 
 @immutable
 class Keyboard extends StatelessWidget {
@@ -37,64 +38,69 @@ class Keyboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 200,
-      color: CustomColors.backgroundColor,
+      width: MediaQuery.of(context).size.width,
       child: Column(
         children: [
           ...layout.map((List<String> row) {
             return Row(
-                children: row.map((String key) {
-              return Expanded(
-                child: Padding(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: row.map((String key) {
+                return Container(
                   padding: const EdgeInsets.all(1),
+                  width: 35,
+                  height: 50,
                   child: Keystroke(
-                      background: getKeyColor(key),
-                      onPressed: () => chooseKey(key),
-                      keyStroke: key),
-                ),
-              );
-            }).toList());
+                    background: getKeyColor(key),
+                    onPressed: () => chooseKey(key),
+                    keyStroke: key,
+                  ),
+                  // ),)
+
+                  // Expanded(
+                  //   // flex: -1,
+                  //   // child: Padding(
+                  //   //   padding: const EdgeInsets.all(1),
+                  //   child: Keystroke(
+                  //       background: getKeyColor(key),
+                  //       onPressed: () => chooseKey(key),
+                  //       keyStroke: key),
+                  //   // ),
+                );
+              }).toList(),
+            );
           }).toList(),
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    SizedBox(
-                      width: 100, // <-- Your width
-                      height: 40, // <-- Your height
-                      child: ElevatedButton(
-                        onPressed: () => chooseKey('delete'),
-                        child: const Text('effacer'),
-                        style: ElevatedButton.styleFrom(
-                          primary: CustomColors.notInWord,
-                          elevation: 3,
-                        ),
-                      ),
-                    ),
-                  ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: 100, // <-- Your width
+                height: 40, // <-- Your height
+                child: ElevatedButton(
+                  key: const Key('KeyDelete'),
+                  onPressed: () => chooseKey('delete'),
+                  child: const Text('effacer'),
+                  style: ElevatedButton.styleFrom(
+                    primary: CustomColors.notInWord,
+                    elevation: 3,
+                  ),
                 ),
-                Column(
-                  children: [
-                    SizedBox(
-                      width: 100, // <-- Your width
-                      height: 40, // <-- Your height
-                      child: ElevatedButton(
-                        onPressed: () => chooseKey('enter'),
-                        child: const Text('entrer'),
-                        style: ElevatedButton.styleFrom(
-                            primary: CustomColors.notInWord,
-                            elevation: 3,
-                            minimumSize: const Size.fromHeight(10.0)),
-                      ),
-                    )
-                  ],
+              ),
+              SizedBox(
+                width: 100, // <-- Your width
+                height: 40, // <-- Your height
+                child: ElevatedButton(
+                  key: const Key('KeyEnter'),
+                  onPressed: () => chooseKey('enter'),
+                  child: const Text('entrer'),
+                  style: ElevatedButton.styleFrom(
+                      primary: CustomColors.notInWord,
+                      elevation: 3,
+                      minimumSize: const Size.fromHeight(10.0)),
                 ),
-              ],
-            ),
+              )
+            ],
           ),
         ],
       ),

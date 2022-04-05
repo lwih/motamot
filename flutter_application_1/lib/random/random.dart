@@ -1,11 +1,9 @@
-import 'dart:async';
-import 'dart:developer';
-
 import 'package:flutter_application_1/gameplay/gameplay_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/storage/db-handler.dart';
+import 'package:flutter_application_1/storage/db_handler.dart';
 import 'package:flutter_application_1/ui/design.dart';
-import 'package:flutter_application_1/modals/daily_results.dart';
+
+import '../daily/daily_results.dart';
 
 class RandomWordRoute extends StatefulWidget {
   const RandomWordRoute({Key? key}) : super(key: key);
@@ -90,6 +88,7 @@ class _RandomWordRouteState extends State<RandomWordRoute>
                 body: Container(
                   margin: EdgeInsets.all(randomWord.length > 6 ? 10 : 30),
                   child: GameplayManager(
+                    db: handler,
                     wordToFind: randomWord,
                     finished: false,
                     onFinish: onFinish,

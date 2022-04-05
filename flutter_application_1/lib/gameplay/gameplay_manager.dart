@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/grid/grid.dart';
-import 'package:flutter_application_1/storage/db-handler.dart';
+import 'package:flutter_application_1/storage/db_handler.dart';
 import 'package:flutter_application_1/ui/design.dart';
-import 'package:flutter_application_1/keyboard/keyboard.dart';
+
+import 'grid/grid.dart';
+import 'keyboard/keyboard.dart';
 
 class GameplayManager extends StatefulWidget {
+  final DatabaseHandler db;
   final String wordToFind;
   final List<String>? wordsInProgress;
   final bool finished;
@@ -16,7 +18,8 @@ class GameplayManager extends StatefulWidget {
   final void Function({required String word})? onEnterWord;
 
   const GameplayManager(
-      {required this.wordToFind,
+      {required this.db,
+      required this.wordToFind,
       this.wordsInProgress,
       required this.finished,
       required this.onFinish,
@@ -46,8 +49,6 @@ class _GameplayManagerState extends State<GameplayManager>
   bool _finished = false;
   late AnimationController animationController;
 
-  late DatabaseHandler handler;
-
   void setInitialValues() {
     setState(() {
       _firstLetter = widget.wordToFind.split('').first;
@@ -63,7 +64,6 @@ class _GameplayManagerState extends State<GameplayManager>
   @override
   void initState() {
     super.initState();
-    handler = DatabaseHandler('motus.db');
 
     setInitialValues();
 
@@ -150,30 +150,27 @@ class _GameplayManagerState extends State<GameplayManager>
     return keys;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    void _onChooseKey(String key) async {
-      if (_finished) {
-        return;
-      }
+  void _onChooseKey(String key) async {
+    if (_finished) {
+      return;
+    }
 
-      if (key == 'delete' && _wordInProgress.length > 1) {
-        return setState(() {
-          _wordInProgress =
-              _wordInProgress.substring(0, _wordInProgress.length - 1);
-          _validation = "";
+    if (key == 'delete' && _wordInProgress.length > 1) {
+      return setState(() {
+        _wordInProgress =
+            _wordInProgress.substring(0, _wordInProgress.length - 1);
+        _validation = "";
+      });
+    }
+
+    if (key == 'enter') {
+      // incorrect length
+      if (_wordInProgress.length != widget.wordToFind.length) {
+        setState(() {
+          _validation = "Ce mot est incorrect.";
         });
-      }
-
-      if (key == 'enter') {
-        // incorrect length
-        if (_wordInProgress.length != widget.wordToFind.length) {
-          setState(() {
-            _validation = "Ce mot n'est pas correct.";
-          });
-        }
-
-        bool wordExists = await handler.wordExists(_wordInProgress);
+      } else {
+        bool wordExists = await widget.db.wordExists(_wordInProgress);
 
         if (wordExists) {
           await _playAnimation();
@@ -220,32 +217,53 @@ class _GameplayManagerState extends State<GameplayManager>
           });
         }
       }
-
-      if (key != 'delete' &&
-          key != 'enter' &&
-          _wordInProgress.length < widget.wordToFind.length) {
-        setState(() {
-          _validation = '';
-          _wordInProgress = '$_wordInProgress$key';
-        });
-      }
     }
 
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    if (key != 'delete' &&
+        key != 'enter' &&
+        _wordInProgress.length < widget.wordToFind.length) {
+      setState(() {
+        _validation = '';
+        _wordInProgress = '$_wordInProgress$key';
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      mainAxisSize: MainAxisSize.max,
+      verticalDirection: VerticalDirection.up,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Center(
-          child: Text('word: ${widget.wordToFind}'),
+        // Center(
+        //   child: Text('word: ${widget.wordToFind}'),
+        // ),
+        // Container(
+        //   margin: const EdgeInsets.only(
+        //     bottom: 50,
+        //   ),
+        //   child: Center(
+        //     child: Keyboard(
+        //       rightPositionKeys:
+        //           getRightPositionKeys(widget.wordToFind, _wordsInProgress),
+        //       wrongPositionKeys:
+        //           getWrongPositionKeys(widget.wordToFind, _wordsInProgress),
+        //       disableKeys: getDisabledKeys(widget.wordToFind, _wordsInProgress),
+        //       chooseKey: _onChooseKey,
+        //     ),
+        //   ),
+        // ),
+        Container(
+          margin: const EdgeInsets.only(bottom: 10),
+          child: Center(
+            child: Text(
+              _validation,
+              style: const TextStyle(
+                  color: CustomColors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
         ),
-        Align(
-          alignment: Alignment.topCenter,
+        Expanded(
           child: Center(
             child: WordGrid(
               animationController: animationController,
@@ -261,24 +279,6 @@ class _GameplayManagerState extends State<GameplayManager>
                       widget.wordToFind, _wordInProgress, _wordsInProgress),
               wordToFind: widget.wordToFind,
             ),
-          ),
-        ),
-        Center(
-          child: Text(
-            _validation,
-            style: const TextStyle(
-                color: CustomColors.white, fontWeight: FontWeight.bold),
-          ),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Keyboard(
-            rightPositionKeys:
-                getRightPositionKeys(widget.wordToFind, _wordsInProgress),
-            wrongPositionKeys:
-                getWrongPositionKeys(widget.wordToFind, _wordsInProgress),
-            disableKeys: getDisabledKeys(widget.wordToFind, _wordsInProgress),
-            chooseKey: _onChooseKey,
           ),
         ),
       ],

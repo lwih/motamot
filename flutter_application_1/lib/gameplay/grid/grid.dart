@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_application_1/grid/animated_row.dart';
-import 'package:flutter_application_1/grid/row.dart';
+import 'package:flutter_application_1/gameplay/grid/row.dart';
+
+import 'animated_row.dart';
 
 @immutable
 class WordGrid extends StatelessWidget {
@@ -44,31 +45,40 @@ class WordGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      ...words.map((word) {
-        return WordRow(
-          word: word.split(''),
-          wordToFind: wordToFind.split(''),
-          validateRow: true,
-        );
-      }).toList(),
-      !finished && hasAnyRowLeft()
-          ? AnimatedWordRow(
-              controller: animationController,
-              wordToFind: wordToFind,
-              showHints: showHints,
-              word: showHints
-                  ? hints
-                  : wordInProgress.padRight(wordToFind.length, ' '),
-            )
-          : Column(),
-      ...createUntouchedRows().map((String emptyWord) {
-        return WordRow(
-          word: emptyWord.split(''),
-          wordToFind: wordToFind.split(''),
-          validateRow: false,
-        );
-      }).toList(),
-    ]);
+    return Row(
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ...words.map((word) {
+              return WordRow(
+                key: Key('Row$word'),
+                word: word.split(''),
+                wordToFind: wordToFind.split(''),
+                validateRow: true,
+              );
+            }).toList(),
+            !finished && hasAnyRowLeft()
+                ? AnimatedWordRow(
+                    controller: animationController,
+                    wordToFind: wordToFind,
+                    showHints: showHints,
+                    word: showHints
+                        ? hints
+                        : wordInProgress.padRight(wordToFind.length, ' '),
+                  )
+                : Container(),
+            ...createUntouchedRows().map((String emptyWord) {
+              return WordRow(
+                word: emptyWord.split(''),
+                wordToFind: wordToFind.split(''),
+                validateRow: false,
+              );
+            }).toList(),
+          ],
+        ),
+      ],
+    );
   }
 }

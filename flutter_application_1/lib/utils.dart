@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:io';
-
 enum WordValidationStatus { goodPosition, wrongPosition, ignored, notInWord }
 
 bool wordIsAcceptable(String word) {
