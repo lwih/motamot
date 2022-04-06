@@ -46,6 +46,7 @@ class _SprintWordRouteState extends State<SprintWordRoute>
   late String _currentWordToFind;
   late List<String> _currentWordsInProgress = [];
   late List<String> _allGivenWords;
+  int _penalty = 0;
 
   @override
   void initState() {
@@ -154,16 +155,19 @@ class _SprintWordRouteState extends State<SprintWordRoute>
     overlayState?.insert(overlayEntry);
   }
 
+  int getScore() {
+    return getFoundWords(widget.sprint.words, _allGivenWords).length - _penalty;
+  }
+
   onFinishGame() async {
-    int score = getFoundWords(widget.sprint.words, _allGivenWords).length;
     _showOverlay(
       context,
-      score: score,
+      score: getScore(),
     );
     try {
       await handler.updateSprintResult(
         date: formattedToday(),
-        score: score,
+        score: getScore(),
         timeLeftInSeconds: 0,
       );
     } catch (e) {
@@ -181,9 +185,14 @@ class _SprintWordRouteState extends State<SprintWordRoute>
       _currentWordsInProgress = [];
     });
     try {
+      if (success == false) {
+        setState(() {
+          _penalty++;
+        });
+      }
       await handler.updateSprintResult(
         date: formattedToday(),
-        score: getFoundWords(widget.sprint.words, _allGivenWords).length,
+        score: getScore(),
         timeLeftInSeconds: _controller.timeLeftInSeconds,
       );
     } catch (e) {
@@ -220,7 +229,6 @@ class _SprintWordRouteState extends State<SprintWordRoute>
         backgroundColor: CustomColors.backgroundColor,
       ),
       body: Container(
-        margin: EdgeInsets.all(_currentWordToFind.length > 6 ? 10 : 30),
         child: widget.sprint.timeLeftInSeconds == 0
             ? Center(
                 child: ElevatedButton(
@@ -260,7 +268,8 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                               onEnterWord: onEnterWord,
                             ),
                     ),
-                    SizedBox(
+                    Container(
+                      margin: const EdgeInsets.only(top: 50),
                       height: 50,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

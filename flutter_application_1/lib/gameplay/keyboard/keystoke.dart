@@ -15,31 +15,18 @@ class Keystroke extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (keyStroke == ' ') {
-      return ElevatedButton(
-        onPressed: null,
-        child: Text(keyStroke),
-        style: ElevatedButton.styleFrom(
-          primary: CustomColors.backgroundColor,
-          onPrimary: Colors.transparent,
-          shadowColor: CustomColors.backgroundColor,
-          elevation: 0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(2.0)),
-        ),
-      );
-    }
     return ElevatedButton(
       key: Key('Key${keyStroke.toUpperCase()}'),
       onPressed: onPressed,
       child: Center(
-        child: Text(keyStroke),
+        child: Text(
+          keyStroke,
+          style: const TextStyle(fontSize: 16),
+        ),
       ),
       style: ElevatedButton.styleFrom(
         primary: background,
         padding: const EdgeInsets.all(1.0),
-        // onPrimary: Colors.white,
-        // shadowColor: Colors.greenAccent,
         elevation: 3,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2.0)),
       ),

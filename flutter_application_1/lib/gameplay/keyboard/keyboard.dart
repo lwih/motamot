@@ -13,7 +13,7 @@ class Keyboard extends StatelessWidget {
   static final List<List<String>> layout = [
     ['a', 'z', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
     ['q', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm'],
-    [' ', ' ', 'w', 'x', 'c', 'v', 'b', 'n', ' ', ' ']
+    ['delete', 'w', 'x', 'c', 'v', 'b', 'n', 'enter']
   ];
 
   const Keyboard(
@@ -38,71 +38,61 @@ class Keyboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 200,
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        children: [
-          ...layout.map((List<String> row) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: row.map((String key) {
-                return Container(
-                  padding: const EdgeInsets.all(1),
-                  width: 35,
-                  height: 50,
-                  child: Keystroke(
-                    background: getKeyColor(key),
-                    onPressed: () => chooseKey(key),
-                    keyStroke: key,
-                  ),
-                  // ),)
-
-                  // Expanded(
-                  //   // flex: -1,
-                  //   // child: Padding(
-                  //   //   padding: const EdgeInsets.all(1),
-                  //   child: Keystroke(
-                  //       background: getKeyColor(key),
-                  //       onPressed: () => chooseKey(key),
-                  //       keyStroke: key),
-                  //   // ),
+    return Material(
+      color: CustomColors.backgroundColor,
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Center(
+          child: Column(
+            children: [
+              ...layout.map((List<String> row) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: row.map((String key) {
+                    if (key == 'delete' || key == 'enter') {
+                      return Flexible(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.all(1),
+                          child: Container(
+                            color: CustomColors.notInWord,
+                            width: 68,
+                            height: 48,
+                            child: IconButton(
+                              // iconSize: 10,
+                              splashRadius: 22,
+                              color: CustomColors.white,
+                              key: Key(
+                                  key == 'delete' ? 'KeyDelete' : 'KeyEnter'),
+                              icon: Icon(
+                                key == 'delete' ? Icons.backspace : Icons.check,
+                              ),
+                              onPressed: () => chooseKey(key),
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Flexible(
+                        flex: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(1),
+                          width: 35,
+                          height: 50,
+                          child: Keystroke(
+                            background: getKeyColor(key),
+                            onPressed: () => chooseKey(key),
+                            keyStroke: key,
+                          ),
+                        ),
+                      );
+                    }
+                  }).toList(),
                 );
               }).toList(),
-            );
-          }).toList(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                width: 100, // <-- Your width
-                height: 40, // <-- Your height
-                child: ElevatedButton(
-                  key: const Key('KeyDelete'),
-                  onPressed: () => chooseKey('delete'),
-                  child: const Text('effacer'),
-                  style: ElevatedButton.styleFrom(
-                    primary: CustomColors.notInWord,
-                    elevation: 3,
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 100, // <-- Your width
-                height: 40, // <-- Your height
-                child: ElevatedButton(
-                  key: const Key('KeyEnter'),
-                  onPressed: () => chooseKey('enter'),
-                  child: const Text('entrer'),
-                  style: ElevatedButton.styleFrom(
-                      primary: CustomColors.notInWord,
-                      elevation: 3,
-                      minimumSize: const Size.fromHeight(10.0)),
-                ),
-              )
             ],
           ),
-        ],
+        ),
       ),
     );
   }

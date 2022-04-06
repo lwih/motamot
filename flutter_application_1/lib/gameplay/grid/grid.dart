@@ -46,13 +46,15 @@ class WordGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ...words.map((word) {
-              return Expanded(
+              return Flexible(
+                flex: 1,
                 child: WordRow(
                   key: Key('Row$word'),
                   word: word.split(''),
@@ -62,7 +64,8 @@ class WordGrid extends StatelessWidget {
               );
             }).toList(),
             !finished && hasAnyRowLeft()
-                ? Expanded(
+                ? Flexible(
+                    flex: 1,
                     child: AnimatedWordRow(
                       controller: animationController,
                       wordToFind: wordToFind,
@@ -72,11 +75,13 @@ class WordGrid extends StatelessWidget {
                           : wordInProgress.padRight(wordToFind.length, ' '),
                     ),
                   )
-                : Expanded(
+                : Flexible(
+                    flex: 0,
                     child: Container(),
                   ),
             ...createUntouchedRows().map((String emptyWord) {
-              return Expanded(
+              return Flexible(
+                flex: 1,
                 child: WordRow(
                   word: emptyWord.split(''),
                   wordToFind: wordToFind.split(''),

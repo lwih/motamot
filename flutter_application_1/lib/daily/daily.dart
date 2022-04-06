@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/gameplay/gameplay_manager.dart';
 import 'package:flutter_application_1/daily/daily_model.dart';
+import 'package:flutter_application_1/home/home.dart';
 import 'package:flutter_application_1/storage/db_handler.dart';
 import 'package:flutter_application_1/ui/design.dart';
+import 'package:flutter_application_1/ui/route/fade_route.dart';
 import 'package:flutter_application_1/utils/date_utils.dart';
 
 import '../utils/date_utils.dart';
@@ -74,7 +76,15 @@ class _DailyWordRouteState extends State<DailyWordRoute>
           shareResults: () {},
           goHome: () {
             overlayEntry.remove();
-            Navigator.pop(context);
+            // .pop() will not refresh the FutureBuilders in Home()
+            // pushAndRemoveUntil() make it word
+            Navigator.pushAndRemoveUntil(
+              context,
+              FadeRoute(
+                page: const Home(),
+              ),
+              (Route<dynamic> route) => false,
+            );
           });
     });
 
@@ -132,6 +142,7 @@ class _DailyWordRouteState extends State<DailyWordRoute>
       ),
       body: Container(
         // margin: EdgeInsets.all(dailyWord.length > 6 ? 10 : 30),
+        padding: const EdgeInsets.all(10),
         child: GameplayManager(
           db: handler,
           wordToFind: dailyWord,

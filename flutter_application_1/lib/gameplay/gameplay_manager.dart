@@ -204,7 +204,7 @@ class _GameplayManagerState extends State<GameplayManager>
               success: true,
             );
           } else {
-            if (_wordsInProgress.length == 5) {
+            if (_wordsInProgress.length == 6) {
               widget.onFinish(
                 word: widget.wordToFind,
                 success: false,
@@ -239,9 +239,9 @@ class _GameplayManagerState extends State<GameplayManager>
         //   child: Text('word: ${widget.wordToFind}'),
         // ),
         Container(
-          // margin: const EdgeInsets.only(
-          //   bottom: 50,
-          // ),
+          margin: const EdgeInsets.only(
+            bottom: 50,
+          ),
           child: Center(
             child: Keyboard(
               rightPositionKeys:
