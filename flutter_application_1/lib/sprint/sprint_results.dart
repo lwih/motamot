@@ -30,29 +30,67 @@ class SprintResults extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              'Vous avez trouvé $score ${score > 1 ? 'mots' : 'mot'}.',
-              style: const TextStyle(
+            const Text(
+              "C'est fini !",
+              style: TextStyle(
                 // fontSize: MediaQuery.of(context).size.height * 0.03,
+                fontSize: 26,
                 color: CustomColors.white,
                 decoration: TextDecoration.none,
               ),
             ),
-            // Text(
-            //   'Le mot du jour est ${wordToFind.toUpperCase()}.',
-            //   style: const TextStyle(
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Text(
+                'Votre score est de ${score.toString()}.',
+                style: const TextStyle(
+                  // fontSize: MediaQuery.of(context).size.height * 0.04,
+
+                  fontSize: 16,
+                  color: CustomColors.white,
+                  overflow: TextOverflow.visible,
+                  decoration: TextDecoration.none,
+                ),
+              ),
+            ),
+            // const Text(
+            //   'Reviens demain pour un nouveau mot.',
+            //   style: TextStyle(
             //     // fontSize: MediaQuery.of(context).size.height * 0.04,
+
+            //     fontSize: 16,
             //     color: CustomColors.white,
             //     overflow: TextOverflow.visible, decoration: TextDecoration.none,
             //   ),
             // ),
-            ElevatedButton(
-              child: const Text("Partager"),
-              onPressed: shareResults,
+            Padding(
+              padding: const EdgeInsets.only(top: 50),
+              child: FloatingActionButton.extended(
+                key: const Key('ShareButton'),
+                label: const Text(
+                  "Partager",
+                  style: TextStyle(),
+                ),
+                backgroundColor: CustomColors.wrongPosition,
+                icon: const Icon(
+                  Icons.share,
+                  size: 24.0,
+                ),
+                onPressed: shareResults,
+              ),
             ),
-            ElevatedButton(
-              child: const Text("Retour à l'accueil"),
-              onPressed: goHome,
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: FloatingActionButton.extended(
+                key: const Key('HomeButton'),
+                label: const Text(" Accueil "),
+                backgroundColor: CustomColors.rightPosition,
+                icon: const Icon(
+                  Icons.home,
+                  size: 24.0,
+                ),
+                onPressed: goHome,
+              ),
             ),
           ],
         ),

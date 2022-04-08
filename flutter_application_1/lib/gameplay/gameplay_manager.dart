@@ -170,15 +170,12 @@ class _GameplayManagerState extends State<GameplayManager>
           _validation = "Ce mot est incorrect.";
         });
       } else {
-        bool wordExists = await widget.db.wordExists(_wordInProgress);
-
+        // bool wordExists = await widget.db.wordExists(_wordInProgress);
+        bool wordExists = true;
         if (wordExists) {
           await _playAnimation();
 
           setState(() {
-            // if (_wordInProgress == widget.wordToFind) {
-            //   _finished = true;
-            // } else {
             _wordsInProgress.add(_wordInProgress);
 
             // custom behaviour optionally defined by parent widget

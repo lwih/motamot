@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/gameplay/gameplay_manager.dart';
 import 'package:flutter_application_1/sprint/sprint_results.dart';
 import 'package:flutter_application_1/home/home.dart';
+import 'package:flutter_application_1/sprint/sprint_utils.dart';
 import 'package:flutter_application_1/storage/db_handler.dart';
 import 'package:flutter_application_1/ui/design.dart';
 import 'package:flutter_application_1/sprint/sprint_model.dart';
@@ -43,10 +44,11 @@ class _SprintWordRouteState extends State<SprintWordRoute>
 
   late bool _gamePaused = true;
   late int _duration;
-  late String _currentWordToFind;
+  late String? _currentWordToFind;
   late List<String> _currentWordsInProgress = [];
   late List<String> _allGivenWords;
   int _penalty = 0;
+  bool _finished = false;
 
   @override
   void initState() {
@@ -60,30 +62,13 @@ class _SprintWordRouteState extends State<SprintWordRoute>
     );
 
     setState(() {
-      if (widget.sprint.wordsInProgress == null) {
-        _currentWordToFind = widget.sprint.words.first;
-      } else {
-        int positionOfLastFoundWord = getPositionOfLastFoundWord(
-          widget.sprint.words,
-          widget.sprint.wordsInProgress,
-        );
-        if ((positionOfLastFoundWord == -1 &&
-                widget.sprint.wordsInProgress != null) ||
-            widget.sprint.wordsInProgress == null) {
-          _currentWordToFind = widget.sprint.words.first;
-        } else {
-          _currentWordToFind = selectNextWord(
-            widget.sprint.words,
-            widget.sprint.wordsInProgress!.elementAt(
-              getPositionOfLastFoundWord(
-                widget.sprint.words,
-                widget.sprint.wordsInProgress,
-              ),
-            ),
-          );
-        }
+      _currentWordToFind = getCurrentWordInProgress(
+        widget.sprint.words,
+        widget.sprint.wordsInProgress,
+      )!;
+      if (_currentWordToFind == null) {
+        _finished = true;
       }
-
       _currentWordsInProgress = getCurrentWordConfig(
         widget.sprint.words,
         widget.sprint.wordsInProgress,
@@ -124,10 +109,6 @@ class _SprintWordRouteState extends State<SprintWordRoute>
     });
   }
 
-  String selectNextWord(List<String> wordsToFind, String lastFoundWord) {
-    return wordsToFind[wordsToFind.indexOf(lastFoundWord) + 1];
-  }
-
   void _showOverlay(BuildContext context, {required int score}) async {
     var overlayState = Overlay.of(context);
     // ignore: prefer_typing_uninitialized_variables
@@ -160,6 +141,9 @@ class _SprintWordRouteState extends State<SprintWordRoute>
   }
 
   onFinishGame() async {
+    setState(() {
+      _finished = true;
+    });
     _showOverlay(
       context,
       score: getScore(),
@@ -179,8 +163,8 @@ class _SprintWordRouteState extends State<SprintWordRoute>
     required String word,
     required bool success,
   }) async {
+    String? nextWord = selectNextWord(widget.sprint.words, word);
     setState(() {
-      String nextWord = selectNextWord(widget.sprint.words, word);
       _currentWordToFind = nextWord;
       _currentWordsInProgress = [];
     });
@@ -190,11 +174,15 @@ class _SprintWordRouteState extends State<SprintWordRoute>
           _penalty++;
         });
       }
-      await handler.updateSprintResult(
-        date: formattedToday(),
-        score: getScore(),
-        timeLeftInSeconds: _controller.timeLeftInSeconds,
-      );
+      if (nextWord == null) {
+        onFinishGame();
+      } else {
+        await handler.updateSprintResult(
+          date: formattedToday(),
+          score: getScore(),
+          timeLeftInSeconds: _controller.timeLeftInSeconds,
+        );
+      }
     } catch (e) {
       log('error onFinishWord updateSprintResult', error: e);
     }
@@ -225,15 +213,18 @@ class _SprintWordRouteState extends State<SprintWordRoute>
       appBar: AppBar(
         // Here we take the value from the Sprint object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: const Text('Sprint du dimanche'),
+        title: const Text('Sprint'),
         backgroundColor: CustomColors.backgroundColor,
       ),
       body: Container(
-        child: widget.sprint.timeLeftInSeconds == 0
-            ? Center(
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('ITS FINISHED'),
+        child: widget.sprint.timeLeftInSeconds == 0 || _finished == true
+            ? const Center(
+                child: Text(
+                  'La partie est terminée.',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: CustomColors.white,
+                  ),
                 ),
               )
             : Center(
@@ -245,23 +236,61 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                           ? SizedBox(
                               height: MediaQuery.of(context).size.height / 2,
                               child: Center(
-                                child: ElevatedButton(
+                                child: FloatingActionButton.extended(
                                   key: const Key('StartButton'),
-                                  child: Text(_gamePaused &&
-                                          _controller.timeLeftInSeconds ==
-                                              defaultDurationInSeconds
-                                      ? 'Démarrer'
-                                      : 'Reprendre'),
+                                  label: Text(
+                                    _gamePaused &&
+                                            _controller.timeLeftInSeconds ==
+                                                defaultDurationInSeconds
+                                        ? 'Démarrer'
+                                        : 'Reprendre',
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  backgroundColor: CustomColors.rightPosition,
+                                  icon: const Icon(
+                                    Icons.play_arrow,
+                                    size: 24.0,
+                                  ),
                                   onPressed: () {
                                     onStart();
                                   },
                                 ),
+                                // ElevatedButton(
+                                //   key: const Key('StartButton'),
+                                //   onPressed: () {
+                                //     onStart();
+                                //   },
+                                //   child: Row(
+                                //     mainAxisSize: MainAxisSize.min,
+                                //     children: [
+                                //       Text(
+                                //         _gamePaused &&
+                                //                 _controller.timeLeftInSeconds ==
+                                //                     defaultDurationInSeconds
+                                //             ? 'Démarrer'
+                                //             : 'Reprendre',
+                                //         style: const TextStyle(
+                                //           fontSize: 28,
+                                //         ),
+                                //       ), // <-- Text
+                                //       const SizedBox(
+                                //         width: 2,
+                                //       ),
+                                //       const Icon(
+                                //         Icons.play_arrow,
+                                //         size: 32.0,
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
                               ),
                             )
                           : GameplayManager(
                               db: handler,
                               key: const Key('GameplayManager'),
-                              wordToFind: _currentWordToFind,
+                              wordToFind: _currentWordToFind!,
                               wordsInProgress: _currentWordsInProgress,
                               finished: false,
                               onFinish: onFinishWord,
@@ -272,26 +301,51 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                       margin: const EdgeInsets.only(top: 50),
                       height: 50,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Countdown(
-                            controller: _controller,
-                            seconds: _duration,
-                            build: (BuildContext context, double time) => Text(
-                              displayTime(time),
-                              style: const TextStyle(color: CustomColors.white),
-                            ),
-                            interval: const Duration(seconds: 1),
-                            onFinished: () async {
-                              await onFinishGame();
-                            },
+                          Row(
+                            children: [
+                              Text(
+                                'Score: ${getScore().toString()}',
+                                style: const TextStyle(
+                                  color: CustomColors.white,
+                                  fontSize: 20,
+                                ),
+                              )
+                            ],
                           ),
-                          ElevatedButton(
-                            child: const Text('Pause'),
-                            onPressed: () {
-                              onPause();
-                            },
-                          ),
+                          Row(
+                            children: [
+                              Countdown(
+                                controller: _controller,
+                                seconds: _duration,
+                                build: (BuildContext context, double time) =>
+                                    Text(
+                                  displayTime(time),
+                                  style: const TextStyle(
+                                    color: CustomColors.white,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                interval: const Duration(seconds: 1),
+                                onFinished: () async {
+                                  await onFinishGame();
+                                },
+                              ),
+                              IconButton(
+                                iconSize: 30,
+                                splashRadius: 32,
+                                color: _gamePaused
+                                    ? CustomColors.backgroundColor
+                                    : CustomColors.white,
+                                icon: const Icon(Icons.pause),
+                                key: const Key('PauseButton'),
+                                onPressed: () {
+                                  onPause();
+                                },
+                              )
+                            ],
+                          )
                         ],
                       ),
                     )

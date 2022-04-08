@@ -17,15 +17,10 @@ class DailyResults extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-        // SizedBox(
-        //   width: MediaQuery.of(context).size.width * 0.8,
-        //   child:
-        Container(
-      alignment: Alignment.bottomCenter,
+    return Container(
+      // alignment: Alignment.bottomCenter,
       color: CustomColors.backgroundColor,
       padding: const EdgeInsets.all(20),
-      constraints: BoxConstraints.tight(const Size.fromWidth(100)),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -36,25 +31,72 @@ class DailyResults extends StatelessWidget {
               success ? 'Félicitations' : 'Dommage...',
               style: const TextStyle(
                 // fontSize: MediaQuery.of(context).size.height * 0.03,
+                fontSize: 26,
                 color: CustomColors.white,
                 decoration: TextDecoration.none,
               ),
             ),
-            Text(
-              'Le mot du jour est ${wordToFind.toUpperCase()}.',
-              style: const TextStyle(
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Text(
+                'Le mot du jour était "${wordToFind.toUpperCase()}".',
+                style: const TextStyle(
+                  // fontSize: MediaQuery.of(context).size.height * 0.04,
+
+                  fontSize: 16,
+                  color: CustomColors.white,
+                  overflow: TextOverflow.visible,
+                  decoration: TextDecoration.none,
+                ),
+              ),
+            ),
+            const Text(
+              'Reviens demain pour un nouveau mot.',
+              style: TextStyle(
                 // fontSize: MediaQuery.of(context).size.height * 0.04,
+
+                fontSize: 16,
                 color: CustomColors.white,
                 overflow: TextOverflow.visible, decoration: TextDecoration.none,
               ),
             ),
-            ElevatedButton(
-              child: const Text("Partager"),
-              onPressed: shareResults,
+            Padding(
+              padding: const EdgeInsets.only(top: 50),
+              child: FloatingActionButton.extended(
+                key: const Key('ShareButton'),
+                label: const Text(
+                  "Partager",
+                  style: TextStyle(
+                      // fontSize: 20,
+                      // shadows: <Shadow>[
+                      //   Shadow(
+                      //     offset: Offset(1.0, 1.0),
+                      //     blurRadius: 1.0,
+                      //     color: Color.fromARGB(255, 90, 90, 90),
+                      //   ),
+                      // ],
+                      ),
+                ),
+                backgroundColor: CustomColors.wrongPosition,
+                icon: const Icon(
+                  Icons.share,
+                  size: 24.0,
+                ),
+                onPressed: shareResults,
+              ),
             ),
-            ElevatedButton(
-              child: const Text("Retour à l'accueil"),
-              onPressed: goHome,
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: FloatingActionButton.extended(
+                key: const Key('HomeButton'),
+                label: const Text(" Accueil "),
+                backgroundColor: CustomColors.rightPosition,
+                icon: const Icon(
+                  Icons.home,
+                  size: 24.0,
+                ),
+                onPressed: goHome,
+              ),
             ),
           ],
         ),

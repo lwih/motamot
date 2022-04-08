@@ -120,7 +120,7 @@ class _HomeState extends State<Home> {
                             ),
                           );
                         },
-                        title: 'Sprint du dimanche',
+                        title: 'Sprint',
                         description:
                             'Tous les dimanches, 5 minutes pour tout donner.',
                         next: snapshot.data?.score != null ? 'dimanche' : null,
