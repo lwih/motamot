@@ -5,6 +5,7 @@ import 'package:flutter_application_1/ui/design.dart';
 
 class CardButton extends StatelessWidget {
   final void Function() onTap;
+  final void Function() onShare;
   final String title;
   final String description;
   final bool? success;
@@ -12,6 +13,7 @@ class CardButton extends StatelessWidget {
 
   const CardButton({
     required this.onTap,
+    required this.onShare,
     required this.title,
     required this.description,
     this.success,
@@ -86,9 +88,7 @@ class CardButton extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.share),
                       color: CustomColors.white,
-                      onPressed: () {
-                        log('labite');
-                      },
+                      onPressed: onShare,
                     ),
                   ],
                 )

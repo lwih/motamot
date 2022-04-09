@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/daily/daily_share.dart';
 import 'package:flutter_application_1/sprint/sprint_model.dart';
+import 'package:flutter_application_1/sprint/sprint_share.dart';
 import 'package:flutter_application_1/ui/button/card_button.dart';
 import 'package:flutter_application_1/ui/design.dart';
 import 'package:flutter_application_1/daily/daily.dart';
@@ -72,6 +74,14 @@ class _HomeState extends State<Home> {
                       description: 'Un jour, un mot, six tentatives',
                       next: snapshot.data?.success != null ? 'demain' : null,
                       success: snapshot.data?.success,
+                      onShare: () async {
+                        await shareDailyResults(daily);
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          duration: Duration(seconds: 1),
+                          content: Text('Résumé copié dans le presse papier'),
+                        ));
+                      },
                     ),
                   );
                 } else {
@@ -101,22 +111,29 @@ class _HomeState extends State<Home> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: CardButton(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              FadeRoute(
-                                page: SprintWordRoute(
-                                  sprint: sprint,
-                                ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            FadeRoute(
+                              page: SprintWordRoute(
+                                sprint: sprint,
                               ),
-                            );
-                          },
-                          title: 'Sprint',
-                          description:
-                              "10 mots en 5 minutes, c'est pas évident",
-                          next:
-                              snapshot.data?.score != null ? 'dimanche' : null,
-                          success: snapshot.data?.score == null ? null : true),
+                            ),
+                          );
+                        },
+                        title: 'Sprint',
+                        description: "10 mots en 5 minutes, c'est pas évident",
+                        next: snapshot.data?.score != null ? 'dimanche' : null,
+                        success: snapshot.data?.score == null ? null : true,
+                        onShare: () async {
+                          await shareSprintResults(sprint);
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            duration: Duration(seconds: 1),
+                            content: Text('Résumé copié dans le presse papier'),
+                          ));
+                        },
+                      ),
                     ),
                   );
                 } else {
