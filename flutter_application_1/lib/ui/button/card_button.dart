@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/design.dart';
 
@@ -5,14 +7,14 @@ class CardButton extends StatelessWidget {
   final void Function() onTap;
   final String title;
   final String description;
-  final bool? status;
+  final bool? success;
   final String? next;
 
   const CardButton({
     required this.onTap,
     required this.title,
     required this.description,
-    this.status,
+    this.success,
     this.next,
     Key? key,
   }) : super(key: key);
@@ -22,20 +24,21 @@ class CardButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color: CustomColors.buttonColor,
+        color: success == null
+            ? CustomColors.buttonColor
+            : CustomColors.buttonColorDisabled,
         borderOnForeground: true,
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: SizedBox(
             width: 300,
-            height: 135,
+            // height: 135,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 0),
-                  child: Text(
+                ListTile(
+                  title: Text(
                     title,
                     style: const TextStyle(
                       color: CustomColors.white,
@@ -43,44 +46,52 @@ class CardButton extends StatelessWidget {
                       fontSize: 26,
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Text(
-                    description,
-                    style: const TextStyle(
-                      color: CustomColors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                  subtitle: Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      description,
+                      style: const TextStyle(
+                        color: CustomColors.white,
+                        // fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
+                  trailing: success == null
+                      ? null
+                      : success == true
+                          ? const Icon(
+                              Icons.check_circle,
+                              color: CustomColors.rightPosition,
+                            )
+                          : const Icon(
+                              Icons.cancel,
+                              color: CustomColors.failed,
+                            ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 25),
-                  child: Text(
-                    status == null
-                        ? ''
-                        : status == true
-                            ? 'Status: gagné'
-                            : 'Status: perdu',
-                    style: const TextStyle(
-                      color: CustomColors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                ButtonBar(
+                  alignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        next != null ? 'Prochaine partie: $next' : '',
+                        style: const TextStyle(
+                          color: CustomColors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Text(
-                    next != null ? 'Prochain mot: $next' : '',
-                    style: const TextStyle(
+                    IconButton(
+                      icon: const Icon(Icons.share),
                       color: CustomColors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                      onPressed: () {
+                        log('labite');
+                      },
                     ),
-                  ),
-                ),
+                  ],
+                )
               ],
             ),
           ),

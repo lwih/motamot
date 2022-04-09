@@ -20,7 +20,7 @@ class Keystroke extends StatelessWidget {
       onPressed: onPressed,
       child: Center(
         child: Text(
-          keyStroke,
+          keyStroke.toUpperCase(),
           style: const TextStyle(fontSize: 16),
         ),
       ),

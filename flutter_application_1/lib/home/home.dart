@@ -59,24 +59,19 @@ class _HomeState extends State<Home> {
                   return Center(
                     child: CardButton(
                       onTap: () {
-                        // hasBeenPlayed == true
-                        //     ? () {}
-                        //     : () {
-                        //         Navigator.push(context,
-                        // FadeRoute(page: const DailyWordRoute()));
-                        //       },
                         Navigator.push(
-                            context,
-                            FadeRoute(
-                                page: DailyWordRoute(
+                          context,
+                          FadeRoute(
+                            page: DailyWordRoute(
                               daily: daily,
-                            )));
+                            ),
+                          ),
+                        );
                       },
                       title: 'Mot du jour',
-                      description:
-                          'Garder son cerveau en forme en trouvant le mot du jour.',
+                      description: 'Un jour, un mot, six tentatives',
                       next: snapshot.data?.success != null ? 'demain' : null,
-                      status: snapshot.data?.success,
+                      success: snapshot.data?.success,
                     ),
                   );
                 } else {
@@ -103,28 +98,26 @@ class _HomeState extends State<Home> {
                 } else if (snapshot.hasData) {
                   Sprint sprint = snapshot.data!;
                   return Center(
-                    child: CardButton(
-                        onTap: () {
-                          // hasBeenPlayed == true
-                          //     ? () {}
-                          //     : () {
-                          //         Navigator.push(context,
-                          // FadeRoute(page: const DailyWordRoute()));
-                          //       },
-                          Navigator.push(
-                            context,
-                            FadeRoute(
-                              page: SprintWordRoute(
-                                sprint: sprint,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: CardButton(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              FadeRoute(
+                                page: SprintWordRoute(
+                                  sprint: sprint,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        title: 'Sprint',
-                        description:
-                            'Tous les dimanches, 5 minutes pour tout donner.',
-                        next: snapshot.data?.score != null ? 'dimanche' : null,
-                        status: snapshot.data?.score != null),
+                            );
+                          },
+                          title: 'Sprint',
+                          description:
+                              "10 mots en 5 minutes, c'est pas évident",
+                          next:
+                              snapshot.data?.score != null ? 'dimanche' : null,
+                          success: snapshot.data?.score == null ? null : true),
+                    ),
                   );
                 } else {
                   return Column(
