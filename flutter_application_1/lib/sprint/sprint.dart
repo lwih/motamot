@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/gameplay/gameplay_manager.dart';
+import 'package:flutter_application_1/sprint/sprint_instructions.dart';
 import 'package:flutter_application_1/sprint/sprint_results.dart';
 import 'package:flutter_application_1/home/home.dart';
 import 'package:flutter_application_1/sprint/sprint_utils.dart';
@@ -109,7 +110,22 @@ class _SprintWordRouteState extends State<SprintWordRoute>
     });
   }
 
-  void _showOverlay(BuildContext context, {required int score}) async {
+  void _showExplanationsOverlay(BuildContext context) async {
+    var overlayState = Overlay.of(context);
+    // ignore: prefer_typing_uninitialized_variables
+    var overlayEntry;
+    overlayEntry = OverlayEntry(builder: (context) {
+      return SprintInstructions(
+        onClose: () {
+          overlayEntry.remove();
+        },
+      );
+    });
+
+    overlayState?.insert(overlayEntry);
+  }
+
+  void _showResultsOverlay(BuildContext context, {required int score}) async {
     var overlayState = Overlay.of(context);
     // ignore: prefer_typing_uninitialized_variables
     var overlayEntry;
@@ -144,7 +160,7 @@ class _SprintWordRouteState extends State<SprintWordRoute>
     setState(() {
       _finished = true;
     });
-    _showOverlay(
+    _showResultsOverlay(
       context,
       score: getScore(),
     );
@@ -215,6 +231,16 @@ class _SprintWordRouteState extends State<SprintWordRoute>
         // the App.build method, and use it to set our appbar title.
         title: const Text('Sprint'),
         backgroundColor: CustomColors.backgroundColor,
+        actions: <Widget>[
+          Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  _showExplanationsOverlay(context);
+                },
+                child: const Icon(Icons.info_outline),
+              )),
+        ],
       ),
       body: Container(
         child: widget.sprint.timeLeftInSeconds == 0 || _finished == true

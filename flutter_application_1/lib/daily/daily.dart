@@ -56,10 +56,6 @@ class _DailyWordRouteState extends State<DailyWordRoute>
     super.dispose();
   }
 
-  void onCloseExplanations(OverlayEntry overlayEntry) {
-    overlayEntry.dispose();
-  }
-
   void _showExplanationsOverlay(BuildContext context) async {
     var overlayState = Overlay.of(context);
     // ignore: prefer_typing_uninitialized_variables
@@ -72,7 +68,6 @@ class _DailyWordRouteState extends State<DailyWordRoute>
       );
     });
 
-    // Inserting the OverlayEntry into the Overlay
     overlayState?.insert(overlayEntry);
   }
 
@@ -103,7 +98,6 @@ class _DailyWordRouteState extends State<DailyWordRoute>
           });
     });
 
-    // Inserting the OverlayEntry into the Overlay
     overlayState?.insert(overlayEntry);
   }
 
