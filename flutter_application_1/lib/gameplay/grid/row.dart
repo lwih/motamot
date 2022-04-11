@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/gameplay/grid/cell.dart';
 import 'package:flutter_application_1/ui/design.dart';
 import 'package:flutter_application_1/utils.dart';
 
@@ -51,20 +52,11 @@ class WordRow extends StatelessWidget {
         i++;
         return Padding(
           padding: const EdgeInsets.all(1),
-          child: Container(
+          child: Cell(
             color: getColor(wordToFind, word, letter, i),
-            width: size > 50 ? 50 : size,
-            height: size > 50 ? 50 : size,
-            child: Center(
-              child: Text(
-                letter.toUpperCase(),
-                style: TextStyle(
-                  color: CustomColors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: wordToFind.length > 8 ? 16 : 20,
-                ),
-              ),
-            ),
+            text: letter.toUpperCase(),
+            size: size > 50 ? 50 : size,
+            fontSize: wordToFind.length > 8 ? 16 : 20,
           ),
         );
       }).toList(),

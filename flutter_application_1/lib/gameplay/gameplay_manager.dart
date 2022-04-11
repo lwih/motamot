@@ -56,7 +56,7 @@ class _GameplayManagerState extends State<GameplayManager>
       _wordsInProgress = [...?widget.wordsInProgress];
       _finished = widget.finished;
       _validation = widget.finished
-          ? 'Le mot à trouver était "${widget.wordToFind.toUpperCase()}".'
+          ? 'La solution était "${widget.wordToFind.toUpperCase()}".'
           : '';
     });
   }

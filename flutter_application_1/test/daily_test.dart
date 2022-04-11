@@ -44,8 +44,8 @@ void main() {
             )));
         await tester.pumpWidget(testWidget);
 
-        final finishedTextFinder = find.text(
-            'Le mot à trouver était "${finishedDaily.word.toUpperCase()}".');
+        final finishedTextFinder = find
+            .text('La solution était "${finishedDaily.word.toUpperCase()}".');
         expect(finishedTextFinder, findsOneWidget);
       });
     });

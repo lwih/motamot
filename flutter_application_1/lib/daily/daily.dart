@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/daily/daily_instructions.dart';
 import 'package:flutter_application_1/gameplay/gameplay_manager.dart';
 import 'package:flutter_application_1/daily/daily_model.dart';
 import 'package:flutter_application_1/home/home.dart';
@@ -15,15 +16,6 @@ import 'daily_results.dart';
 class DailyWordRoute extends StatefulWidget {
   final Daily daily;
   const DailyWordRoute({required this.daily, Key? key}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   @override
   State<DailyWordRoute> createState() => _DailyWordRouteState();
@@ -64,8 +56,31 @@ class _DailyWordRouteState extends State<DailyWordRoute>
     super.dispose();
   }
 
-  void _showOverlay(BuildContext context,
-      {required bool success, required String word}) async {
+  void onCloseExplanations(OverlayEntry overlayEntry) {
+    overlayEntry.dispose();
+  }
+
+  void _showExplanationsOverlay(BuildContext context) async {
+    var overlayState = Overlay.of(context);
+    // ignore: prefer_typing_uninitialized_variables
+    var overlayEntry;
+    overlayEntry = OverlayEntry(builder: (context) {
+      return DailyInstructions(
+        onClose: () {
+          overlayEntry.remove();
+        },
+      );
+    });
+
+    // Inserting the OverlayEntry into the Overlay
+    overlayState?.insert(overlayEntry);
+  }
+
+  void _showResultsOverlay(
+    BuildContext context, {
+    required bool success,
+    required String word,
+  }) async {
     var overlayState = Overlay.of(context);
     // ignore: prefer_typing_uninitialized_variables
     var overlayEntry;
@@ -96,7 +111,7 @@ class _DailyWordRouteState extends State<DailyWordRoute>
     required String word,
     required bool success,
   }) async {
-    _showOverlay(
+    _showResultsOverlay(
       context,
       success: true,
       word: word,
@@ -139,10 +154,20 @@ class _DailyWordRouteState extends State<DailyWordRoute>
         // the App.build method, and use it to set our appbar title.
         title: const Text('Le mot du jour'),
         backgroundColor: CustomColors.backgroundColor,
+        actions: <Widget>[
+          Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  _showExplanationsOverlay(context);
+                },
+                child: const Icon(Icons.info_outline),
+              )),
+        ],
       ),
       body: Container(
         // margin: EdgeInsets.all(dailyWord.length > 6 ? 10 : 30),
-        padding: const EdgeInsets.all(10),
+        padding: EdgeInsets.all(dailyWord.length > 6 ? 10 : 30),
         child: GameplayManager(
           db: handler,
           wordToFind: dailyWord,

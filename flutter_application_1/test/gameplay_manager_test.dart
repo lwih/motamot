@@ -324,7 +324,7 @@ void main() {
         await tester.pumpWidget(testWidget);
 
         final finishedTextFinder =
-            find.text('Le mot à trouver était "${"plateau".toUpperCase()}".');
+            find.text('La solution était "${"plateau".toUpperCase()}".');
         expect(finishedTextFinder, findsOneWidget);
       });
     });
