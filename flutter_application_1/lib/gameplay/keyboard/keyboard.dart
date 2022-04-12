@@ -32,7 +32,7 @@ class Keyboard extends StatelessWidget {
     } else if (disableKeys.contains(key)) {
       return CustomColors.backgroundColor;
     } else {
-      return CustomColors.notInWord;
+      return CustomColors.buttonColor;
     }
   }
 
@@ -55,7 +55,7 @@ class Keyboard extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(1),
                           child: Container(
-                            color: CustomColors.notInWord,
+                            color: CustomColors.buttonColor,
                             width: 68,
                             height: 58,
                             child: IconButton(

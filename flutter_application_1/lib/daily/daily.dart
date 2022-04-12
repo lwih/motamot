@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/daily/daily_instructions.dart';
+import 'package:flutter_application_1/daily/daily_share.dart';
 import 'package:flutter_application_1/gameplay/gameplay_manager.dart';
 import 'package:flutter_application_1/daily/daily_model.dart';
 import 'package:flutter_application_1/home/home.dart';
@@ -80,22 +81,38 @@ class _DailyWordRouteState extends State<DailyWordRoute>
     // ignore: prefer_typing_uninitialized_variables
     var overlayEntry;
     overlayEntry = OverlayEntry(builder: (context) {
-      return DailyResults(
-          wordToFind: word,
-          success: success,
-          shareResults: () {},
-          goHome: () {
-            overlayEntry.remove();
-            // .pop() will not refresh the FutureBuilders in Home()
-            // pushAndRemoveUntil() make it word
-            Navigator.pushAndRemoveUntil(
-              context,
-              FadeRoute(
-                page: const Home(),
-              ),
-              (Route<dynamic> route) => false,
-            );
-          });
+      return Scaffold(
+        body: DailyResults(
+            wordToFind: word,
+            success: success,
+            shareResults: () async {
+              await shareDailyResults(
+                Daily(
+                  date: formattedToday(),
+                  word: widget.daily.word,
+                  success: success,
+                  words: _wordsInProgress,
+                ),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                // behavior: SnackBarBehavior.fixed,
+                duration: Duration(seconds: 1, milliseconds: 200),
+                content: Text('Résumé copié dans le presse papier'),
+              ));
+            },
+            goHome: () {
+              overlayEntry.remove();
+              // .pop() will not refresh the FutureBuilders in Home()
+              // pushAndRemoveUntil() make it word
+              Navigator.pushAndRemoveUntil(
+                context,
+                FadeRoute(
+                  page: const Home(),
+                ),
+                (Route<dynamic> route) => false,
+              );
+            }),
+      );
     });
 
     overlayState?.insert(overlayEntry);
@@ -150,13 +167,17 @@ class _DailyWordRouteState extends State<DailyWordRoute>
         backgroundColor: CustomColors.backgroundColor,
         actions: <Widget>[
           Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  _showExplanationsOverlay(context);
-                },
-                child: const Icon(Icons.info_outline),
-              )),
+            padding: const EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              onTap: () {
+                _showExplanationsOverlay(context);
+              },
+              child: const Icon(
+                Icons.info_outline,
+                color: CustomColors.hintText,
+              ),
+            ),
+          ),
         ],
       ),
       body: Container(

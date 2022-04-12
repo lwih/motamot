@@ -78,7 +78,7 @@ class _HomeState extends State<Home> {
                         await shareDailyResults(daily);
                         ScaffoldMessenger.of(context)
                             .showSnackBar(const SnackBar(
-                          duration: Duration(seconds: 1),
+                          duration: Duration(seconds: 1, milliseconds: 200),
                           content: Text('Résumé copié dans le presse papier'),
                         ));
                       },
@@ -126,10 +126,10 @@ class _HomeState extends State<Home> {
                         next: snapshot.data?.score != null ? 'dimanche' : null,
                         success: snapshot.data?.score == null ? null : true,
                         onShare: () async {
-                          await shareSprintResults(sprint);
+                          await shareSprintResults(sprint.score ?? 0);
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
-                            duration: Duration(seconds: 1),
+                            duration: Duration(seconds: 1, milliseconds: 200),
                             content: Text('Résumé copié dans le presse papier'),
                           ));
                         },

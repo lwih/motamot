@@ -23,7 +23,7 @@ class SprintResults extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       color: CustomColors.backgroundColor,
       padding: const EdgeInsets.all(20),
-      constraints: BoxConstraints.tight(const Size.fromWidth(100)),
+      // constraints: BoxConstraints.tight(const Size.fromWidth(100)),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

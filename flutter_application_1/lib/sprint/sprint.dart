@@ -6,6 +6,7 @@ import 'package:flutter_application_1/gameplay/gameplay_manager.dart';
 import 'package:flutter_application_1/sprint/sprint_instructions.dart';
 import 'package:flutter_application_1/sprint/sprint_results.dart';
 import 'package:flutter_application_1/home/home.dart';
+import 'package:flutter_application_1/sprint/sprint_share.dart';
 import 'package:flutter_application_1/sprint/sprint_utils.dart';
 import 'package:flutter_application_1/storage/db_handler.dart';
 import 'package:flutter_application_1/ui/design.dart';
@@ -130,22 +131,32 @@ class _SprintWordRouteState extends State<SprintWordRoute>
     // ignore: prefer_typing_uninitialized_variables
     var overlayEntry;
     overlayEntry = OverlayEntry(builder: (context) {
-      return SprintResults(
-          score: score,
-          shareResults: () {},
-          goHome: () {
-            overlayEntry.remove();
+      return Scaffold(
+        body: SprintResults(
+            score: score,
+            shareResults: () async {
+              var a = score;
+              await shareSprintResults(getScore());
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                // behavior: SnackBarBehavior.fixed,
+                duration: Duration(seconds: 1, milliseconds: 200),
+                content: Text('Résumé copié dans le presse papier'),
+              ));
+            },
+            goHome: () {
+              overlayEntry.remove();
 
-            // .pop() will not refresh the FutureBuilders in Home()
-            // pushAndRemoveUntil() make it word
-            Navigator.pushAndRemoveUntil(
-              context,
-              FadeRoute(
-                page: const Home(),
-              ),
-              (Route<dynamic> route) => false,
-            );
-          });
+              // .pop() will not refresh the FutureBuilders in Home()
+              // pushAndRemoveUntil() make it word
+              Navigator.pushAndRemoveUntil(
+                context,
+                FadeRoute(
+                  page: const Home(),
+                ),
+                (Route<dynamic> route) => false,
+              );
+            }),
+      );
     });
 
     // Inserting the OverlayEntry into the Overlay
@@ -238,7 +249,10 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                 onTap: () {
                   _showExplanationsOverlay(context);
                 },
-                child: const Icon(Icons.info_outline),
+                child: const Icon(
+                  Icons.info_outline,
+                  color: CustomColors.hintText,
+                ),
               )),
         ],
       ),
