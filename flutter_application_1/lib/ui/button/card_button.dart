@@ -6,6 +6,8 @@ import 'package:flutter_application_1/ui/design.dart';
 class CardButton extends StatelessWidget {
   final void Function() onTap;
   final void Function() onShare;
+  final bool enableShare;
+  final bool? disabled;
   final String title;
   final String description;
   final bool? success;
@@ -14,9 +16,11 @@ class CardButton extends StatelessWidget {
   const CardButton({
     required this.onTap,
     required this.onShare,
+    required this.enableShare,
     required this.title,
     required this.description,
     this.success,
+    this.disabled,
     this.next,
     Key? key,
   }) : super(key: key);
@@ -26,9 +30,9 @@ class CardButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color: success == null
-            ? CustomColors.buttonColor
-            : CustomColors.buttonColorDisabled,
+        color: disabled == true
+            ? CustomColors.buttonColorDisabled
+            : CustomColors.buttonColor,
         borderOnForeground: true,
         child: Padding(
           padding: const EdgeInsets.all(10),
@@ -75,9 +79,9 @@ class CardButton extends StatelessWidget {
                   alignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
-                      onPressed: () {},
+                      onPressed: onTap,
                       child: Text(
-                        next != null ? 'Prochaine partie: $next' : '',
+                        next != null ? '$next' : '',
                         style: const TextStyle(
                           color: CustomColors.white,
                           fontWeight: FontWeight.bold,
@@ -85,11 +89,13 @@ class CardButton extends StatelessWidget {
                         ),
                       ),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.share),
-                      color: CustomColors.white,
-                      onPressed: onShare,
-                    ),
+                    !enableShare
+                        ? Container()
+                        : IconButton(
+                            icon: const Icon(Icons.share),
+                            color: CustomColors.white,
+                            onPressed: onShare,
+                          ),
                   ],
                 )
               ],

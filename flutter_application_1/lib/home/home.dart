@@ -24,58 +24,103 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: CustomColors.backgroundColor,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Center(
-                child: Image.asset('assets/logo.png'),
-              ),
+      backgroundColor: CustomColors.backgroundColor,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Center(
+              child: Image.asset('assets/logo.png'),
             ),
-            // Center(
-            //   child: CardButton(
-            //     onTap: () {
-            //       Navigator.push(
-            //           context, FadeRoute(page: const RandomWordRoute()));
-            //     },
-            //     title: 'Mot Aléatoire',
-            //     description: 'mot random',
-            //   ),
-            // ),
-            FutureBuilder(
-              future: handler.retrieveDailyChallenge(formattedToday()),
-              builder: (context, AsyncSnapshot<Daily> snapshot) {
-                if (snapshot.hasError) {
-                  return Scaffold(
-                    backgroundColor: CustomColors.backgroundColor,
-                    body: Column(
-                      children: const [
-                        Text('error'),
-                      ],
-                    ),
-                  );
-                } else if (snapshot.hasData) {
-                  Daily daily = snapshot.data!;
-                  return Center(
+          ),
+          // Center(
+          //   child: CardButton(
+          //     onTap: () {
+          //       Navigator.push(
+          //           context, FadeRoute(page: const RandomWordRoute()));
+          //     },
+          //     title: 'Mot Aléatoire',
+          //     description: 'mot random',
+          //   ),
+          // ),
+          FutureBuilder(
+            future: handler.retrieveDailyChallenge(formattedToday()),
+            builder: (context, AsyncSnapshot<Daily> snapshot) {
+              if (snapshot.hasData) {
+                Daily daily = snapshot.data!;
+                return Center(
+                  child: CardButton(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        FadeRoute(
+                          page: DailyWordRoute(
+                            daily: daily,
+                          ),
+                        ),
+                      );
+                    },
+                    title: 'Mot du jour',
+                    description: 'Un jour, un mot, six tentatives',
+                    next: snapshot.data?.success != null
+                        ? 'Disponible demain'
+                        : 'Disponible maintenant',
+                    success: snapshot.data?.success,
+                    disabled: snapshot.data?.success == null ? false : true,
+                    enableShare: snapshot.data?.success == null ? false : true,
+                    onShare: () async {
+                      await shareDailyResults(daily);
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        duration: Duration(seconds: 1, milliseconds: 200),
+                        content: Text('Résumé copié dans le presse papier'),
+                      ));
+                    },
+                  ),
+                );
+              } else {
+                return Center(
+                  child: CardButton(
+                    onTap: () {},
+                    title: 'Mot du jour',
+                    description: 'Un jour, un mot, six tentatives',
+                    next: null,
+                    success: null,
+                    disabled: true,
+                    enableShare: false,
+                    onShare: () {},
+                  ),
+                );
+              }
+            },
+          ),
+          FutureBuilder(
+            future: handler.retrieveSprintChallenge(formattedToday()),
+            builder: (context, AsyncSnapshot<Sprint> snapshot) {
+              if (snapshot.hasData) {
+                Sprint sprint = snapshot.data!;
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10),
                     child: CardButton(
                       onTap: () {
                         Navigator.push(
                           context,
                           FadeRoute(
-                            page: DailyWordRoute(
-                              daily: daily,
+                            page: SprintWordRoute(
+                              sprint: sprint,
                             ),
                           ),
                         );
                       },
-                      title: 'Mot du jour',
-                      description: 'Un jour, un mot, six tentatives',
-                      next: snapshot.data?.success != null ? 'demain' : null,
-                      success: snapshot.data?.success,
+                      title: 'Sprint',
+                      description: "10 mots en 5 minutes, c'est pas évident",
+                      next: 'Disponible tous les dimanches',
+                      disabled: snapshot.data?.score == null ? false : true,
+                      success: snapshot.data?.score == null ? null : true,
+                      enableShare: snapshot.data?.score == null ? false : true,
                       onShare: () async {
-                        await shareDailyResults(daily);
+                        await shareSprintResults(sprint.score ?? 0);
                         ScaffoldMessenger.of(context)
                             .showSnackBar(const SnackBar(
                           duration: Duration(seconds: 1, milliseconds: 200),
@@ -83,69 +128,29 @@ class _HomeState extends State<Home> {
                         ));
                       },
                     ),
-                  );
-                } else {
-                  return Column(
-                    children: const [
-                      Text('loading'),
-                    ],
-                  );
-                }
-              },
-            ),
-            FutureBuilder(
-              future: handler.retrieveSprintChallenge(formattedToday()),
-              builder: (context, AsyncSnapshot<Sprint> snapshot) {
-                if (snapshot.hasError) {
-                  return Scaffold(
-                    backgroundColor: CustomColors.backgroundColor,
-                    body: Column(
-                      children: const [
-                        Text('error'),
-                      ],
+                  ),
+                );
+              } else {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: CardButton(
+                      onTap: () {},
+                      title: 'Sprint',
+                      description: "Jusqu'à 10 mots à trouver en 5 minutes",
+                      next: 'Disponible tous les dimanches',
+                      disabled: true,
+                      success: null,
+                      enableShare: false,
+                      onShare: () {},
                     ),
-                  );
-                } else if (snapshot.hasData) {
-                  Sprint sprint = snapshot.data!;
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: CardButton(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            FadeRoute(
-                              page: SprintWordRoute(
-                                sprint: sprint,
-                              ),
-                            ),
-                          );
-                        },
-                        title: 'Sprint',
-                        description: "10 mots en 5 minutes, c'est pas évident",
-                        next: snapshot.data?.score != null ? 'dimanche' : null,
-                        success: snapshot.data?.score == null ? null : true,
-                        onShare: () async {
-                          await shareSprintResults(sprint.score ?? 0);
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            duration: Duration(seconds: 1, milliseconds: 200),
-                            content: Text('Résumé copié dans le presse papier'),
-                          ));
-                        },
-                      ),
-                    ),
-                  );
-                } else {
-                  return Column(
-                    children: const [
-                      Text('loading'),
-                    ],
-                  );
-                }
-              },
-            ),
-          ],
-        ));
+                  ),
+                );
+              }
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

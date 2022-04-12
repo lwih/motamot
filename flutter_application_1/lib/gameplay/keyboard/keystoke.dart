@@ -25,6 +25,7 @@ class Keystroke extends StatelessWidget {
         ),
       ),
       style: ElevatedButton.styleFrom(
+        enableFeedback: true,
         primary: background,
         padding: const EdgeInsets.all(1.0),
         elevation: 3,

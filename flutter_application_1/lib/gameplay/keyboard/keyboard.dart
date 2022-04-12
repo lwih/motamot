@@ -61,6 +61,7 @@ class Keyboard extends StatelessWidget {
                             child: IconButton(
                               // iconSize: 10,
                               splashRadius: 22,
+                              enableFeedback: true,
                               color: CustomColors.white,
                               key: Key(
                                   key == 'delete' ? 'KeyDelete' : 'KeyEnter'),
