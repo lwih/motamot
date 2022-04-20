@@ -135,7 +135,6 @@ class _SprintWordRouteState extends State<SprintWordRoute>
         body: SprintResults(
             score: score,
             shareResults: () async {
-              var a = score;
               await shareSprintResults(getScore());
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 // behavior: SnackBarBehavior.fixed,

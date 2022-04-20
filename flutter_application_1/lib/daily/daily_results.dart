@@ -28,7 +28,7 @@ class DailyResults extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              success ? 'Félicitations' : 'Dommage...',
+              success == true ? 'Félicitations' : 'Dommage...',
               style: const TextStyle(
                 // fontSize: MediaQuery.of(context).size.height * 0.03,
                 fontSize: 26,

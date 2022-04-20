@@ -124,7 +124,7 @@ class _DailyWordRouteState extends State<DailyWordRoute>
   }) async {
     _showResultsOverlay(
       context,
-      success: true,
+      success: success,
       word: word,
     );
     try {
