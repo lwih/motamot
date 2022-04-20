@@ -88,6 +88,7 @@ class _DailyWordRouteState extends State<DailyWordRoute>
             shareResults: () async {
               await shareDailyResults(
                 Daily(
+                  id: 123,
                   date: formattedToday(),
                   word: widget.daily.word,
                   success: success,
@@ -133,7 +134,7 @@ class _DailyWordRouteState extends State<DailyWordRoute>
         success: success,
       );
     } catch (e) {
-      log('error onFinish updateSprintWordsInProgress', error: e);
+      log('error onFinish updateDailyResult', error: e);
     }
   }
 

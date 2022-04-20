@@ -1,10 +1,12 @@
 class Daily {
+  final int id;
   final String date;
   final String word;
   final bool? success;
   final List<String>? words;
 
   Daily({
+    required this.id,
     required this.date,
     required this.word,
     required this.success,
@@ -12,7 +14,8 @@ class Daily {
   });
 
   Daily.fromMap(Map<String, dynamic> res)
-      : date = res['date'],
+      : id = res['id'],
+        date = res['date'],
         word = res['word'],
         success = res['success'] == 1
             ? true
@@ -23,6 +26,7 @@ class Daily {
 
   Map<String, Object?> toMap() {
     return {
+      'id': id,
       'date': date,
       'word': word,
       'success': success == true

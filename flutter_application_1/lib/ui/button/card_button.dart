@@ -5,7 +5,7 @@ import 'package:flutter_application_1/ui/design.dart';
 
 class CardButton extends StatelessWidget {
   final void Function() onTap;
-  final void Function() onShare;
+  final void Function()? onShare;
   final bool enableShare;
   final bool? disabled;
   final String title;
@@ -15,7 +15,7 @@ class CardButton extends StatelessWidget {
 
   const CardButton({
     required this.onTap,
-    required this.onShare,
+    this.onShare,
     required this.enableShare,
     required this.title,
     required this.description,

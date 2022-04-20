@@ -13,6 +13,8 @@ class DatabaseHandler {
 
   DatabaseHandler(this.dbName);
 
+  dynamic db;
+
   initializeDB() async {
     var databasesPath = await getDatabasesPath();
     var path = join(databasesPath, dbName);
@@ -47,19 +49,32 @@ class DatabaseHandler {
   }
 
   Future<Database> openDB() async {
-    var db = await openDatabase(dbName, readOnly: false, version: 1);
+    var database = await openDatabase(dbName, readOnly: false, version: 1);
+    db = database;
     return db;
   }
 
+  Future<Database> getDB() async {
+    if (db == null) {
+      return await openDB();
+    } else {
+      return db;
+    }
+  }
+
+  Future close() async {
+    return db.close();
+  }
+
   Future<Daily> retrieveDailyChallenge(String date) async {
-    final Database db = await openDB();
+    final Database db = await getDB();
     final List<Map<String, Object?>> queryResult = await db.query(
       'daily',
       where: 'date = ?',
       whereArgs: [date],
       limit: 1,
     );
-    await db.close();
+    // await db.close();
     return queryResult.map((e) => Daily.fromMap(e)).toList().first;
   }
 
@@ -70,7 +85,7 @@ class DatabaseHandler {
   //     where: 'date = ?',
   //     whereArgs: [date],
   //   );
-  //   await db.close();
+  // await db.close();
   //   return queryResult.map((e) => Daily.fromMap(e)).toList().first.success !=
   //       null;
   // }
@@ -79,7 +94,7 @@ class DatabaseHandler {
     required String date,
     required bool success,
   }) async {
-    final Database db = await openDB();
+    final Database db = await getDB();
     var update = await db.update(
       'daily',
       {
@@ -88,13 +103,13 @@ class DatabaseHandler {
       where: 'date = ?',
       whereArgs: [date],
     );
-    await db.close();
+    // await db.close();
     return update;
   }
 
   Future<int> updateDailyWordsInProgress(
       {required String date, required List<String> words}) async {
-    final Database db = await openDB();
+    final Database db = await getDB();
     var update = await db.update(
       'daily',
       {
@@ -103,76 +118,90 @@ class DatabaseHandler {
       where: 'date = ?',
       whereArgs: [date],
     );
-    await db.close();
+    // await db.close();
     return update;
   }
 
   Future<String> retrieveRandomWord() async {
-    final Database db = await openDB();
+    final Database db = await getDB();
     final List<Map<String, Object?>> queryResult =
         await db.rawQuery('SELECT lemme FROM lemme ORDER BY RANDOM() LIMIT 1;');
     return queryResult.map((e) => Lemme.fromMap(e)).toList().first.lemme;
   }
 
   Future<bool> wordExists(String word) async {
-    final Database db = await openDB();
+    final Database db = await getDB();
     final List<Map<String, Object?>> queryResult = await db.query(
       'word',
       columns: ['word'],
       where: 'word = ?',
       whereArgs: [word],
     );
-    await db.close();
+    // await db.close();
     return queryResult.isNotEmpty;
   }
 
-  Future<Sprint> retrieveSprintChallenge(String date) async {
-    final Database db = await openDB();
+  Future<Sprint?> retrieveSprintChallenge(String date) async {
+    final Database db = await getDB();
     final List<Map<String, Object?>> queryResult = await db.query(
       'sprint',
       where: 'date = ?',
       whereArgs: [date],
       limit: 1,
     );
-    await db.close();
-    return queryResult.map((e) => Sprint.fromMap(e)).toList().first;
+    // await db.close();
+    final results = queryResult.map((e) => Sprint.fromMap(e)).toList();
+    return results.isNotEmpty ? results.first : null;
   }
 
   Future<int> updateSprintResult({
-    required String date,
+    required String table,
+    required int id,
     required int score,
     required int timeLeftInSeconds,
   }) async {
-    final Database db = await openDB();
+    final Database db = await getDB();
     var update = await db.update(
-      'sprint',
+      table,
       {
         'score': score,
         'timeLeftInSeconds': timeLeftInSeconds,
       },
-      where: 'date = ?',
-      whereArgs: [date],
+      where: 'id = ?',
+      whereArgs: [id],
     );
-    await db.close();
+    // await db.close();
     return update;
   }
 
   Future<int> updateSprintWordsInProgress(
-      {required String date,
+      {required String table,
+      required int id,
       required List<String> words,
       required int timeLeftInSeconds}) async {
-    final Database db = await openDB();
+    final Database db = await getDB();
     var update = await db.update(
-      'sprint',
+      table,
       {
         'wordsInProgress': words.join(','),
         'timeLeftInSeconds': timeLeftInSeconds
       },
-      where: 'date = ?',
-      whereArgs: [date],
+      where: 'id = ?',
+      whereArgs: [id],
     );
-    await db.close();
+    // await db.close();
     return update;
+  }
+
+  Future<List<Sprint>> retrieveFreeSprints() async {
+    final Database db = await getDB();
+    final List<Map<String, Object?>> queryResult = await db.query(
+      'sprint_free',
+      where: 'timeLeftInSeconds != 0 OR timeLeftInSeconds IS NULL',
+    );
+    // await db.close();
+    final results = queryResult.map((e) => Sprint.fromMap(e)).toList();
+    return results;
   }
 }
 

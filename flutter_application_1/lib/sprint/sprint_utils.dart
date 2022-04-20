@@ -1,7 +1,7 @@
 List<String> getFoundWords(
     List<String> wordsToFind, List<String>? gameInProgress) {
   return wordsToFind
-      .takeWhile((wordtoFind) => gameInProgress!.contains(wordtoFind))
+      .where((wordtoFind) => gameInProgress!.contains(wordtoFind))
       .toList();
 }
 

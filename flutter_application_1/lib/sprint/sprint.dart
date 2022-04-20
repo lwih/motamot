@@ -21,7 +21,9 @@ import '../utils/date_utils.dart';
 
 class SprintWordRoute extends StatefulWidget {
   final Sprint sprint;
-  const SprintWordRoute({required this.sprint, Key? key}) : super(key: key);
+  final String mode;
+  const SprintWordRoute({required this.sprint, required this.mode, Key? key})
+      : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -83,12 +85,6 @@ class _SprintWordRouteState extends State<SprintWordRoute>
       vsync: this,
       duration: const Duration(seconds: 2),
     );
-  }
-
-  Future<Sprint> dailyChallenge() async {
-    final Sprint dailyChallenge =
-        await handler.retrieveSprintChallenge(formattedToday());
-    return dailyChallenge;
   }
 
   @override
@@ -163,21 +159,26 @@ class _SprintWordRouteState extends State<SprintWordRoute>
   }
 
   int getScore() {
-    return getFoundWords(widget.sprint.words, _allGivenWords).length - _penalty;
+    List<String> foundWords =
+        getFoundWords(widget.sprint.words, _allGivenWords);
+    int score = (foundWords.length) - _penalty;
+    return score;
   }
 
   onFinishGame() async {
+    int score = getScore();
     setState(() {
       _finished = true;
     });
     _showResultsOverlay(
       context,
-      score: getScore(),
+      score: score,
     );
     try {
       await handler.updateSprintResult(
-        date: formattedToday(),
-        score: getScore(),
+        table: widget.mode,
+        id: widget.sprint.id,
+        score: score,
         timeLeftInSeconds: 0,
       );
     } catch (e) {
@@ -204,7 +205,8 @@ class _SprintWordRouteState extends State<SprintWordRoute>
         onFinishGame();
       } else {
         await handler.updateSprintResult(
-          date: formattedToday(),
+          table: widget.mode,
+          id: widget.sprint.id,
           score: getScore(),
           timeLeftInSeconds: _controller.timeLeftInSeconds,
         );
@@ -223,7 +225,8 @@ class _SprintWordRouteState extends State<SprintWordRoute>
 
     try {
       await handler.updateSprintWordsInProgress(
-        date: formattedToday(),
+        table: widget.mode,
+        id: widget.sprint.id,
         words: allWords,
         timeLeftInSeconds: _controller.timeLeftInSeconds,
       );
@@ -296,34 +299,6 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                                     onStart();
                                   },
                                 ),
-                                // ElevatedButton(
-                                //   key: const Key('StartButton'),
-                                //   onPressed: () {
-                                //     onStart();
-                                //   },
-                                //   child: Row(
-                                //     mainAxisSize: MainAxisSize.min,
-                                //     children: [
-                                //       Text(
-                                //         _gamePaused &&
-                                //                 _controller.timeLeftInSeconds ==
-                                //                     defaultDurationInSeconds
-                                //             ? 'Démarrer'
-                                //             : 'Reprendre',
-                                //         style: const TextStyle(
-                                //           fontSize: 28,
-                                //         ),
-                                //       ), // <-- Text
-                                //       const SizedBox(
-                                //         width: 2,
-                                //       ),
-                                //       const Icon(
-                                //         Icons.play_arrow,
-                                //         size: 32.0,
-                                //       ),
-                                //     ],
-                                //   ),
-                                // ),
                               ),
                             )
                           : GameplayManager(
