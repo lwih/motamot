@@ -36,10 +36,9 @@ Si vous trouvez un mot, votre score augmentera de 1 point, sinon il diminuera.
 
 Vous avez 6 tentatives par mot.
 
-Chaque tentative doit proposer un mot valide.
+Chaque proposition devra être un mot valide.
 
-Après chaque tentative, les cellules changeront de couleur 
-pour vous indiquer la proximité avec le mot à trouver
+Après chaque tentative, les cellules changeront de couleur pour vous indiquer la proximité avec le mot à trouver
 
 """,
                 style: TextStyle(
@@ -72,7 +71,6 @@ pour vous indiquer la proximité avec le mot à trouver
                             style: TextStyle(
                               fontSize: 16,
                               color: CustomColors.white,
-                              overflow: TextOverflow.ellipsis,
                               decoration: TextDecoration.none,
                               fontWeight: FontWeight.normal,
                             ),

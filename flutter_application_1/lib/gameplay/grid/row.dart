@@ -21,16 +21,16 @@ class WordRow extends StatelessWidget {
         return CustomColors.wrongPosition;
       } else if (statuses[i] == WordValidationStatus.notInWord ||
           statuses[i] == WordValidationStatus.ignored) {
-        return CustomColors.backgroundColor;
+        return CustomColors.disabledBackgroundColor;
       } else {
-        return CustomColors.notInWord;
+        return CustomColors.lighterBackgroundColor;
       }
     });
     return (pos == 0 && word[0] == wordToFind[0])
         ? CustomColors.rightPosition
         : validateRow
             ? list[pos]
-            : CustomColors.notInWord;
+            : CustomColors.lighterBackgroundColor;
   }
 
   const WordRow(

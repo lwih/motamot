@@ -260,10 +260,10 @@ class _SprintWordRouteState extends State<SprintWordRoute>
       ),
       body: Container(
         child: widget.sprint.timeLeftInSeconds == 0 || _finished == true
-            ? const Center(
+            ? Center(
                 child: Text(
-                  'La partie est terminée.',
-                  style: TextStyle(
+                  'Partie terminée score de ${getScore()}.',
+                  style: const TextStyle(
                     fontSize: 20,
                     color: CustomColors.white,
                   ),
@@ -278,26 +278,76 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                           ? SizedBox(
                               height: MediaQuery.of(context).size.height / 2,
                               child: Center(
-                                child: FloatingActionButton.extended(
-                                  key: const Key('StartButton'),
-                                  label: Text(
-                                    _gamePaused &&
-                                            _controller.timeLeftInSeconds ==
-                                                defaultDurationInSeconds
-                                        ? 'Démarrer'
-                                        : 'Reprendre',
-                                    style: const TextStyle(
-                                      fontSize: 20,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Flexible(
+                                      flex: 1,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Flexible(
+                                            child: Text(
+                                              _controller.timeLeftInSeconds <
+                                                      defaultDurationInSeconds
+                                                  ? 'Partie en pause'
+                                                  : 'Prêt à en découdre ?',
+                                              style: const TextStyle(
+                                                fontSize: 26,
+                                                fontWeight: FontWeight.bold,
+                                                height: 4,
+                                                color: CustomColors.white,
+                                                decoration: TextDecoration.none,
+                                              ),
+                                            ),
+                                          ),
+                                          Flexible(
+                                            child: Text(
+                                              _controller.timeLeftInSeconds <
+                                                      defaultDurationInSeconds
+                                                  ? 'Appuie sur le bouton pour reprendre'
+                                                  : "Jusqu'à 10 mots à trouver en 5 minutes",
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: CustomColors.white,
+                                                decoration: TextDecoration.none,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  backgroundColor: CustomColors.rightPosition,
-                                  icon: const Icon(
-                                    Icons.play_arrow,
-                                    size: 24.0,
-                                  ),
-                                  onPressed: () {
-                                    onStart();
-                                  },
+                                    Flexible(
+                                      flex: 1,
+                                      child: FloatingActionButton.extended(
+                                        key: const Key('StartButton'),
+                                        label: Text(
+                                          _gamePaused &&
+                                                  _controller
+                                                          .timeLeftInSeconds ==
+                                                      defaultDurationInSeconds
+                                              ? 'Démarrer'
+                                              : 'Reprendre',
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                        backgroundColor:
+                                            CustomColors.rightPosition,
+                                        icon: const Icon(
+                                          Icons.play_arrow,
+                                          size: 24.0,
+                                        ),
+                                        onPressed: () {
+                                          onStart();
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             )

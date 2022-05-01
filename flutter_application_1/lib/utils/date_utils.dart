@@ -13,3 +13,8 @@ String formattedTodayInFrench() {
   var formattedDate = DateFormat("dd/MM/yy").format(date);
   return formattedDate;
 }
+
+bool isSunday(DateTime date) {
+  String day = DateFormat('EEEE').format(date);
+  return day == 'Sunday';
+}

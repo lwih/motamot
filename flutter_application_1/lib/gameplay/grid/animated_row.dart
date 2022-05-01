@@ -27,7 +27,7 @@ class AnimatedWordRow extends StatelessWidget {
     return List.generate(
       letterColors.length,
       (i) => ColorTween(
-        begin: CustomColors.notInWord,
+        begin: CustomColors.lighterBackgroundColor,
         end: letterColors[i],
       ).animate(
         CurvedAnimation(
@@ -103,7 +103,7 @@ class LetterColors {
           statuses[i] == WordValidationStatus.ignored) {
         return CustomColors.backgroundColor;
       } else {
-        return CustomColors.notInWord;
+        return CustomColors.lighterBackgroundColor;
       }
     });
   }

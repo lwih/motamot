@@ -31,8 +31,8 @@ class CardButton extends StatelessWidget {
       onTap: onTap,
       child: Card(
         color: disabled == true
-            ? CustomColors.buttonColorDisabled
-            : CustomColors.buttonColor,
+            ? CustomColors.disabledBackgroundColor
+            : CustomColors.lighterBackgroundColor,
         borderOnForeground: true,
         child: Padding(
           padding: const EdgeInsets.all(10),
@@ -63,17 +63,17 @@ class CardButton extends StatelessWidget {
                       ),
                     ),
                   ),
-                  trailing: success == null
-                      ? null
-                      : success == true
-                          ? const Icon(
-                              Icons.check_circle,
-                              color: CustomColors.rightPosition,
-                            )
-                          : const Icon(
-                              Icons.cancel,
-                              color: CustomColors.failed,
-                            ),
+                  // trailing: success == null
+                  //     ? null
+                  //     : success == true
+                  //         ? const Icon(
+                  //             Icons.check_circle,
+                  //             color: CustomColors.rightPosition,
+                  //           )
+                  //         : const Icon(
+                  //             Icons.mood_bad_outlined,
+                  //             color: CustomColors.wrongPosition,
+                  //           ),
                 ),
                 ButtonBar(
                   alignment: MainAxisAlignment.spaceBetween,
@@ -85,17 +85,25 @@ class CardButton extends StatelessWidget {
                         style: const TextStyle(
                           color: CustomColors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 12,
+                          fontSize: 14,
                         ),
                       ),
                     ),
-                    !enableShare
-                        ? Container()
-                        : IconButton(
+                    enableShare
+                        ? IconButton(
                             icon: const Icon(Icons.share),
                             color: CustomColors.white,
+                            iconSize: 35,
                             onPressed: onShare,
-                          ),
+                          )
+                        : !disabled!
+                            ? IconButton(
+                                icon: const Icon(Icons.play_circle_outline),
+                                color: CustomColors.rightPosition,
+                                iconSize: 35,
+                                onPressed: onTap,
+                              )
+                            : Container(),
                   ],
                 )
               ],

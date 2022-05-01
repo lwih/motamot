@@ -53,16 +53,10 @@ class SprintResults extends StatelessWidget {
                 ),
               ),
             ),
-            // const Text(
-            //   'Reviens demain pour un nouveau mot.',
-            //   style: TextStyle(
-            //     // fontSize: MediaQuery.of(context).size.height * 0.04,
-
-            //     fontSize: 16,
-            //     color: CustomColors.white,
-            //     overflow: TextOverflow.visible, decoration: TextDecoration.none,
-            //   ),
-            // ),
+            SizedBox(
+              height: 100,
+              child: Container(),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 50),
               child: FloatingActionButton.extended(

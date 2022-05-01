@@ -102,7 +102,6 @@ class _DailyWordRouteState extends State<DailyWordRoute>
               ));
             },
             goHome: () {
-              overlayEntry.remove();
               // .pop() will not refresh the FutureBuilders in Home()
               // pushAndRemoveUntil() make it word
               Navigator.pushAndRemoveUntil(
@@ -112,6 +111,7 @@ class _DailyWordRouteState extends State<DailyWordRoute>
                 ),
                 (Route<dynamic> route) => false,
               );
+              overlayEntry.remove();
             }),
       );
     });
@@ -182,8 +182,7 @@ class _DailyWordRouteState extends State<DailyWordRoute>
         ],
       ),
       body: Container(
-        // margin: EdgeInsets.all(dailyWord.length > 6 ? 10 : 30),
-        padding: EdgeInsets.all(dailyWord.length > 6 ? 10 : 30),
+        padding: const EdgeInsets.all(10),
         child: GameplayManager(
           db: handler,
           wordToFind: dailyWord,

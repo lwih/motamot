@@ -30,9 +30,9 @@ class Keyboard extends StatelessWidget {
     } else if (wrongPositionKeys.contains(key)) {
       return CustomColors.wrongPosition;
     } else if (disableKeys.contains(key)) {
-      return CustomColors.backgroundColor;
+      return CustomColors.disabledBackgroundColor;
     } else {
-      return CustomColors.buttonColor;
+      return CustomColors.lighterBackgroundColor;
     }
   }
 
@@ -55,12 +55,12 @@ class Keyboard extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(1),
                           child: Container(
-                            color: CustomColors.buttonColor,
+                            color: CustomColors.lighterBackgroundColor,
                             width: 68,
                             height: 58,
                             child: IconButton(
-                              // iconSize: 10,
                               splashRadius: 22,
+                              splashColor: Colors.white,
                               enableFeedback: true,
                               color: CustomColors.white,
                               key: Key(

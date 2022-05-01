@@ -18,8 +18,8 @@ class DefaultSprintCard extends StatelessWidget {
         child: CardButton(
           onTap: () {},
           title: 'Sprint',
-          description: "Jusqu'à 10 mots à trouver en 5 minutes",
-          next: 'Disponible tous les dimanches',
+          description: "Jusqu'à 10 mots en 5 minutes",
+          next: 'Disponible dimanche',
           disabled: true,
           success: null,
           enableShare: false,
@@ -75,7 +75,7 @@ class HomeSprintCard extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 10),
                 child: CardButton(
                   title: 'Sprint',
-                  description: "Jusqu'à 10 mots à trouver en 5 minutes",
+                  description: "Dix mots en cinq minutes",
                   next: 'Parties gratuites: ${freeSprints.length}',
                   onTap: () {
                     goToGame(
@@ -85,14 +85,16 @@ class HomeSprintCard extends StatelessWidget {
                 ),
               ),
             );
+          } else if (!isSunday(DateTime.now())) {
+            return const DefaultSprintCard();
           } else if (sprint != null) {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: CardButton(
                   title: 'Sprint',
-                  description: "Jusqu'à 10 mots à trouver en 5 minutes",
-                  next: 'Disponible tous les dimanches',
+                  description: "Dix mots en cinq minutes",
+                  next: 'Disponible dimanche',
                   disabled: sprint.score == null ? false : true,
                   success: sprint.score == null ? null : true,
                   enableShare: sprint.score == null ? false : true,

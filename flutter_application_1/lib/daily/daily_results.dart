@@ -28,10 +28,10 @@ class DailyResults extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              success == true ? 'Félicitations' : 'Dommage...',
+              success == true ? 'Félicitations 🎉' : 'Dommage...',
               style: const TextStyle(
-                // fontSize: MediaQuery.of(context).size.height * 0.03,
                 fontSize: 26,
+                fontWeight: FontWeight.bold,
                 color: CustomColors.white,
                 decoration: TextDecoration.none,
               ),
@@ -41,9 +41,8 @@ class DailyResults extends StatelessWidget {
               child: Text(
                 'Le mot du jour était "${wordToFind.toUpperCase()}".',
                 style: const TextStyle(
-                  // fontSize: MediaQuery.of(context).size.height * 0.04,
-
                   fontSize: 16,
+                  fontWeight: FontWeight.bold,
                   color: CustomColors.white,
                   overflow: TextOverflow.visible,
                   decoration: TextDecoration.none,
@@ -53,12 +52,16 @@ class DailyResults extends StatelessWidget {
             const Text(
               'Reviens demain pour un nouveau mot.',
               style: TextStyle(
-                // fontSize: MediaQuery.of(context).size.height * 0.04,
-
                 fontSize: 16,
+                fontWeight: FontWeight.bold,
                 color: CustomColors.white,
-                overflow: TextOverflow.visible, decoration: TextDecoration.none,
+                overflow: TextOverflow.visible,
+                decoration: TextDecoration.none,
               ),
+            ),
+            SizedBox(
+              height: 100,
+              child: Container(),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 50),
@@ -67,15 +70,16 @@ class DailyResults extends StatelessWidget {
                 label: const Text(
                   "Partager",
                   style: TextStyle(
-                      // fontSize: 20,
-                      // shadows: <Shadow>[
-                      //   Shadow(
-                      //     offset: Offset(1.0, 1.0),
-                      //     blurRadius: 1.0,
-                      //     color: Color.fromARGB(255, 90, 90, 90),
-                      //   ),
-                      // ],
-                      ),
+                    fontSize: 16,
+                    // fontWeight: FontWeight.bold,
+                    // shadows: <Shadow>[
+                    //   Shadow(
+                    //     offset: Offset(1.0, 1.0),
+                    //     blurRadius: 1.0,
+                    //     color: Color.fromARGB(255, 90, 90, 90),
+                    //   ),
+                    // ],
+                  ),
                 ),
                 backgroundColor: CustomColors.wrongPosition,
                 icon: const Icon(
@@ -89,7 +93,13 @@ class DailyResults extends StatelessWidget {
               padding: const EdgeInsets.only(top: 10),
               child: FloatingActionButton.extended(
                 key: const Key('HomeButton'),
-                label: const Text(" Accueil "),
+                label: const Text(
+                  " Accueil ",
+                  style: TextStyle(
+                    fontSize: 16,
+                    // fontWeight: FontWeight.bold,
+                  ),
+                ),
                 backgroundColor: CustomColors.rightPosition,
                 icon: const Icon(
                   Icons.home,
