@@ -3,12 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/storage/db_handler.dart';
 import 'package:flutter_application_1/home/home.dart';
+// import 'package:device_preview/device_preview.dart';
+// import 'package:sqflite/sqflite.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var dbHandler = DatabaseHandler('motus.db');
   await dbHandler.initializeDB();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  // DevicePreview(
+  //   enabled: true,
+  //   builder: (context) => const Mouitus(), // Wrap your app
+  // );
   runApp(const Mouitus());
 }
 
@@ -19,6 +25,9 @@ class Mouitus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // useInheritedMediaQuery: true,
+      // locale: DevicePreview.locale(context),
+      // builder: DevicePreview.appBuilder,
       title: 'Mouitus',
       theme: ThemeData(
           // This is the theme of your application.

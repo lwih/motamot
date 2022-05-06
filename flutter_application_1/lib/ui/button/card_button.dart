@@ -96,7 +96,7 @@ class CardButton extends StatelessWidget {
                             iconSize: 35,
                             onPressed: onShare,
                           )
-                        : !disabled!
+                        : (disabled != null && !disabled!)
                             ? IconButton(
                                 icon: const Icon(Icons.play_circle_outline),
                                 color: CustomColors.rightPosition,

@@ -19,15 +19,14 @@ samples, guidance on mobile development, and a full API reference.
 # DONE
 - BD words = words + lemme
 - Write to db
-- 
+- Partager
+- Sprint
+- 5 free sprint games
 
 
 # TODO
-- Partager
-- Sprint
 - Stats
 - Design
-- 5 free sprint games
 
 
 # Ops
@@ -36,4 +35,34 @@ samples, guidance on mobile development, and a full API reference.
 - ci
 - errors
 - analytics
+
+
+# next steps
+- find a name
+- create play store app
+- play store billing
+- app signin
+- logo
+- play store marketing
+
+
+
+
+
+
+# play store marketing
+- name: Moui
+- short: Mots à trouver
+- long: Jeu à la Motus offrant different modes de jeux aux amateurs de mots.
+
+strategical positioning:
+- different gameplays
+- ad-free
+- competition (later)
+
+screens play store
+- intro + ad-free
+- mot du jour
+- sprint
+
 

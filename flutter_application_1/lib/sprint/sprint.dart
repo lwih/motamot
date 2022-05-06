@@ -362,7 +362,10 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                             ),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(top: 50),
+                      margin: EdgeInsets.only(
+                        top: 0,
+                        // top: MediaQuery.of(context).size.height / 20,
+                      ),
                       height: 50,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,

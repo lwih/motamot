@@ -9,7 +9,8 @@ class CustomColors {
 
   static const Color failed = Colors.red;
   static const Color notInWord = Color.fromRGBO(33, 33, 33, 1);
-  static const Color rightPosition = Colors.green; // maybe 6ae792 ?
-  static const Color wrongPosition = Colors.orange;
+  static const Color rightPosition =
+      Color.fromARGB(255, 60, 161, 63); // maybe 6ae792 ?
+  static const Color wrongPosition = Color.fromARGB(255, 228, 139, 5);
   static const Color hintText = Color.fromARGB(255, 110, 110, 110);
 }

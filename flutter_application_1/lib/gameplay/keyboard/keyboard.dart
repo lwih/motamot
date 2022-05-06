@@ -56,7 +56,9 @@ class Keyboard extends StatelessWidget {
                           padding: const EdgeInsets.all(1),
                           child: Container(
                             color: CustomColors.lighterBackgroundColor,
-                            width: 68,
+                            width:
+                                ((MediaQuery.of(context).size.width / 10) - 2) *
+                                    2,
                             height: 58,
                             child: IconButton(
                               splashRadius: 22,
@@ -78,7 +80,7 @@ class Keyboard extends StatelessWidget {
                         flex: 0,
                         child: Container(
                           padding: const EdgeInsets.all(1),
-                          width: 35,
+                          width: (MediaQuery.of(context).size.width / 10) - 2,
                           height: 60,
                           child: Keystroke(
                             background: getKeyColor(key),

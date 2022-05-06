@@ -237,7 +237,7 @@ class _GameplayManagerState extends State<GameplayManager>
         // ),
         Container(
           margin: const EdgeInsets.only(
-            bottom: 50,
+            bottom: 10,
           ),
           child: Center(
             child: Keyboard(
