@@ -74,15 +74,15 @@ class HomeSprintCard extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: CardButton(
-                  title: 'Sprint',
-                  description: "Dix mots en cinq minutes",
-                  next: 'Parties gratuites: ${freeSprints.length}',
-                  onTap: () {
-                    goToGame(
-                        context, freeSprints.first as Sprint, 'sprint_free');
-                  },
-                  enableShare: false,
-                ),
+                    title: 'Sprint',
+                    description: "Dix mots en cinq minutes",
+                    next: 'Parties gratuites: ${freeSprints.length}',
+                    onTap: () {
+                      goToGame(
+                          context, freeSprints.first as Sprint, 'sprint_free');
+                    },
+                    enableShare: false,
+                    disabled: false),
               ),
             );
           } else if (!isSunday(DateTime.now())) {

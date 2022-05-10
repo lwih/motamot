@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-
+import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/gameplay/gameplay_manager.dart';
 import 'package:flutter_application_1/sprint/sprint_instructions.dart';
@@ -240,9 +240,13 @@ class _SprintWordRouteState extends State<SprintWordRoute>
     return Scaffold(
       backgroundColor: CustomColors.backgroundColor,
       appBar: AppBar(
-        // Here we take the value from the Sprint object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: const Text('Sprint'),
+        toolbarHeight: 6.h,
+        title: Text(
+          'Sprint',
+          style: TextStyle(
+            fontSize: 11.sp,
+          ),
+        ),
         backgroundColor: CustomColors.backgroundColor,
         actions: <Widget>[
           Padding(
@@ -263,8 +267,8 @@ class _SprintWordRouteState extends State<SprintWordRoute>
             ? Center(
                 child: Text(
                   'Partie terminée score de ${getScore()}.',
-                  style: const TextStyle(
-                    fontSize: 20,
+                  style: TextStyle(
+                    fontSize: 16.sp,
                     color: CustomColors.white,
                   ),
                 ),
@@ -295,8 +299,8 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                                                       defaultDurationInSeconds
                                                   ? 'Partie en pause'
                                                   : 'Prêt à en découdre ?',
-                                              style: const TextStyle(
-                                                fontSize: 26,
+                                              style: TextStyle(
+                                                fontSize: 16.sp,
                                                 fontWeight: FontWeight.bold,
                                                 height: 4,
                                                 color: CustomColors.white,
@@ -310,8 +314,8 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                                                       defaultDurationInSeconds
                                                   ? 'Appuie sur le bouton pour reprendre'
                                                   : "Jusqu'à 10 mots à trouver en 5 minutes",
-                                              style: const TextStyle(
-                                                fontSize: 16,
+                                              style: TextStyle(
+                                                fontSize: 12.sp,
                                                 fontWeight: FontWeight.bold,
                                                 color: CustomColors.white,
                                                 decoration: TextDecoration.none,
@@ -323,28 +327,32 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                                     ),
                                     Flexible(
                                       flex: 1,
-                                      child: FloatingActionButton.extended(
-                                        key: const Key('StartButton'),
-                                        label: Text(
-                                          _gamePaused &&
-                                                  _controller
-                                                          .timeLeftInSeconds ==
-                                                      defaultDurationInSeconds
-                                              ? 'Démarrer'
-                                              : 'Reprendre',
-                                          style: const TextStyle(
-                                            fontSize: 20,
+                                      child: SizedBox(
+                                        height: 40.sp,
+                                        width: 150.sp,
+                                        child: FloatingActionButton.extended(
+                                          key: const Key('StartButton'),
+                                          label: Text(
+                                            _gamePaused &&
+                                                    _controller
+                                                            .timeLeftInSeconds ==
+                                                        defaultDurationInSeconds
+                                                ? 'Démarrer'
+                                                : 'Reprendre',
+                                            style: TextStyle(
+                                              fontSize: 14.sp,
+                                            ),
                                           ),
+                                          backgroundColor:
+                                              CustomColors.rightPosition,
+                                          icon: Icon(
+                                            Icons.play_arrow,
+                                            size: 14.sp,
+                                          ),
+                                          onPressed: () {
+                                            onStart();
+                                          },
                                         ),
-                                        backgroundColor:
-                                            CustomColors.rightPosition,
-                                        icon: const Icon(
-                                          Icons.play_arrow,
-                                          size: 24.0,
-                                        ),
-                                        onPressed: () {
-                                          onStart();
-                                        },
                                       ),
                                     ),
                                   ],
@@ -362,10 +370,6 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                             ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(
-                        top: 0,
-                        // top: MediaQuery.of(context).size.height / 20,
-                      ),
                       height: 50,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -374,9 +378,9 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                             children: [
                               Text(
                                 'Score: ${getScore().toString()}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: CustomColors.white,
-                                  fontSize: 20,
+                                  fontSize: 14.sp,
                                 ),
                               )
                             ],
@@ -389,9 +393,9 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                                 build: (BuildContext context, double time) =>
                                     Text(
                                   displayTime(time),
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: CustomColors.white,
-                                    fontSize: 20,
+                                    fontSize: 14.sp,
                                   ),
                                 ),
                                 interval: const Duration(seconds: 1),
@@ -400,8 +404,8 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                                 },
                               ),
                               IconButton(
-                                iconSize: 30,
-                                splashRadius: 32,
+                                iconSize: 14.sp,
+                                splashRadius: 14.sp,
                                 color: _gamePaused
                                     ? CustomColors.backgroundColor
                                     : CustomColors.white,

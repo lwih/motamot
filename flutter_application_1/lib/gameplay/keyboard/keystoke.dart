@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/ui/design.dart';
+import 'package:sizer/sizer.dart';
 
 class Keystroke extends StatelessWidget {
   final String keyStroke;
@@ -21,7 +21,9 @@ class Keystroke extends StatelessWidget {
       child: Center(
         child: Text(
           keyStroke.toUpperCase(),
-          style: const TextStyle(fontSize: 16),
+          style: TextStyle(
+            fontSize: 12.sp,
+          ),
         ),
       ),
       style: ElevatedButton.styleFrom(

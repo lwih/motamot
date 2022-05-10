@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/storage/db_handler.dart';
 import 'package:flutter_application_1/ui/design.dart';
-
+import 'package:sizer/sizer.dart';
 import 'grid/grid.dart';
 import 'keyboard/keyboard.dart';
 
@@ -255,8 +255,11 @@ class _GameplayManagerState extends State<GameplayManager>
           child: Center(
             child: Text(
               _validation,
-              style: const TextStyle(
-                  color: CustomColors.white, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: CustomColors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 10.sp,
+              ),
             ),
           ),
         ),

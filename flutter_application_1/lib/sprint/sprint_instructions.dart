@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/gameplay/grid/cell.dart';
 import 'package:flutter_application_1/ui/design.dart';
+import 'package:sizer/sizer.dart';
 
 class SprintInstructions extends StatelessWidget {
   final void Function() onClose;
@@ -19,15 +20,17 @@ class SprintInstructions extends StatelessWidget {
             color: CustomColors.white,
           ),
         ),
-        title: const Text(
+        toolbarHeight: 6.h,
+        title: Text(
           'Instructions',
           style: TextStyle(
+            fontSize: 11.sp,
             color: CustomColors.white,
           ),
         ),
       ),
       body: Container(
-        // alignment: Alignment.bottomCenter,
+        height: 100.h,
         color: CustomColors.backgroundColor,
         padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
@@ -37,8 +40,8 @@ class SprintInstructions extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 20),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
                   child: Text(
                     """
 Vous avez jusqu'à 10 mots à trouver en 5 minutes.
@@ -52,7 +55,7 @@ Après chaque tentative, les cellules changeront de couleur pour vous indiquer l
 
 """,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 12.sp,
                       color: CustomColors.white,
                       overflow: TextOverflow.visible,
                       decoration: TextDecoration.none,
@@ -61,25 +64,27 @@ Après chaque tentative, les cellules changeront de couleur pour vous indiquer l
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.only(
+                    top: 20,
+                  ),
                   child: Column(
                     children: [
                       Row(
-                        children: const [
+                        children: [
                           Cell(
                             color: CustomColors.notInWord,
                             text: 'M',
-                            size: 50,
-                            fontSize: 20,
+                            size: 40.sp,
+                            fontSize: 12.sp,
                           ),
                           Flexible(
                             flex: 1,
                             child: Padding(
-                              padding: EdgeInsets.only(left: 20),
+                              padding: const EdgeInsets.only(left: 20),
                               child: Text(
                                 "La lettre n'est pas présente dans le mot à trouver",
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 12.sp,
                                   color: CustomColors.white,
                                   decoration: TextDecoration.none,
                                   fontWeight: FontWeight.normal,
@@ -97,21 +102,21 @@ Après chaque tentative, les cellules changeront de couleur pour vous indiquer l
                   child: Column(
                     children: [
                       Row(
-                        children: const [
+                        children: [
                           Cell(
                             color: CustomColors.wrongPosition,
                             text: 'M',
-                            size: 50,
-                            fontSize: 20,
+                            size: 40.sp,
+                            fontSize: 12.sp,
                           ),
                           Flexible(
                             flex: 1,
                             child: Padding(
-                              padding: EdgeInsets.only(left: 20),
+                              padding: const EdgeInsets.only(left: 20),
                               child: Text(
                                 "La lettre existe dans le mot à trouver mais n'est pas à la bonne position",
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 12.sp,
                                   color: CustomColors.white,
                                   overflow: TextOverflow.visible,
                                   decoration: TextDecoration.none,
@@ -130,21 +135,21 @@ Après chaque tentative, les cellules changeront de couleur pour vous indiquer l
                   child: Column(
                     children: [
                       Row(
-                        children: const [
+                        children: [
                           Cell(
                             color: CustomColors.rightPosition,
                             text: 'M',
-                            size: 50,
-                            fontSize: 20,
+                            size: 40.sp,
+                            fontSize: 12.sp,
                           ),
                           Flexible(
                             flex: 1,
                             child: Padding(
-                              padding: EdgeInsets.only(left: 20),
+                              padding: const EdgeInsets.only(left: 20),
                               child: Text(
                                 'La lettre est à la bonne position',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 12.sp,
                                   color: CustomColors.white,
                                   overflow: TextOverflow.visible,
                                   decoration: TextDecoration.none,
@@ -159,12 +164,25 @@ Après chaque tentative, les cellules changeront de couleur pour vous indiquer l
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 50),
-                  child: FloatingActionButton.extended(
-                    key: const Key('InstructionsCloseButton'),
-                    label: const Text("   Fermer   "),
-                    backgroundColor: CustomColors.rightPosition,
-                    onPressed: onClose,
+                  padding: EdgeInsets.only(top: 50.sp),
+                  child: SizedBox(
+                    height: 40.sp,
+                    width: 100.sp,
+                    child: FloatingActionButton.extended(
+                      key: const Key('InstructionsCloseButton'),
+                      label: Text(
+                        "Fermer",
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                      backgroundColor: CustomColors.rightPosition,
+                      onPressed: onClose,
+                      icon: Icon(
+                        Icons.close,
+                        size: 14.sp,
+                      ),
+                    ),
                   ),
                 ),
               ],

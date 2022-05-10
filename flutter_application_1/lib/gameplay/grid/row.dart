@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/gameplay/grid/cell.dart';
 import 'package:flutter_application_1/ui/design.dart';
 import 'package:flutter_application_1/utils.dart';
+import 'package:sizer/sizer.dart';
 
 @immutable
 class WordRow extends StatelessWidget {
@@ -56,7 +57,7 @@ class WordRow extends StatelessWidget {
             color: getColor(wordToFind, word, letter, i),
             text: letter.toUpperCase(),
             size: size,
-            fontSize: wordToFind.length > 8 ? 16 : 20,
+            fontSize: wordToFind.length > 8 ? 12.sp : 13.sp,
           ),
         );
       }).toList(),

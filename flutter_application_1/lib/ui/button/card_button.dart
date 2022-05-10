@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/design.dart';
 
@@ -37,8 +37,8 @@ class CardButton extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: SizedBox(
-            width: 300,
-            // height: 135,
+            width: 80.w,
+            // height: 20.h,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,20 +46,20 @@ class CardButton extends StatelessWidget {
                 ListTile(
                   title: Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: CustomColors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 26,
+                      fontSize: 16.sp,
                     ),
                   ),
                   subtitle: Padding(
-                    padding: const EdgeInsets.only(top: 8),
+                    padding: EdgeInsets.only(top: 8.sp),
                     child: Text(
                       description,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: CustomColors.white,
                         // fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 12.sp,
                       ),
                     ),
                   ),
@@ -82,10 +82,10 @@ class CardButton extends StatelessWidget {
                       onPressed: onTap,
                       child: Text(
                         next != null ? '$next' : '',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: CustomColors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 14,
+                          fontSize: 10.sp,
                         ),
                       ),
                     ),
@@ -93,14 +93,14 @@ class CardButton extends StatelessWidget {
                         ? IconButton(
                             icon: const Icon(Icons.share),
                             color: CustomColors.white,
-                            iconSize: 35,
+                            iconSize: 35.sp,
                             onPressed: onShare,
                           )
                         : (disabled != null && !disabled!)
                             ? IconButton(
                                 icon: const Icon(Icons.play_circle_outline),
                                 color: CustomColors.rightPosition,
-                                iconSize: 35,
+                                iconSize: 35.sp,
                                 onPressed: onTap,
                               )
                             : Container(),

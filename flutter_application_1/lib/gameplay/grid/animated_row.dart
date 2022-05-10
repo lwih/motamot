@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/design.dart';
 import 'package:flutter_application_1/utils.dart';
+import 'package:sizer/sizer.dart';
 
 class AnimatedWordRow extends StatelessWidget {
   final double size;
@@ -52,12 +53,12 @@ class AnimatedWordRow extends StatelessWidget {
           ? TextStyle(
               color: CustomColors.hintText,
               fontWeight: FontWeight.bold,
-              fontSize: wordToFind.length > 8 ? 16 : 20,
+              fontSize: wordToFind.length > 8 ? 12.sp : 13.sp,
             )
           : TextStyle(
               color: CustomColors.white,
               fontWeight: FontWeight.bold,
-              fontSize: wordToFind.length > 8 ? 16 : 20,
+              fontSize: wordToFind.length > 8 ? 12.sp : 13.sp,
             );
       return Container(
         color: animations[i].value,

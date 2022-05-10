@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/design.dart';
-
+import 'package:sizer/sizer.dart';
 import 'keystoke.dart';
 
 @immutable
@@ -59,7 +59,7 @@ class Keyboard extends StatelessWidget {
                             width:
                                 ((MediaQuery.of(context).size.width / 10) - 2) *
                                     2,
-                            height: 58,
+                            height: 40.sp - 2,
                             child: IconButton(
                               splashRadius: 22,
                               splashColor: Colors.white,
@@ -69,6 +69,7 @@ class Keyboard extends StatelessWidget {
                                   key == 'delete' ? 'KeyDelete' : 'KeyEnter'),
                               icon: Icon(
                                 key == 'delete' ? Icons.backspace : Icons.check,
+                                size: 14.sp,
                               ),
                               onPressed: () => chooseKey(key),
                             ),
@@ -81,7 +82,7 @@ class Keyboard extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.all(1),
                           width: (MediaQuery.of(context).size.width / 10) - 2,
-                          height: 60,
+                          height: 40.sp,
                           child: Keystroke(
                             background: getKeyColor(key),
                             onPressed: () => chooseKey(key),

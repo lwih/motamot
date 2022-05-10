@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 import 'package:flutter_application_1/daily/daily_instructions.dart';
 import 'package:flutter_application_1/daily/daily_share.dart';
 import 'package:flutter_application_1/gameplay/gameplay_manager.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_application_1/storage/db_handler.dart';
 import 'package:flutter_application_1/ui/design.dart';
 import 'package:flutter_application_1/ui/route/fade_route.dart';
 import 'package:flutter_application_1/utils/date_utils.dart';
-
 import '../utils/date_utils.dart';
 import 'daily_results.dart';
 
@@ -162,9 +162,13 @@ class _DailyWordRouteState extends State<DailyWordRoute>
     return Scaffold(
       backgroundColor: CustomColors.backgroundColor,
       appBar: AppBar(
-        // Here we take the value from the Daily object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: const Text('Le mot du jour'),
+        toolbarHeight: 6.h,
+        title: Text(
+          'Le mot du jour',
+          style: TextStyle(
+            fontSize: 11.sp,
+          ),
+        ),
         backgroundColor: CustomColors.backgroundColor,
         actions: <Widget>[
           Padding(
