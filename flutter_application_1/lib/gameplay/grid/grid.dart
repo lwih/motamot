@@ -45,53 +45,64 @@ class WordGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ...words.map((word) {
-              return Flexible(
-                flex: 1,
-                child: WordRow(
-                  key: Key('Row$word'),
-                  word: word.split(''),
-                  wordToFind: wordToFind.split(''),
-                  validateRow: true,
-                ),
-              );
-            }).toList(),
-            !finished && hasAnyRowLeft()
-                ? Flexible(
-                    flex: 1,
-                    child: AnimatedWordRow(
-                      controller: animationController,
-                      wordToFind: wordToFind,
-                      showHints: showHints,
-                      word: showHints
-                          ? hints
-                          : wordInProgress.padRight(wordToFind.length, ' '),
-                    ),
-                  )
-                : Flexible(
-                    flex: 0,
-                    child: Container(),
+    final screenWidth = MediaQuery.of(context).size.width;
+    final cellSize = ((screenWidth - 50) / wordToFind.length) - 10;
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 10,
+        bottom: 10,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ...words.map((word) {
+                return Flexible(
+                  flex: 1,
+                  child: WordRow(
+                    key: Key('Row$word'),
+                    word: word.split(''),
+                    wordToFind: wordToFind.split(''),
+                    validateRow: true,
+                    size: cellSize,
                   ),
-            ...createUntouchedRows().map((String emptyWord) {
-              return Flexible(
-                flex: 1,
-                child: WordRow(
-                  word: emptyWord.split(''),
-                  wordToFind: wordToFind.split(''),
-                  validateRow: false,
-                ),
-              );
-            }).toList(),
-          ],
-        ),
-      ],
+                );
+              }).toList(),
+              !finished && hasAnyRowLeft()
+                  ? Flexible(
+                      flex: 1,
+                      child: AnimatedWordRow(
+                        controller: animationController,
+                        size: cellSize,
+                        wordToFind: wordToFind,
+                        showHints: showHints,
+                        word: showHints
+                            ? hints
+                            : wordInProgress.padRight(wordToFind.length, ' '),
+                      ),
+                    )
+                  : Flexible(
+                      flex: 0,
+                      child: Container(),
+                    ),
+              ...createUntouchedRows().map((String emptyWord) {
+                return Flexible(
+                  flex: 1,
+                  child: WordRow(
+                    size: cellSize,
+                    word: emptyWord.split(''),
+                    wordToFind: wordToFind.split(''),
+                    validateRow: false,
+                  ),
+                );
+              }).toList(),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

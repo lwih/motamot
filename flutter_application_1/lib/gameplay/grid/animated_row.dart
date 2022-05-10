@@ -3,6 +3,7 @@ import 'package:flutter_application_1/ui/design.dart';
 import 'package:flutter_application_1/utils.dart';
 
 class AnimatedWordRow extends StatelessWidget {
+  final double size;
   final AnimationController controller;
   final String wordToFind;
   final String word;
@@ -13,6 +14,7 @@ class AnimatedWordRow extends StatelessWidget {
   AnimatedWordRow({
     Key? key,
     required this.controller,
+    required this.size,
     required this.wordToFind,
     required this.word,
     required this.showHints,
@@ -46,8 +48,6 @@ class AnimatedWordRow extends StatelessWidget {
   // create a function to render the nth animated letter
   _buildLetterAnimation(int i) {
     return (BuildContext context, Widget? child) {
-      final screenWidth = MediaQuery.of(context).size.width;
-      final size = (screenWidth / wordToFind.length) - 10;
       var styles = (i != 0 && showHints)
           ? TextStyle(
               color: CustomColors.hintText,
@@ -61,8 +61,8 @@ class AnimatedWordRow extends StatelessWidget {
             );
       return Container(
         color: animations[i].value,
-        width: size > 50 ? 50 : size,
-        height: size > 50 ? 50 : size,
+        width: size,
+        height: size,
         child: Center(
           child: Text(
             word[i].toUpperCase(),

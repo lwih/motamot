@@ -20,8 +20,8 @@ class Cell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: color,
-      width: size > 50 ? 50 : size,
-      height: size > 50 ? 50 : size,
+      width: size,
+      height: size,
       child: Center(
         child: Text(
           text.toUpperCase(),

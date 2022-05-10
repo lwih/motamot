@@ -5,6 +5,7 @@ import 'package:flutter_application_1/utils.dart';
 
 @immutable
 class WordRow extends StatelessWidget {
+  final double size;
   final List<String> word;
   final List<String> wordToFind;
   final bool validateRow;
@@ -34,7 +35,8 @@ class WordRow extends StatelessWidget {
   }
 
   const WordRow(
-      {required this.word,
+      {required this.size,
+      required this.word,
       required this.wordToFind,
       required this.validateRow,
       Key? key})
@@ -43,8 +45,6 @@ class WordRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     i = -1;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final size = (screenWidth / wordToFind.length) - 10;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -55,7 +55,7 @@ class WordRow extends StatelessWidget {
           child: Cell(
             color: getColor(wordToFind, word, letter, i),
             text: letter.toUpperCase(),
-            size: size > 50 ? 50 : size,
+            size: size,
             fontSize: wordToFind.length > 8 ? 16 : 20,
           ),
         );
