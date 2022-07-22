@@ -65,6 +65,14 @@ jobs:
       
       - name: ls ./build/
         run: ls ./build/ -la
+      - name: ls .build/app/
+        run: ls .build/app/ -la
+      - name: ls .build/app/outputs
+        run: ls .build/app/outputs -la
+      - name: ls .build/app/outputs/bundle/
+        run: ls .build/app/outputs/bundle/ -la
+      - name: ls .build/app/outputs/bundle/release
+        run: ls .build/app/outputs/bundle/release -la
 
       - uses: r0adkll/sign-android-release@v1
         name: Sign app
