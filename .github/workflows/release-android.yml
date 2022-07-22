@@ -78,9 +78,6 @@ jobs:
           keyStorePassword: ${{ secrets.SIGN_KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.SIGN_KEY_PASSWORD }}
           buildToolsVersion: 30.0.2
-        # env:
-          # override default build-tools version (29.0.3) -- optional
-          # BUILD_TOOLS_VERSION: "30.0.2"
 
       # Example use of `signedReleaseFile` output -- not needed
       - uses: actions/upload-artifact@v2
@@ -98,4 +95,4 @@ jobs:
           status: inProgress
           # inAppUpdatePriority: 2
           whatsNewDirectory: ./motamot/whatsnew
-          mappingFile: build/app/outputs/mapping/release/mapping.txt
+          # mappingFile: build/app/outputs/mapping/release/mapping.txt
