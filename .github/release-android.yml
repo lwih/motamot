@@ -44,7 +44,7 @@ jobs:
       - name: Cache Flutter dependencies
         uses: actions/cache@v1
         with:
-          path: ${{ env.FLUTTER_ROOT }}
+          path: ${{ runner.tool_cache }}/flutter
           key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}
 
       - name: Setup Flutter
@@ -53,22 +53,23 @@ jobs:
           channel: 'stable' # or: 'beta' or 'master'
           cache: true
           cache-key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }} # optional, change this to force refresh cache
-          cache-path: ${{ env.FLUTTER_ROOT }} # optional, change this to specify the cache path
+          cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
           architecture: x64 # optional, x64 or arm64
 
       - name: Flutter version
         run: flutter --version
+      
 
       - name: Load dependencies
         run: flutter pub get
       
       # Bundle app
       - name: Bundle App
-        run: flutter build appbundle
+        run: flutter build apk
 
       - uses: actions/upload-artifact@v2
         with:
-          name: Unsigned app bundle
+          name: igned app bundle
           path: /build/app/outputs/bundle/release/app-release.aab
 
       - uses: ilharp/sign-android-release@v1
