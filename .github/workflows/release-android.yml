@@ -39,9 +39,14 @@ jobs:
           channel: 'stable' # or: 'beta' or 'master'
       - run: flutter --version
 
-      # Runs a single command using the runners shell
+      - name: pwd1
+        run: pwd
+
       - name: Target app directory
         run: cd motamot
+
+      - name: pwd2
+        run: pwd
 
       - name: Load dependencies
         run: flutter pub get
