@@ -86,13 +86,13 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Signed app bundle
-          path: ${{steps.sign_app.outputs.signedReleaseFile}}
+          path: ${{env.ANDROID_SIGNED_FILE}}
 
       - uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           packageName: com.muy.motamot
-          releaseFiles: ${{steps.sign_app.outputs.signedReleaseFile}}
+          releaseFiles: ${{env.ANDROID_SIGNED_FILE}}
           # track: production
           track: internal
           status: inProgress
