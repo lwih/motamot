@@ -30,6 +30,10 @@ jobs:
       - run: flutter --version
 
       # Runs a single command using the runners shell
+      - name: cd directory
+        run: cd motamot
+      
+      # Bundle app
       - name: Bundle App
         run: flutter build appbundle
 
