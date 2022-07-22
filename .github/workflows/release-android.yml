@@ -3,11 +3,14 @@
 name: CI
 
 # Controls when the workflow will run
+# on:
+#   push:
+#     tags:
+#       - 'v*'
 on:
   push:
-    # Sequence of patterns matched against refs/tags
-    tags:
-      - 'v*'
+    branches:
+    - master
 
   # Allows you to run this workflow manually from the Actions tab
   #workflow_dispatch:
@@ -32,6 +35,9 @@ jobs:
       # Runs a single command using the runners shell
       - name: cd directory
         run: cd motamot
+
+      - name: Load dependencies
+        run: flutter pub get
       
       # Bundle app
       - name: Bundle App
