@@ -46,6 +46,8 @@ jobs:
 
       - name: pwd1
         run: pwd
+      - name: ls
+        run: ls -la
 
       - name: Load dependencies
         run: flutter pub get
