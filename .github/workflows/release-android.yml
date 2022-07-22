@@ -40,6 +40,9 @@ jobs:
 
       - name: Flutter version
         run: flutter --version
+      
+        - name: Flutter doctor
+        run: flutter doctor
 
       - name: pwd1
         run: pwd
