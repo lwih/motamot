@@ -97,5 +97,5 @@ jobs:
           track: internal
           status: inProgress
           # inAppUpdatePriority: 2
-          whatsNewDirectory: whatsnew
-          mappingFile: build/app/outputs/mapping/release/mapping.txt
+          whatsNewDirectory: ./motamot/whatsnew
+          mappingFile: /motamot/build/app/outputs/mapping/release/mapping.txt
