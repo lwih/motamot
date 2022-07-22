@@ -67,33 +67,17 @@ jobs:
       - name: Bundle App
         run: flutter build appbundle
 
-      - name: pwd
-        run: pwd
-
-      - name: ls
-        run: ls -la
-      
-      - name: ls ./build/
-        run: ls ./build/ -la
-      - name: ls ./build/app/
-        run: ls ./build/app/ -la
-      - name: ls ./build/app/outputs
-        run: ls ./build/app/outputs -la
-      - name: ls ./build/app/outputs/bundle/
-        run: ls ./build/app/outputs/bundle/ -la
-      - name: ls ./build/app/outputs/bundle/release
-        run: ls ./build/app/outputs/bundle/release -la
-
-      - uses: r0adkll/sign-android-release@v1
+      - uses: ilharp/sign-android-release@v1
         name: Sign app
         # ID used to access action output
         id: sign_app
         with:
-          releaseDirectory: ./motamot/build/app/outputs/bundle/release
-          signingKeyBase64: ${{ secrets.SIGN_SIGNING_KEY }}
-          alias: ${{ secrets.SIGN_ALIAS }}
+          releaseDir: ./motamot/build/app/outputs/bundle/release
+          signingKey: ${{ secrets.SIGN_SIGNING_KEY }}
+          keyAlias: ${{ secrets.SIGN_ALIAS }}
           keyStorePassword: ${{ secrets.SIGN_KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.SIGN_KEY_PASSWORD }}
+          buildToolsVersion: 30.0.2
         # env:
           # override default build-tools version (29.0.3) -- optional
           # BUILD_TOOLS_VERSION: "30.0.2"
