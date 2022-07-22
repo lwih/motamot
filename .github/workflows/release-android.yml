@@ -65,7 +65,7 @@ jobs:
       
       # Bundle app
       - name: Bundle App
-        run: flutter build appbundle
+        run: flutter build apk
 
       - uses: ilharp/sign-android-release@v1
         name: Sign app
