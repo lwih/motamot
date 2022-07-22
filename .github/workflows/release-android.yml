@@ -49,13 +49,6 @@ jobs:
       - name: Flutter version
         run: flutter --version
       
-      - name: Flutter doctor
-        run: flutter doctor
-
-      - name: pwd1
-        run: pwd
-      - name: ls
-        run: ls -la
 
       - name: Load dependencies
         run: flutter pub get
@@ -63,6 +56,15 @@ jobs:
       # Bundle app
       - name: Bundle App
         run: flutter build appbundle
+
+      - name: pwd
+        run: pwd
+
+      - name: ls
+        run: ls -la
+      
+      - name: ls ./build/
+        run: ls ./build/ -la
 
       - uses: r0adkll/sign-android-release@v1
         name: Sign app
