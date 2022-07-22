@@ -65,7 +65,7 @@ jobs:
       
       # Bundle app
       - name: Bundle App
-        run: flutter build apk
+        run: flutter build appbundle
 
       - uses: actions/upload-artifact@v2
         with:
