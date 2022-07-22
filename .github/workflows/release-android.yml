@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: release-android
 
 # Controls when the workflow will run
 # on:
@@ -59,15 +59,48 @@ jobs:
       - name: Flutter version
         run: flutter --version
       
+
       - name: Load dependencies
         run: flutter pub get
       
       # Bundle app
-      - name: Run tests
-        run: flutter test
-
-      # Bundle app
       - name: Bundle App
-        run: flutter build appbundle
+        run: flutter build apk
 
-      
+      - uses: actions/upload-artifact@v2
+        with:
+          name: igned app bundle
+          path: /build/app/outputs/bundle/release/app-release.aab
+
+      - uses: ilharp/sign-android-release@v1
+        name: Sign app
+        # ID used to access action output
+        id: sign_app
+        with:
+          releaseDir: ./motamot/build/app/outputs/bundle/release
+          signingKey: ${{ secrets.SIGN_SIGNING_KEY }}
+          keyAlias: ${{ secrets.SIGN_ALIAS }}
+          keyStorePassword: ${{ secrets.SIGN_KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.SIGN_KEY_PASSWORD }}
+          buildToolsVersion: 30.0.2
+        # env:
+          # override default build-tools version (29.0.3) -- optional
+          # BUILD_TOOLS_VERSION: "30.0.2"
+
+      # Example use of `signedReleaseFile` output -- not needed
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Signed app bundle
+          path: ${{steps.sign_app.outputs.signedReleaseFile}}
+
+      # - uses: r0adkll/upload-google-play@v1
+      #   with:
+      #     serviceAccountJsonPlainText: ${{ GOOGLE_SERVICE_ACCOUNT_JSON }}
+      #     packageName: com.muy.motamot
+      #     releaseFiles: ${{steps.sign_app.outputs.signedReleaseFile}}
+      #     # track: production
+      #     track: internal
+      #     status: inProgress
+      #     inAppUpdatePriority: 2
+      #     whatsNewDirectory: distribution/whatsnew
+      #     mappingFile: build/app/outputs/mapping/release/mapping.txt
