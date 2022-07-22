@@ -44,7 +44,7 @@ jobs:
       - name: Cache Flutter dependencies
         uses: actions/cache@v1
         with:
-          path: /opt/hostedtoolcache/flutter
+          path: ${{ runner.tool_cache }}/flutter
           key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}
 
       - name: Setup Flutter
@@ -52,10 +52,10 @@ jobs:
         with:
           channel: 'stable' # or: 'beta' or 'master'
           cache: true
-          cache-key: flutter # optional, change this to force refresh cache
+          cache-key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }} # optional, change this to force refresh cache
           cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
           architecture: x64 # optional, x64 or arm64
-          
+
       - name: Flutter version
         run: flutter --version
       
