@@ -38,7 +38,7 @@ jobs:
           alias: ${{ secrets.SIGN_ALIAS }}
           keyStorePassword: ${{ secrets.SIGN_KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.SIGN_KEY_PASSWORD }}
-        env:
+        # env:
           # override default build-tools version (29.0.3) -- optional
           # BUILD_TOOLS_VERSION: "30.0.2"
 
