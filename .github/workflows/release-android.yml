@@ -98,4 +98,4 @@ jobs:
           status: inProgress
           # inAppUpdatePriority: 2
           whatsNewDirectory: ./motamot/whatsnew
-          mappingFile: /motamot/build/app/outputs/mapping/release/mapping.txt
+          mappingFile: build/app/outputs/mapping/release/mapping.txt
