@@ -98,7 +98,7 @@ jobs:
           releaseName: ${{ steps.tagName.outputs.tag }}
           # track: production
           track: internal
-          status: draft
+          status: completed
           # inAppUpdatePriority: 2
           whatsNewDirectory: ./motamot/whatsnew
           # mappingFile: ./motamot/build/app/outputs/mapping/release/mapping.txt
