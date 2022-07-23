@@ -45,20 +45,17 @@ jobs:
         with:
           java-version: ${{ env.java_version }}
 
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v1
-        with:
-          path: ${{ runner.tool_cache }}/flutter
-          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}
+      # - uses: actions/cache@v2
+      #   with:
+      #     path: ${{ runner.tool_cache }}/flutter
+      #     key: flutter-${{ env.flutter_version }}-stable
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: ${{ env.flutter_version }}
           channel: 'stable' # or: 'beta' or 'master'
           cache: true
-          cache-key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }} # optional, change this to force refresh cache
-          cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
-          architecture: x64 # optional, x64 or arm64
 
       - name: Flutter version
         run: flutter --version
@@ -96,7 +93,7 @@ jobs:
           releaseFiles: ${{env.ANDROID_SIGNED_FILE}}
           # track: production
           track: internal
-          status: inProgress
+          # status: inProgress
           # inAppUpdatePriority: 2
           whatsNewDirectory: ./motamot/whatsnew
           # mappingFile: ./motamot/build/app/outputs/mapping/release/mapping.txt
