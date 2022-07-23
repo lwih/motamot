@@ -40,6 +40,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - uses: little-core-labs/get-git-tag@v3.0.1
+        name: Get git tag
+        id: tagName
+
       - name: Setup Java
         uses: actions/setup-java@v1
         with:
@@ -91,9 +95,10 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           packageName: ${{env.package_name}}
           releaseFiles: ${{env.ANDROID_SIGNED_FILE}}
+          releaseName: ${{ steps.tagName.outputs.tag }}
           # track: production
           track: internal
-          # status: inProgress
+          status: draft
           # inAppUpdatePriority: 2
           whatsNewDirectory: ./motamot/whatsnew
           # mappingFile: ./motamot/build/app/outputs/mapping/release/mapping.txt
