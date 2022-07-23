@@ -5,6 +5,7 @@ import 'package:motamot/sprint/sprint_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 final Sprint unstartedSprint = Sprint(
+  id: 1,
   date: '2022-04-04',
   words: [
     'word11',
@@ -26,6 +27,7 @@ void main() {
             child: MaterialApp(
                 home: SprintWordRoute(
               sprint: unstartedSprint,
+              mode: 'sprint_free',
             )));
         await tester.pumpWidget(testWidget);
         final startButtonFinder = find.byKey(const Key('StartButton'));
@@ -37,6 +39,7 @@ void main() {
             child: MaterialApp(
                 home: SprintWordRoute(
               sprint: unstartedSprint,
+              mode: 'sprint',
             )));
         await tester.pumpWidget(testWidget);
         final gameFinder = find.byType(GameplayManager);
@@ -51,6 +54,7 @@ void main() {
             child: MaterialApp(
                 home: SprintWordRoute(
               sprint: unstartedSprint,
+              mode: 'sprint',
             )));
         await tester.pumpWidget(testWidget);
         final startButtonFinder = find.byKey(const Key('StartButton'));

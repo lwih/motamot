@@ -5,12 +5,14 @@ import 'package:motamot/gameplay/gameplay_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 final Daily unstartedDaily = Daily(
+  id: 1,
   date: '2022-04-04',
   word: 'plateau',
   success: null,
   words: null,
 );
 final Daily finishedDaily = Daily(
+  id: 1,
   date: '2022-04-04',
   word: 'plateau',
   success: true,
@@ -22,11 +24,13 @@ void main() {
     group('unstarted', () {
       testWidgets('the Game should be shown', (WidgetTester tester) async {
         Widget testWidget = MediaQuery(
-            data: const MediaQueryData(),
-            child: MaterialApp(
-                home: DailyWordRoute(
+          data: const MediaQueryData(),
+          child: MaterialApp(
+            home: DailyWordRoute(
               daily: unstartedDaily,
-            )));
+            ),
+          ),
+        );
         await tester.pumpWidget(testWidget);
 
         final gameFinder = find.byType(GameplayManager);
@@ -37,11 +41,13 @@ void main() {
       testWidgets('the finished text should be shown',
           (WidgetTester tester) async {
         Widget testWidget = MediaQuery(
-            data: const MediaQueryData(),
-            child: MaterialApp(
-                home: DailyWordRoute(
+          data: const MediaQueryData(),
+          child: MaterialApp(
+            home: DailyWordRoute(
               daily: finishedDaily,
-            )));
+            ),
+          ),
+        );
         await tester.pumpWidget(testWidget);
 
         final finishedTextFinder = find
