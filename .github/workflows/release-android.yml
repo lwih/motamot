@@ -3,14 +3,14 @@
 name: release-android
 
 # Controls when the workflow will run
-# on:
-#   push:
-#     tags:
-#       - 'v*'
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'
+# on:
+#   push:
+#     branches:
+#       - main
 
 # on: workflow_dispatch
 
