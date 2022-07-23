@@ -6,7 +6,7 @@ name: release-android
 on:
   push:
     tags:
-      - 'v*'
+      - '*'
 # on:
 #   push:
 #     branches:
