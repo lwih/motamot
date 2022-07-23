@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:motamot/ui/design.dart';
 import 'package:motamot/utils.dart';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class AnimatedWordRow extends StatelessWidget {
   final double size;

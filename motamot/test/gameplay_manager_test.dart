@@ -4,6 +4,8 @@ import 'package:motamot/storage/db_handler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
+import 'component_wrapper.dart';
+
 const wrongWord = 'aaaaa';
 const rightWord = 'arbre';
 
@@ -32,18 +34,16 @@ void main() {
     group('validation', () {
       testWidgets('should show validation when word does not exist',
           (WidgetTester tester) async {
-        Widget testWidget = MediaQuery(
-            data: const MediaQueryData(),
-            child: MaterialApp(
-                home: GameplayManager(
-              finished: false,
-              wordToFind: rightWord,
-              onFinish: ({
-                required String word,
-                required bool success,
-              }) {},
-              db: db,
-            )));
+        Widget widget = GameplayManager(
+          finished: false,
+          wordToFind: rightWord,
+          onFinish: ({
+            required String word,
+            required bool success,
+          }) {},
+          db: db,
+        );
+        Widget testWidget = wrapped(widget);
 
         await tester.pumpWidget(testWidget);
         await tester.tap(find.byKey(const Key('KeyA')));
@@ -60,18 +60,16 @@ void main() {
       });
       testWidgets('should show validation when word is too short',
           (WidgetTester tester) async {
-        Widget testWidget = MediaQuery(
-            data: const MediaQueryData(),
-            child: MaterialApp(
-                home: GameplayManager(
-              finished: false,
-              wordToFind: rightWord,
-              onFinish: ({
-                required String word,
-                required bool success,
-              }) {},
-              db: db,
-            )));
+        Widget widget = GameplayManager(
+          finished: false,
+          wordToFind: rightWord,
+          onFinish: ({
+            required String word,
+            required bool success,
+          }) {},
+          db: db,
+        );
+        Widget testWidget = wrapped(widget);
 
         await tester.pumpWidget(testWidget);
         await tester.tap(find.byKey(const Key('KeyA')));
@@ -86,18 +84,16 @@ void main() {
       });
       testWidgets('should disappear when delete is pressed',
           (WidgetTester tester) async {
-        Widget testWidget = MediaQuery(
-            data: const MediaQueryData(),
-            child: MaterialApp(
-                home: GameplayManager(
-              finished: false,
-              wordToFind: rightWord,
-              onFinish: ({
-                required String word,
-                required bool success,
-              }) {},
-              db: db,
-            )));
+        Widget widget = GameplayManager(
+          finished: false,
+          wordToFind: rightWord,
+          onFinish: ({
+            required String word,
+            required bool success,
+          }) {},
+          db: db,
+        );
+        Widget testWidget = wrapped(widget);
 
         await tester.pumpWidget(testWidget);
         await tester.tap(find.byKey(const Key('KeyA')));
@@ -115,18 +111,16 @@ void main() {
       });
       testWidgets('should disappear when a letter is pressed',
           (WidgetTester tester) async {
-        Widget testWidget = MediaQuery(
-            data: const MediaQueryData(),
-            child: MaterialApp(
-                home: GameplayManager(
-              finished: false,
-              wordToFind: rightWord,
-              onFinish: ({
-                required String word,
-                required bool success,
-              }) {},
-              db: db,
-            )));
+        Widget widget = GameplayManager(
+          finished: false,
+          wordToFind: rightWord,
+          onFinish: ({
+            required String word,
+            required bool success,
+          }) {},
+          db: db,
+        );
+        Widget testWidget = wrapped(widget);
 
         await tester.pumpWidget(testWidget);
         await tester.tap(find.byKey(const Key('KeyA')));
@@ -148,19 +142,17 @@ void main() {
           MockOnEnterWord();
       testWidgets('should not be called when word is invalid',
           (WidgetTester tester) async {
-        Widget testWidget = MediaQuery(
-            data: const MediaQueryData(),
-            child: MaterialApp(
-                home: GameplayManager(
-              finished: false,
-              wordToFind: rightWord,
-              onFinish: ({
-                required String word,
-                required bool success,
-              }) {},
-              onEnterWord: onEnterWord,
-              db: db,
-            )));
+        Widget widget = GameplayManager(
+          finished: false,
+          wordToFind: rightWord,
+          onFinish: ({
+            required String word,
+            required bool success,
+          }) {},
+          onEnterWord: onEnterWord,
+          db: db,
+        );
+        Widget testWidget = wrapped(widget);
 
         await tester.pumpWidget(testWidget);
         await tester.tap(find.byKey(const Key('KeyA')));
@@ -174,19 +166,17 @@ void main() {
       });
       testWidgets('should be called when word is valid',
           (WidgetTester tester) async {
-        Widget testWidget = MediaQuery(
-            data: const MediaQueryData(),
-            child: MaterialApp(
-                home: GameplayManager(
-              finished: false,
-              wordToFind: rightWord,
-              onFinish: ({
-                required String word,
-                required bool success,
-              }) {},
-              onEnterWord: onEnterWord,
-              db: db,
-            )));
+        Widget widget = GameplayManager(
+          finished: false,
+          wordToFind: rightWord,
+          onFinish: ({
+            required String word,
+            required bool success,
+          }) {},
+          onEnterWord: onEnterWord,
+          db: db,
+        );
+        Widget testWidget = wrapped(widget);
 
         await tester.pumpWidget(testWidget);
         await tester.tap(find.byKey(const Key('KeyR')));
@@ -206,15 +196,13 @@ void main() {
       }) onFinish = MockOnFinish();
       testWidgets('should not be called when word is invalid',
           (WidgetTester tester) async {
-        Widget testWidget = MediaQuery(
-            data: const MediaQueryData(),
-            child: MaterialApp(
-                home: GameplayManager(
-              finished: false,
-              wordToFind: rightWord,
-              onFinish: onFinish,
-              db: db,
-            )));
+        Widget widget = GameplayManager(
+          finished: false,
+          wordToFind: rightWord,
+          onFinish: onFinish,
+          db: db,
+        );
+        Widget testWidget = wrapped(widget);
 
         await tester.pumpWidget(testWidget);
         await tester.tap(find.byKey(const Key('KeyA')));
@@ -229,15 +217,13 @@ void main() {
       });
       testWidgets('should be called with success when word is the right one',
           (WidgetTester tester) async {
-        Widget testWidget = MediaQuery(
-            data: const MediaQueryData(),
-            child: MaterialApp(
-                home: GameplayManager(
-              finished: false,
-              wordToFind: rightWord,
-              onFinish: onFinish,
-              db: db,
-            )));
+        Widget widget = GameplayManager(
+          finished: false,
+          wordToFind: rightWord,
+          onFinish: onFinish,
+          db: db,
+        );
+        Widget testWidget = wrapped(widget);
 
         await tester.pumpWidget(testWidget);
         await tester.tap(find.byKey(const Key('KeyR')));
@@ -252,15 +238,13 @@ void main() {
       });
       testWidgets('should be called with failure when all 6 attemps failed',
           (WidgetTester tester) async {
-        Widget testWidget = MediaQuery(
-            data: const MediaQueryData(),
-            child: MaterialApp(
-                home: GameplayManager(
-              finished: false,
-              wordToFind: rightWord,
-              onFinish: onFinish,
-              db: db,
-            )));
+        Widget widget = GameplayManager(
+          finished: false,
+          wordToFind: rightWord,
+          onFinish: onFinish,
+          db: db,
+        );
+        Widget testWidget = wrapped(widget);
 
         await tester.pumpWidget(testWidget);
 
@@ -308,19 +292,16 @@ void main() {
     group('finished', () {
       testWidgets('nothing happens when tapping keyboard',
           (WidgetTester tester) async {
-        Widget testWidget = MediaQuery(
-            data: const MediaQueryData(),
-            child: MaterialApp(
-                home: GameplayManager(
-              db: MockDatabaseHandler(),
-              finished: true,
-              wordToFind: 'plateau',
-              onFinish: ({
-                required String word,
-                required bool success,
-              }) {},
-            )));
-
+        Widget widget = GameplayManager(
+          db: MockDatabaseHandler(),
+          finished: true,
+          wordToFind: 'plateau',
+          onFinish: ({
+            required String word,
+            required bool success,
+          }) {},
+        );
+        Widget testWidget = wrapped(widget);
         await tester.pumpWidget(testWidget);
 
         final finishedTextFinder =

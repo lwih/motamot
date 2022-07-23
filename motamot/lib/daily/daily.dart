@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:motamot/daily/daily_instructions.dart';
 import 'package:motamot/daily/daily_share.dart';
 import 'package:motamot/gameplay/gameplay_manager.dart';
@@ -162,11 +162,11 @@ class _DailyWordRouteState extends State<DailyWordRoute>
     return Scaffold(
       backgroundColor: CustomColors.backgroundColor,
       appBar: AppBar(
-        toolbarHeight: 6.h,
+        toolbarHeight: 50,
         title: Text(
           'Le mot du jour',
           style: TextStyle(
-            fontSize: 11.sp,
+            fontSize: 22,
           ),
         ),
         backgroundColor: CustomColors.backgroundColor,

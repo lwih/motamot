@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:motamot/gameplay/grid/cell.dart';
 import 'package:motamot/gameplay/keyboard/keystoke.dart';
 import 'package:motamot/ui/design.dart';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class DailyInstructions extends StatelessWidget {
   final void Function() onClose;

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:motamot/gameplay/gameplay_manager.dart';
 import 'package:motamot/sprint/sprint_instructions.dart';

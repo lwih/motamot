@@ -4,6 +4,8 @@ import 'package:motamot/sprint/sprint.dart';
 import 'package:motamot/sprint/sprint_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'component_wrapper.dart';
+
 final Sprint unstartedSprint = Sprint(
   id: 1,
   date: '2022-04-04',
@@ -22,25 +24,21 @@ void main() {
       testWidgets('the "Démarrer" button should be shown',
           (WidgetTester tester) async {
         tester.binding.window.physicalSizeTestValue = const Size(2000, 2000);
-        Widget testWidget = MediaQuery(
-            data: const MediaQueryData(size: Size.fromHeight(1000)),
-            child: MaterialApp(
-                home: SprintWordRoute(
-              sprint: unstartedSprint,
-              mode: 'sprint_free',
-            )));
+
+        Widget testWidget = wrapped(SprintWordRoute(
+          sprint: unstartedSprint,
+          mode: 'sprint_free',
+        ));
         await tester.pumpWidget(testWidget);
         final startButtonFinder = find.byKey(const Key('StartButton'));
         expect(startButtonFinder, findsOneWidget);
       });
       testWidgets('the Game should not be shown', (WidgetTester tester) async {
-        Widget testWidget = MediaQuery(
-            data: const MediaQueryData(),
-            child: MaterialApp(
-                home: SprintWordRoute(
-              sprint: unstartedSprint,
-              mode: 'sprint',
-            )));
+        Widget testWidget = wrapped(SprintWordRoute(
+          sprint: unstartedSprint,
+          mode: 'sprint',
+        ));
+
         await tester.pumpWidget(testWidget);
         final gameFinder = find.byType(GameplayManager);
         expect(gameFinder, findsNothing);
@@ -49,13 +47,10 @@ void main() {
       testWidgets('it should show the Game after tapping Démarrer',
           (WidgetTester tester) async {
         tester.binding.window.physicalSizeTestValue = const Size(2000, 2000);
-        Widget testWidget = MediaQuery(
-            data: const MediaQueryData(size: Size.fromHeight(1000)),
-            child: MaterialApp(
-                home: SprintWordRoute(
-              sprint: unstartedSprint,
-              mode: 'sprint',
-            )));
+        Widget testWidget = wrapped(SprintWordRoute(
+          sprint: unstartedSprint,
+          mode: 'sprint',
+        ));
         await tester.pumpWidget(testWidget);
         final startButtonFinder = find.byKey(const Key('StartButton'));
         expect(startButtonFinder, findsOneWidget);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:motamot/gameplay/grid/cell.dart';
 import 'package:motamot/ui/design.dart';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class SprintInstructions extends StatelessWidget {
   final void Function() onClose;

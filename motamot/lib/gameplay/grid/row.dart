@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:motamot/gameplay/grid/cell.dart';
 import 'package:motamot/ui/design.dart';
 import 'package:motamot/utils.dart';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 @immutable
 class WordRow extends StatelessWidget {
