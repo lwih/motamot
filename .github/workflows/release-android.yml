@@ -16,7 +16,7 @@ on:
 
 
 env:
-  package_name: "com.muy.motamot"
+  package_name: "com.lwih.motamot"
   flutter_version: "3.0.5"
   java_version: "12.x"
 

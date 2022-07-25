@@ -1,4 +1,4 @@
-package com.muy.motamot
+package com.lwih.motamot
 
 import io.flutter.embedding.android.FlutterActivity
 
