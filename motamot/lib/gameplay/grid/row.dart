@@ -57,7 +57,7 @@ class WordRow extends StatelessWidget {
             color: getColor(wordToFind, word, letter, i),
             text: letter.toUpperCase(),
             size: size,
-            fontSize: wordToFind.length > 8 ? 12.sp : 13.sp,
+            fontSize: wordToFind.length > 8 ? 16.sp : 18.sp,
           ),
         );
       }).toList(),

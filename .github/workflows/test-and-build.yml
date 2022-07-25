@@ -2,11 +2,6 @@
 
 name: test-and-build
 
-# Controls when the workflow will run
-# on:
-#   push:
-#     tags:
-#       - 'v*'
 on:
   push:
     branches:
@@ -16,8 +11,6 @@ env:
   flutter_version: "3.0.5"
   java_version: "12.x"
 
-  # Allows you to run this workflow manually from the Actions tab
-  #workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:

@@ -46,7 +46,10 @@ class WordGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final cellSize = ((screenWidth - 50) / wordToFind.length) - 10;
+    final cellSize = wordToFind.length > 8
+        ? ((screenWidth - 50) / wordToFind.length)
+        : ((screenWidth - 50) / wordToFind.length) -
+            5; // VERIFY - it was -10 before
     return Padding(
       padding: const EdgeInsets.only(
         top: 10,

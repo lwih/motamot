@@ -240,11 +240,11 @@ class _SprintWordRouteState extends State<SprintWordRoute>
     return Scaffold(
       backgroundColor: CustomColors.backgroundColor,
       appBar: AppBar(
-        toolbarHeight: 6.h,
+        toolbarHeight: 50,
         title: Text(
           'Sprint',
           style: TextStyle(
-            fontSize: 11.sp,
+            fontSize: 18.sp,
           ),
         ),
         backgroundColor: CustomColors.backgroundColor,
@@ -315,7 +315,7 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                                                   ? 'Appuie sur le bouton pour reprendre'
                                                   : "Jusqu'à 10 mots à trouver en 5 minutes",
                                               style: TextStyle(
-                                                fontSize: 12.sp,
+                                                fontSize: 16.sp,
                                                 fontWeight: FontWeight.bold,
                                                 color: CustomColors.white,
                                                 decoration: TextDecoration.none,
@@ -328,8 +328,8 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                                     Flexible(
                                       flex: 1,
                                       child: SizedBox(
-                                        height: 40.sp,
-                                        width: 150.sp,
+                                        height: 30.sp,
+                                        width: 60.sp,
                                         child: FloatingActionButton.extended(
                                           key: const Key('StartButton'),
                                           label: Text(
@@ -340,14 +340,14 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                                                 ? 'Démarrer'
                                                 : 'Reprendre',
                                             style: TextStyle(
-                                              fontSize: 14.sp,
+                                              fontSize: 18.sp,
                                             ),
                                           ),
                                           backgroundColor:
                                               CustomColors.rightPosition,
                                           icon: Icon(
                                             Icons.play_arrow,
-                                            size: 14.sp,
+                                            size: 18.sp,
                                           ),
                                           onPressed: () {
                                             onStart();
@@ -380,7 +380,7 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                                 'Score: ${getScore().toString()}',
                                 style: TextStyle(
                                   color: CustomColors.white,
-                                  fontSize: 14.sp,
+                                  fontSize: 18.sp,
                                 ),
                               )
                             ],
@@ -395,7 +395,7 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                                   displayTime(time),
                                   style: TextStyle(
                                     color: CustomColors.white,
-                                    fontSize: 14.sp,
+                                    fontSize: 18.sp,
                                   ),
                                 ),
                                 interval: const Duration(seconds: 1),
@@ -404,8 +404,8 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                                 },
                               ),
                               IconButton(
-                                iconSize: 14.sp,
-                                splashRadius: 14.sp,
+                                iconSize: 18.sp,
+                                splashRadius: 18.sp,
                                 color: _gamePaused
                                     ? CustomColors.backgroundColor
                                     : CustomColors.white,

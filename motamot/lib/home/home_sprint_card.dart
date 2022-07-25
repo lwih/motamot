@@ -85,8 +85,8 @@ class HomeSprintCard extends StatelessWidget {
                     disabled: false),
               ),
             );
-          } else if (!isSunday(DateTime.now())) {
-            return const DefaultSprintCard();
+            // } else if (!isSunday(DateTime.now())) {
+            //   return const DefaultSprintCard();
           } else if (sprint != null) {
             return Center(
               child: Padding(

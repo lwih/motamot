@@ -53,12 +53,12 @@ class AnimatedWordRow extends StatelessWidget {
           ? TextStyle(
               color: CustomColors.hintText,
               fontWeight: FontWeight.bold,
-              fontSize: wordToFind.length > 8 ? 12.sp : 13.sp,
+              fontSize: wordToFind.length > 8 ? 18.sp : 18.sp,
             )
           : TextStyle(
               color: CustomColors.white,
               fontWeight: FontWeight.bold,
-              fontSize: wordToFind.length > 8 ? 12.sp : 13.sp,
+              fontSize: wordToFind.length > 8 ? 18.sp : 18.sp,
             );
       return Container(
         color: animations[i].value,

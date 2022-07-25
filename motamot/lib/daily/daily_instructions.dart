@@ -25,7 +25,7 @@ class DailyInstructions extends StatelessWidget {
         title: Text(
           'Instructions',
           style: TextStyle(
-            fontSize: 11.sp,
+            fontSize: 18.sp,
             color: CustomColors.white,
           ),
         ),
@@ -55,7 +55,7 @@ Après chaque tentative, les cellules changeront de couleur pour vous indiquer l
 
 """,
                     style: TextStyle(
-                      fontSize: 12.sp,
+                      fontSize: 16.sp,
                       color: CustomColors.white,
                       overflow: TextOverflow.visible,
                       decoration: TextDecoration.none,
@@ -74,8 +74,8 @@ Après chaque tentative, les cellules changeront de couleur pour vous indiquer l
                           Cell(
                             color: CustomColors.notInWord,
                             text: 'M',
-                            size: 40.sp,
-                            fontSize: 12.sp,
+                            size: 30.sp,
+                            fontSize: 16.sp,
                           ),
                           Flexible(
                             flex: 1,
@@ -84,7 +84,7 @@ Après chaque tentative, les cellules changeront de couleur pour vous indiquer l
                               child: Text(
                                 "La lettre n'est pas présente dans le mot à trouver",
                                 style: TextStyle(
-                                  fontSize: 12.sp,
+                                  fontSize: 16.sp,
                                   color: CustomColors.white,
                                   decoration: TextDecoration.none,
                                   fontWeight: FontWeight.normal,
@@ -106,8 +106,8 @@ Après chaque tentative, les cellules changeront de couleur pour vous indiquer l
                           Cell(
                             color: CustomColors.wrongPosition,
                             text: 'M',
-                            size: 40.sp,
-                            fontSize: 12.sp,
+                            size: 30.sp,
+                            fontSize: 16.sp,
                           ),
                           Flexible(
                             flex: 1,
@@ -116,7 +116,7 @@ Après chaque tentative, les cellules changeront de couleur pour vous indiquer l
                               child: Text(
                                 "La lettre existe dans le mot à trouver mais n'est pas à la bonne position",
                                 style: TextStyle(
-                                  fontSize: 12.sp,
+                                  fontSize: 16.sp,
                                   color: CustomColors.white,
                                   overflow: TextOverflow.visible,
                                   decoration: TextDecoration.none,
@@ -139,8 +139,8 @@ Après chaque tentative, les cellules changeront de couleur pour vous indiquer l
                           Cell(
                             color: CustomColors.rightPosition,
                             text: 'M',
-                            size: 40.sp,
-                            fontSize: 12.sp,
+                            size: 30.sp,
+                            fontSize: 16.sp,
                           ),
                           Flexible(
                             flex: 1,
@@ -149,7 +149,7 @@ Après chaque tentative, les cellules changeront de couleur pour vous indiquer l
                               child: Text(
                                 'La lettre est à la bonne position',
                                 style: TextStyle(
-                                  fontSize: 12.sp,
+                                  fontSize: 16.sp,
                                   color: CustomColors.white,
                                   overflow: TextOverflow.visible,
                                   decoration: TextDecoration.none,
@@ -166,21 +166,21 @@ Après chaque tentative, les cellules changeront de couleur pour vous indiquer l
                 Padding(
                   padding: EdgeInsets.only(top: 50.sp),
                   child: SizedBox(
-                    height: 40.sp,
-                    width: 100.sp,
+                    height: 30.sp,
+                    width: 60.sp,
                     child: FloatingActionButton.extended(
                       key: const Key('InstructionsCloseButton'),
                       label: Text(
                         "Fermer",
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 16.sp,
                         ),
                       ),
                       backgroundColor: CustomColors.rightPosition,
                       onPressed: onClose,
                       icon: Icon(
                         Icons.close,
-                        size: 14.sp,
+                        size: 18.sp,
                       ),
                     ),
                   ),

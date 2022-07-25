@@ -22,7 +22,7 @@ class Keystroke extends StatelessWidget {
         child: Text(
           keyStroke.toUpperCase(),
           style: TextStyle(
-            fontSize: 12.sp,
+            fontSize: 16.sp,
           ),
         ),
       ),

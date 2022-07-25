@@ -49,7 +49,7 @@ class CardButton extends StatelessWidget {
                     style: TextStyle(
                       color: CustomColors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16.sp,
+                      fontSize: 20.sp,
                     ),
                   ),
                   subtitle: Padding(
@@ -59,7 +59,7 @@ class CardButton extends StatelessWidget {
                       style: TextStyle(
                         color: CustomColors.white,
                         // fontWeight: FontWeight.bold,
-                        fontSize: 12.sp,
+                        fontSize: 16.sp,
                       ),
                     ),
                   ),
@@ -85,7 +85,7 @@ class CardButton extends StatelessWidget {
                         style: TextStyle(
                           color: CustomColors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 10.sp,
+                          fontSize: 14.sp,
                         ),
                       ),
                     ),
@@ -93,14 +93,14 @@ class CardButton extends StatelessWidget {
                         ? IconButton(
                             icon: const Icon(Icons.share),
                             color: CustomColors.white,
-                            iconSize: 35.sp,
+                            iconSize: 20.sp,
                             onPressed: onShare,
                           )
                         : (disabled != null && !disabled!)
                             ? IconButton(
                                 icon: const Icon(Icons.play_circle_outline),
                                 color: CustomColors.rightPosition,
-                                iconSize: 35.sp,
+                                iconSize: 25.sp,
                                 onPressed: onTap,
                               )
                             : Container(),

@@ -258,7 +258,7 @@ class _GameplayManagerState extends State<GameplayManager>
               style: TextStyle(
                 color: CustomColors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 10,
+                fontSize: 16.sp,
               ),
             ),
           ),

@@ -166,7 +166,7 @@ class _DailyWordRouteState extends State<DailyWordRoute>
         title: Text(
           'Le mot du jour',
           style: TextStyle(
-            fontSize: 22,
+            fontSize: 18.sp,
           ),
         ),
         backgroundColor: CustomColors.backgroundColor,
