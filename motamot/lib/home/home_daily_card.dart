@@ -9,7 +9,7 @@ import 'package:motamot/utils/date_utils.dart';
 
 class HomeDailyCard extends StatelessWidget {
   HomeDailyCard({Key? key}) : super(key: key);
-  final DatabaseHandler handler = DatabaseHandler('motus.db');
+  final DatabaseHandler handler = DatabaseHandler('motamot.db');
 
   @override
   Widget build(BuildContext context) {

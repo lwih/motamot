@@ -7,7 +7,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  var dbHandler = DatabaseHandler('motus.db');
+  var dbHandler = DatabaseHandler('motamot.db');
   await dbHandler.initializeDB();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const Motamot());

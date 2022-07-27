@@ -30,7 +30,7 @@ class _RandomWordRouteState extends State<RandomWordRoute>
   @override
   void initState() {
     super.initState();
-    handler = DatabaseHandler('motus.db');
+    handler = DatabaseHandler('motamot.db');
 
     animationController = AnimationController(
       vsync: this,

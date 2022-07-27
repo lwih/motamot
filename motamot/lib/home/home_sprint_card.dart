@@ -32,7 +32,7 @@ class DefaultSprintCard extends StatelessWidget {
 
 class HomeSprintCard extends StatelessWidget {
   HomeSprintCard({Key? key}) : super(key: key);
-  final DatabaseHandler handler = DatabaseHandler('motus.db');
+  final DatabaseHandler handler = DatabaseHandler('motamot.db');
 
   void goToGame(BuildContext context, Sprint sprint, String mode) {
     Navigator.push(

@@ -57,7 +57,7 @@ class _SprintWordRouteState extends State<SprintWordRoute>
   @override
   void initState() {
     super.initState();
-    handler = DatabaseHandler('motus.db');
+    handler = DatabaseHandler('motamot.db');
     int timeLeftInSeconds =
         widget.sprint.timeLeftInSeconds ?? defaultDurationInSeconds;
     _controller = CountdownController(
