@@ -240,7 +240,7 @@ class _SprintWordRouteState extends State<SprintWordRoute>
     return Scaffold(
       backgroundColor: CustomColors.backgroundColor,
       appBar: AppBar(
-        toolbarHeight: 50,
+        toolbarHeight: 30.sp,
         title: Text(
           'Sprint',
           style: TextStyle(
@@ -369,55 +369,58 @@ class _SprintWordRouteState extends State<SprintWordRoute>
                               onEnterWord: onEnterWord,
                             ),
                     ),
-                    Container(
+                    SizedBox(
                       height: 50,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                'Score: ${getScore().toString()}',
-                                style: TextStyle(
-                                  color: CustomColors.white,
-                                  fontSize: 18.sp,
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Countdown(
-                                controller: _controller,
-                                seconds: _duration,
-                                build: (BuildContext context, double time) =>
-                                    Text(
-                                  displayTime(time),
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 10.sp),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'Score: ${getScore().toString()}',
                                   style: TextStyle(
                                     color: CustomColors.white,
                                     fontSize: 18.sp,
                                   ),
+                                )
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Countdown(
+                                  controller: _controller,
+                                  seconds: _duration,
+                                  build: (BuildContext context, double time) =>
+                                      Text(
+                                    displayTime(time),
+                                    style: TextStyle(
+                                      color: CustomColors.white,
+                                      fontSize: 18.sp,
+                                    ),
+                                  ),
+                                  interval: const Duration(seconds: 1),
+                                  onFinished: () async {
+                                    await onFinishGame();
+                                  },
                                 ),
-                                interval: const Duration(seconds: 1),
-                                onFinished: () async {
-                                  await onFinishGame();
-                                },
-                              ),
-                              IconButton(
-                                iconSize: 18.sp,
-                                splashRadius: 18.sp,
-                                color: _gamePaused
-                                    ? CustomColors.backgroundColor
-                                    : CustomColors.white,
-                                icon: const Icon(Icons.pause),
-                                key: const Key('PauseButton'),
-                                onPressed: () {
-                                  onPause();
-                                },
-                              )
-                            ],
-                          )
-                        ],
+                                IconButton(
+                                  iconSize: 18.sp,
+                                  splashRadius: 18.sp,
+                                  color: _gamePaused
+                                      ? CustomColors.backgroundColor
+                                      : CustomColors.white,
+                                  icon: const Icon(Icons.pause),
+                                  key: const Key('PauseButton'),
+                                  onPressed: () {
+                                    onPause();
+                                  },
+                                )
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     )
                   ],

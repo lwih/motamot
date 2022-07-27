@@ -10,18 +10,18 @@ Future<void> main() async {
   var dbHandler = DatabaseHandler('motus.db');
   await dbHandler.initializeDB();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(const Mouitus());
+  runApp(const Motamot());
 }
 
-class Mouitus extends StatelessWidget {
-  const Mouitus({Key? key}) : super(key: key);
+class Motamot extends StatelessWidget {
+  const Motamot({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ResponsiveSizer(builder: (context, orientation, deviceType) {
       return MaterialApp(
-        title: 'Mouitus',
+        title: 'Motamot',
         theme: ThemeData(
             // This is the theme of your application.
             //

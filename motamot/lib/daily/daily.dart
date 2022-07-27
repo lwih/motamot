@@ -162,7 +162,7 @@ class _DailyWordRouteState extends State<DailyWordRoute>
     return Scaffold(
       backgroundColor: CustomColors.backgroundColor,
       appBar: AppBar(
-        toolbarHeight: 50,
+        toolbarHeight: 30.sp,
         title: Text(
           'Le mot du jour',
           style: TextStyle(
