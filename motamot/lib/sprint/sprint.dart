@@ -11,13 +11,9 @@ import 'package:motamot/sprint/sprint_utils.dart';
 import 'package:motamot/storage/db_handler.dart';
 import 'package:motamot/ui/design.dart';
 import 'package:motamot/sprint/sprint_model.dart';
-import 'package:motamot/utils.dart';
-import 'package:motamot/utils/date_utils.dart';
-
 import '../ui/countdown/countdown.dart';
 import '../ui/countdown/countdown_controller.dart';
 import '../ui/route/fade_route.dart';
-import '../utils/date_utils.dart';
 
 class SprintWordRoute extends StatefulWidget {
   final Sprint sprint;
