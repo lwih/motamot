@@ -243,6 +243,16 @@ class _SprintWordRouteState extends State<SprintWordRoute>
             fontSize: 18.sp,
           ),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: CustomColors.white),
+          onPressed: () => Navigator.pushAndRemoveUntil(
+            context,
+            FadeRoute(
+              page: const Home(),
+            ),
+            (Route<dynamic> route) => false,
+          ),
+        ),
         backgroundColor: CustomColors.backgroundColor,
         actions: <Widget>[
           Padding(
