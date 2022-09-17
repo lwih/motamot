@@ -6,7 +6,7 @@ Le sprint du Motamot
 
 Score: ${score.toString()}
 
-link play store
+https://play.google.com/store/apps/details?id=com.lwih.motamot&gl=FR
 """);
   await Clipboard.setData(text);
 }

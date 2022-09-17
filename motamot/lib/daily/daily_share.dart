@@ -37,7 +37,7 @@ Score: ${daily.words!.length}/6
 
 ${displayRows(daily.word, daily.words!)}
   
-link play store
+https://play.google.com/store/apps/details?id=com.lwih.motamot&gl=FR
   """);
   await Clipboard.setData(text);
 }
