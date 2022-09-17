@@ -19,7 +19,7 @@ class DefaultSprintCard extends StatelessWidget {
           onTap: () {},
           title: 'Sprint',
           description: "Jusqu'à 10 mots en 5 minutes",
-          next: 'Disponible dimanche',
+          next: 'Disponible demain',
           disabled: true,
           success: null,
           enableShare: false,
@@ -94,7 +94,9 @@ class HomeSprintCard extends StatelessWidget {
                 child: CardButton(
                   title: 'Sprint',
                   description: "Dix mots en cinq minutes",
-                  next: 'Disponible dimanche',
+                  next: sprint.score == null
+                      ? 'Disponible maintenant'
+                      : 'Disponible demain',
                   disabled: sprint.score == null ? false : true,
                   success: sprint.score == null ? null : true,
                   enableShare: sprint.score == null ? false : true,
